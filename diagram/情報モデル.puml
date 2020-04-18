@@ -1,0 +1,39 @@
+@startuml
+
+title 情報モデル
+
+left to right direction
+
+object 会議室{
+ - 想定使用人数
+}
+object 予約者
+object 使用人数
+object 予約
+object 使用時間帯
+object 予約台帳
+
+
+予約 *-- 会議室
+予約 *-- 予約者
+予約 *-- 使用人数
+予約 *-- 使用時間帯
+
+予約台帳 -- 予約
+
+
+note left of 会議室
+3分の1くらいしか
+しばらく使ってなかったら、
+分割をしたい
+end note
+
+note left of 使用時間帯
+何時から何時まで使用するかを
+表す
+end note
+
+
+
+
+@enduml
