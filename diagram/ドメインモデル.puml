@@ -82,8 +82,13 @@ note right of 使用時間帯
 end note
 
 note right of 使用時間帯
-・ルール？: 過去の日時で、会議室は予約できない
+過去の日時で、会議室は予約できない
 end note
+
+note right of 使用時間帯
+使用時間帯は、日を跨いではいけない
+end note
+
 
 
 
