@@ -1,8 +1,8 @@
 import pytest
 
-from src.domain.reservation.errors import 使用開始日時Error, Not15分単位Error
-from src.domain.reservations.使用日時 import 使用日時
-from src.domain.reservations.使用時間帯 import 使用時間帯
+from src.domain.reservation.errors import 使用開始日時Error, Not15分単位Error, 使用終了日時Error
+from src.domain.reservation.使用日時 import 使用日時
+from src.domain.reservation.使用時間帯 import 使用時間帯
 
 
 def test_使用日時が15分単位であること_正常系():
@@ -19,4 +19,20 @@ def test_予約できる時間帯は1000から1900までであること_異常�
     end = 使用日時(2020, 4, 20, 12, 0)
 
     with pytest.raises(使用開始日時Error):
+        使用時間帯(start, end)
+
+
+def test_予約できる時間帯は1000から1900までであること_異常系2():
+    start = 使用日時(2020, 4, 20, 19, 15)
+    end = 使用日時(2020, 4, 20, 19, 30)
+
+    with pytest.raises(使用開始日時Error):
+        使用時間帯(start, end)
+
+
+def test_予約できる時間帯は1000から1900までであること_異常系3():
+    start = 使用日時(2020, 4, 20, 18, 0)
+    end = 使用日時(2020, 4, 20, 19, 30)
+
+    with pytest.raises(使用終了日時Error):
         使用時間帯(start, end)
