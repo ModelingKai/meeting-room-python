@@ -10,5 +10,5 @@ class 未来過ぎて予約できないよError(Exception):
     pass
 
 
-class 過去の日付は予約できないよError(Exception):
+class 使用日時は過去であってはいけないんだよError(Exception):
     pass

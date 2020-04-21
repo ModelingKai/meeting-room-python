@@ -3,7 +3,7 @@ import datetime
 import freezegun
 import pytest
 
-from src.domain.reservation.errors import 使用時間帯の範囲がおかしいよError, 未来過ぎて予約できないよError, 過去の日付は予約できないよError
+from src.domain.reservation.errors import 使用時間帯の範囲がおかしいよError, 未来過ぎて予約できないよError, 使用日時は過去であってはいけないんだよError
 from src.domain.reservation.使用日時 import 使用日時
 from src.domain.reservation.使用時間帯 import 使用時間帯
 
@@ -33,7 +33,7 @@ def test_予約できる時間帯は1000から1900までであること_異常�
 
 
 def test_過去の日時で会議室は予約できないこと():
-    with pytest.raises(過去の日付は予約できないよError):
+    with pytest.raises(使用日時は過去であってはいけないんだよError):
         使用時間帯(使用日時(1999, 1, 1, 13, 00), 使用日時(1999, 1, 1, 14, 00))
 
 
