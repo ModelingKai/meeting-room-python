@@ -1,6 +1,6 @@
 @startuml
 
-title 会議室予約のドメインモデル
+title 会議室予約ドメインモデル
 
 left to right direction
 
