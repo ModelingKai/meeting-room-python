@@ -19,7 +19,7 @@ jobs:
 #            args: -v -tsvg **.puml
       - name: Install Japanese Language
         run: |
-          - sudo apt-get install fonts-takao
+          sudo apt-get install fonts-takao
       - name: Get changed UML files
         id: getfile
         run: |
