@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="571px" preserveAspectRatio="none" style="width:1141px;height:571px;" version="1.1" viewBox="0 0 1141 571" width="1141px" zoomAndPan="magnify"><defs><filter height="300%" id="fyr4mjm0hcsy0" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="66" x="540.5" y="16.708">要求モデル図</text><!--entity 経営者--><ellipse cx="42" cy="274.9531" fill="#FEFECE" filter="url(#fyr4mjm0hcsy0)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M42,282.9531 L42,309.9531 M29,290.9531 L55,290.9531 M42,309.9531 L29,324.9531 M42,309.9531 L55,324.9531 " fill="none" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="24" x="30" y="344.9482">経営者</text><!--entity 会議室を利用する人--><ellipse cx="42" cy="38.9531" fill="#FEFECE" filter="url(#fyr4mjm0hcsy0)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M42,46.9531 L42,73.9531 M29,54.9531 L55,54.9531 M42,73.9531 L29,88.9531 M42,73.9531 L55,88.9531 " fill="none" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="72" x="6" y="108.9482">会議室を利用する人</text><!--entity 予約する人--><ellipse cx="42" cy="156.9531" fill="#FEFECE" filter="url(#fyr4mjm0hcsy0)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M42,164.9531 L42,191.9531 M29,172.9531 L55,172.9531 M42,191.9531 L29,206.9531 M42,191.9531 L55,206.9531 " fill="none" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="40" x="22" y="226.9482">予約する人</text><!--entity 施設管理者--><ellipse cx="42" cy="424.9531" fill="#FEFECE" filter="url(#fyr4mjm0hcsy0)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M42,432.9531 L42,459.9531 M29,440.9531 L55,440.9531 M42,459.9531 L29,474.9531 M42,459.9531 L55,474.9531 " fill="none" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="40" x="22" y="494.9482">施設管理者</text><path d="M258,353.9531 L258,379.0859 L479,379.0859 L479,363.9531 L469,353.9531 L258,353.9531 " fill="#FBFB77" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M469,353.9531 L469,363.9531 L479,363.9531 L469,353.9531 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="200" x="264" y="371.02">システム上には現れない、会議室の交換があったりする</text><path d="M230,413.9531 L230,439.0859 A0,0 0 0 0 230,439.0859 L230,439.0859 L62.424,454.5765 L238,439.0859 L507,439.0859 A0,0 0 0 0 507,439.0859 L507,423.9531 L497,413.9531 L230,413.9531 A0,0 0 0 0 230,413.9531 " fill="#FBFB77" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M497,413.9531 L497,423.9531 L507,423.9531 L497,413.9531 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="256" x="236" y="431.02">会議は中止になったのに会議室予約をキャンセルしないことがよくある</text><path d="M202,233.9531 L202,259.0859 L535,259.0859 L535,243.9531 L525,233.9531 L202,233.9531 " fill="#FBFB77" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M525,233.9531 L525,243.9531 L535,243.9531 L525,233.9531 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="312" x="208" y="251.02">「会議室の予約がとれない」という声が多いが、実際の会議室の利用実績をわからない</text><path d="M314,115.9531 L314,141.0859 L423,141.0859 L423,125.9531 L413,115.9531 L314,115.9531 " fill="#FBFB77" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M413,115.9531 L413,125.9531 L423,125.9531 L413,115.9531 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="88" x="320" y="133.02">会議室の予約が取れない</text><path d="M294,473.9531 L294,499.0859 L443,499.0859 L443,483.9531 L433,473.9531 L294,473.9531 " fill="#FBFB77" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M433,473.9531 L433,483.9531 L443,483.9531 L433,473.9531 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="128" x="300" y="491.02">直前でのキャンセルが多い気がする</text><path d="M226,293.9531 L226,319.0859 L511,319.0859 L511,303.9531 L501,293.9531 L226,293.9531 " fill="#FBFB77" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M501,293.9531 L501,303.9531 L511,303.9531 L501,293.9531 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="264" x="232" y="311.02">コストが無駄にならないよう、できる限り、無駄なく会議室を用意したい</text><path d="M138,533.9531 L138,559.0859 L599,559.0859 L599,543.9531 L589,533.9531 L138,533.9531 " fill="#FBFB77" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M589,533.9531 L589,543.9531 L599,543.9531 L589,533.9531 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="440" x="144" y="551.02">帳簿上に載っていないと、誰が部屋と設備を利用したのかわらかないから、何かあったときに責任の所在がわからなくなる</text><path d="M659,346.4531 L659,386.7188 L832,386.7188 L832,356.4531 L822,346.4531 L659,346.4531 " fill="#40E0D0" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M822,346.4531 L822,356.4531 L832,356.4531 L822,346.4531 " fill="#40E0D0" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="152" x="665" y="363.52">予約とキャンセルの予約台帳を作れること</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="128" x="665" y="378.6528">予約台帳は、集計機能を付けること</text><path d="M892,346.4531 L892,362.4531 L832.2709,366.4531 L892,370.4531 L892,386.7188 A0,0 0 0 0 892,386.7188 L1129,386.7188 A0,0 0 0 0 1129,386.7188 L1129,356.4531 L1119,346.4531 L892,346.4531 A0,0 0 0 0 892,346.4531 " fill="#40E0D0" filter="url(#fyr4mjm0hcsy0)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1119,346.4531 L1119,356.4531 L1129,356.4531 L1119,346.4531 " fill="#40E0D0" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="216" x="898" y="363.52">誰が、いつ、何人想定で、どの会議室を予約、キャンセルを</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="120" x="898" y="378.6528">したか把握できるようにすること</text><!--link 施設管理者 to r1--><path d="M62.0057,440.3297 C80.5536,426.3004 109.506,406.6613 138,396.4531 C175.8005,382.9108 219.0377,375.3635 257.775,371.1969 " fill="none" id="施設管理者-r1" style="stroke: #A80036; stroke-width: 1.0;"/><!--link 施設管理者 to r4--><path d="M62.424,458.3297 C107.7963,462.4987 218.8935,472.7067 293.994,479.6072 " fill="none" id="施設管理者-r4" style="stroke: #A80036; stroke-width: 1.0;"/><!--link 施設管理者 to r7--><path d="M62.0057,472.5765 C80.5536,486.6058 109.506,506.2449 138,516.4531 C158.9897,523.9728 181.6558,529.6441 204.2969,533.9145 " fill="none" id="施設管理者-r7" style="stroke: #A80036; stroke-width: 1.0;"/><!--link 経営者 to r3--><path d="M57.0767,300.8454 C75.7996,294.0913 108.8356,282.8572 138,276.4531 C171.3063,269.1395 207.7386,263.3855 241.6045,258.9583 " fill="none" id="経営者-r3" style="stroke: #A80036; stroke-width: 1.0;"/><!--link 経営者 to r6--><path d="M57.3098,312.2536 C89.9002,317.7611 168.9064,319.995 239.1518,318.9555 " fill="none" id="経営者-r6" style="stroke: #A80036; stroke-width: 1.0;"/><!--link 経営者 to r6--><path d="M57.3098,300.3114 C94.8171,293.6002 193.8023,291.4797 270.1579,293.9501 " fill="none" id="経営者-r6" style="stroke: #A80036; stroke-width: 1.0;"/><!--link 予約する人 to r5--><path d="M62.424,184.6998 C111.9845,175.5922 239.9637,152.0739 313.7909,138.5068 " fill="none" id="予約する人-r5" style="stroke: #A80036; stroke-width: 1.0;"/><!--link 会議室を利用する人 to r5--><path d="M78.1887,76.8817 C135.3867,87.0425 247.0456,106.8777 313.9819,118.7684 " fill="none" id="会議室を利用する人-r5" style="stroke: #A80036; stroke-width: 1.0;"/><!--link r3 to d1--><path d="M531.7276,258.9688 C554.6829,263.2367 577.6961,268.9133 599,276.4531 C645.1492,292.786 692.2934,325.1284 720.2181,346.2651 " fill="none" id="r3-d1" style="stroke: #A80036; stroke-width: 1.0;"/><!--link r4 to d1--><path d="M443.0043,484.6652 C489.0702,481.6461 548.7838,474.2254 599,456.4531 C645.1492,440.1202 692.2934,407.7778 720.2181,386.6411 " fill="none" id="r4-d1" style="stroke: #A80036; stroke-width: 1.0;"/><!--
+@startuml
+
+title 要求モデル図
+
+left to right direction
+
+actor 経営者
+actor 会議室を利用する人
+actor 予約する人
+actor 施設管理者
+
+note "システム上には現れない、会議室の交換があったりする" as r1
+note "会議は中止になったのに会議室予約をキャンセルしないことがよくある" as r2
+note "「会議室の予約がとれない」という声が多いが、実際の会議室の利用実績をわからない" as r3
+note "会議室の予約が取れない" as r5
+note "直前でのキャンセルが多い気がする" as r4
+note "コストが無駄にならないよう、できる限り、無駄なく会議室を用意したい" as r6
+note "帳簿上に載っていないと、誰が部屋と設備を利用したのかわらかないから、何かあったときに責任の所在がわからなくなる" as r7
+
+:施設管理者: - - r1
+:施設管理者: - - r2
+:施設管理者: - - r4
+:施設管理者: - - r7
+
+:経営者: - - r3
+:経営者: - - r6
+:経営者: - - r6
+
+:予約する人: - - r5
+:会議室を利用する人: - - r5
+
+note as d1 #Turquoise
+ 予約とキャンセルの予約台帳を作れること
+ 予約台帳は、集計機能を付けること
+end note
+
+note as d2 #Turquoise
+ 誰が、いつ、何人想定で、どの会議室を予約、キャンセルを
+ したか把握できるようにすること
+end note
+
+r3 - - d1
+r4 - - d1
+d1 - - d2
+
+
+@enduml
+
+PlantUML version 1.2018.13(Mon Nov 26 17:11:51 UTC 2018)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.6+10-post-Debian-1deb10u1
+Operating System: Linux
+OS Version: 5.0.0-1035-azure
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
