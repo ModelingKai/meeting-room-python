@@ -27,7 +27,7 @@ jobs:
       - name: Generate PNG Diagrams
         uses: cloudbees/plantuml-github-action@master
         with:
-            args: -v -tpng  **.puml -charset UTF-8
+            args: -v **.puml -charset UTF-8
       - name: Push Local Changes
         uses:  stefanzweifel/git-auto-commit-action@v4.1.2 
         with: 
