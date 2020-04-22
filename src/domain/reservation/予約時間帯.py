@@ -6,7 +6,7 @@ from src.domain.reservation.errors import 使用時間帯の範囲がおかし�
 
 
 @dataclass(frozen=True)
-class 使用時間帯:
+class 予約時間帯:
     start: 使用日時
     end: 使用日時
 
@@ -17,6 +17,6 @@ class 使用時間帯:
         if self.start.date() < datetime.date.today() or self.end.date() < datetime.date.today():
             raise 使用日時は過去であってはいけないんだよError('今日より過去の日付では予約できません')
 
-        later_14_days = datetime.datetime.now() + datetime.timedelta(days=14)
-        if later_14_days.date() < self.start.date() or later_14_days.date() < self.end.date():
-            raise 未来過ぎて予約できないよError('予約が可能な会議室は、14日後以内です')
+        later_15_date = (datetime.datetime.today() + datetime.timedelta(days=15)).date()
+        if later_15_date <= self.start.date() or later_15_date <= self.end.date():
+            raise 未来過ぎて予約できないよError('指定された日にちは予約できません。予約できるのは、申請日を1日目として15日目以内です')
