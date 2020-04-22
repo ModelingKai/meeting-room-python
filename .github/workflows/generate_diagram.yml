@@ -3,8 +3,8 @@ on:
   push:
     paths:
       - '**.puml'
-    branches:
-      - master
+#    branches:
+#      - master
 jobs:
   ci:
     runs-on: ubuntu-latest
