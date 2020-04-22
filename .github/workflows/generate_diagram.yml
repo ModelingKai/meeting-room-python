@@ -35,4 +35,4 @@ jobs:
           commit_user_email: "example@email.org"
           commit_author: "diagram generater <me@email.org>"
           commit_message: "Generate SVG and PNG images for PlantUML diagrams" 
-          branch: ${{ github.head_ref }}
+          branch: ${{ github.ref }}
