@@ -35,3 +35,5 @@ jobs:
           commit_user_email: "example@email.org"
           commit_author: "github-actions <example@email.org>"
           commit_message: "Generate SVG and PNG images for PlantUML diagrams"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
