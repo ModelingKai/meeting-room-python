@@ -1,17 +1,21 @@
 @startuml
 left to right direction
 
-actor 予約者 as a1
-actor 分析する人 as a2
+actor 会議前_予約者 as a1
+actor 会議中_会議参加者  as a3
+actor 会議終了後_分析する人 as a2
 
 rectangle {
     a1 --> (新規の会議を予約する)
-    a1 --> (会議をキャンセルする)
-    a1 --> (会議室の使用時間を延長する)
+    a1 --> (予約済みの会議予約をキャンセルする)
 }
 
 rectangle {
     a2 --> (何かの仮説をもって、何かを集計する)
+}
+
+rectangle {
+    a3 --> (会議室の使用終了時刻を延長する)
 }
 
 @enduml
