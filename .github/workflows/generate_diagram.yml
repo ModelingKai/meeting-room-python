@@ -1,14 +1,6 @@
 name: Generate PlantUML Diagrams
 on:
   push:
-    branches:
-      - master
-    paths:
-      - '**.puml'
-  pull_request:
-    branches:
-      - master
-      - develop
     paths:
       - '**.puml'
 jobs:
