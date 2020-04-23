@@ -4,18 +4,20 @@ title 会議室予約ドメインモデル
 
 left to right direction
 
+rectangle 社員集約 {
+    object 社員 {
+        + 社員ID
+        + 社員名
+    }
+}
 
 rectangle 予約集約 {
     object "予約\n<集約ルート>" as c1 {
         + 予約ID
         + 会議室ID
+        + 予約者ID: 社員ID
         + 延長した回数
         + キャンセル済みかどうか
-    }
-
-    object 予約者 {
-        + 予約者ID
-        + 予約者名
     }
 
     object 使用人数 {
@@ -41,7 +43,7 @@ rectangle 会議室集約 {
 
 
 c1 --> 会議室
-c1 *-- 予約者
+c1 --> 社員
 c1 *-- 使用人数
 c1 *-- 予約時間帯
 予約時間帯 "1" *-- "2" 使用日時
