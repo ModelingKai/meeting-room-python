@@ -3,20 +3,26 @@ on:
   push:
     paths:
       - '**.puml'
-#    branches:
-#      - master
 jobs:
   ci:
     runs-on: ubuntu-latest
     env:
-        UML_FILES: ".puml"
+        UML_FILES: "**.puml"
     steps:
       - name: Checkout Source 
-        uses: actions/checkout@v1
-      - name: Generate SVG Diagrams
-        uses: cloudbees/plantuml-github-action@master
-        with:
-            args: -v -tsvg $UML_FILES
+        uses: actions/checkout@v2
+      - name: Install java
+        run: |
+          sudo apt-get install default-jdk && java -version
+      - name: Install graphviz
+        run: |
+          sudo apt-get install graphviz && dot -v
+      - name: Install Japanese Language
+        run: |
+          sudo apt-get install fonts-takao
+      - name: Install plantuml
+        run: |
+           wget -O plantuml.jar 'https://downloads.sourceforge.net/project/plantuml/plantuml.jar?r=http%3A%2F%2Fplantuml.com%2Fstarting&ts=1538667739&use_mirror=jaist'
       - name: Get changed UML files
         id: getfile
         run: |
@@ -25,14 +31,14 @@ jobs:
         run: |
           echo ${{ steps.getfile.outputs.files }}
       - name: Generate PNG Diagrams
-        uses: cloudbees/plantuml-github-action@master
-        with:
-            args: -v -tpng $UML_FILES
+        run: |
+          java -jar plantuml.jar  -v **.puml
       - name: Push Local Changes
         uses:  stefanzweifel/git-auto-commit-action@v4.1.2 
         with: 
-          commit_user_name: "diagram generater"
+          commit_user_name: "github-action"
           commit_user_email: "example@email.org"
-          commit_author: "diagram generater <me@email.org>"
-          commit_message: "Generate SVG and PNG images for PlantUML diagrams" 
-          branch: ${{ github.head_ref }}
+          commit_author: "github-actions <example@email.org>"
+          commit_message: "Generate SVG and PNG images for PlantUML diagrams"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
