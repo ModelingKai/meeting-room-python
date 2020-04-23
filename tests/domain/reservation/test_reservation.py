@@ -18,3 +18,13 @@ def test_reservation():
                       reserver_id=社員ID(str(uuid.uuid4())))
 
     assert sut is not None
+
+
+@freezegun.freeze_time('2020-4-1 10:00')
+def test_延長ができること():
+    # 会議中のときに延長をするよね
+
+    sut = Reservation(予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                      使用人数(4),
+                      会議室ID(str(uuid.uuid4())),
+                      reserver_id=社員ID(str(uuid.uuid4())))
