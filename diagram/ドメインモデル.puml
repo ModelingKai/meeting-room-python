@@ -96,4 +96,8 @@ note right of 使用日時
     ・時間帯は関係なし
 end note
 
+note right of 使用人数
+1人以上、20人以内
+end note
+
 @enduml
