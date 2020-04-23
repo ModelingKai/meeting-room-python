@@ -20,6 +20,10 @@ def test_使用日時は過去であってはならないこと():
     with pytest.raises(使用日時は過去であってはいけないんだよError):
         使用日時(1970, 1, 1, 10, 00)
 
+@freezegun.freeze_time('2020-4-1 13:00')
+def test_使用日時は過去であってはならないこと_同日の過去もダメ():
+    with pytest.raises(使用日時は過去であってはいけないんだよError):
+        使用日時(2020, 4, 1, 11, 00)
 
 @freezegun.freeze_time('2020-4-1 10:00')
 def test_申請日を1日目として15日目より先の予約はできないこと():
