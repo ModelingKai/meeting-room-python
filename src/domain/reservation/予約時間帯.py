@@ -23,4 +23,4 @@ class 予約時間帯:
     def _is_over_maximum_available_time(self) -> bool:
         MAXIMUM_SECONDS = 60 * 60 * 2
 
-        return MAXIMUM_SECONDS < (self.end - self.start).seconds
+        return MAXIMUM_SECONDS < (self.end - self.start).total_seconds()
