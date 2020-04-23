@@ -15,7 +15,7 @@ class 使用日時(datetime):
         if self._is_over_limit_available_date():
             raise 未来過ぎて予約できないよError('指定された日にちは予約できません。予約できるのは、申請日を1日目として15日目以内です')
 
-    def _is_over_limit_available_date(self):
+    def _is_over_limit_available_date(self) -> bool:
         LIMIT_AVAILABLE_DAYS = 15
 
         limit_available_date = (datetime.today() + timedelta(days=LIMIT_AVAILABLE_DAYS)).date()
