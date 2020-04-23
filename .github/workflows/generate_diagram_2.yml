@@ -24,7 +24,7 @@ jobs:
           sudo apt-get install fonts-takao
       - name: Install plantuml
         run: |
-          wget 'https://downloads.sourceforge.net/project/plantuml/plantuml.jar?r=http%3A%2F%2Fplantuml.com%2Fstarting&ts=1538667739&use_mirror=jaist' && mv 'plantuml.jar?r=http%3A%2F%2Fplantuml.com%2Fstarting&ts=1538667739&use_mirror=jaist' plantuml.jar
+           wget -O plantuml.jar 'https://downloads.sourceforge.net/project/plantuml/plantuml.jar?r=http%3A%2F%2Fplantuml.com%2Fstarting&ts=1538667739&use_mirror=jaist'
       - name: Get changed UML files
         id: getfile
         run: |
