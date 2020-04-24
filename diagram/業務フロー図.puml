@@ -27,6 +27,8 @@ partition 会議をする {
 :会議室に入る;
 :会議をするぜ;
 
+#HotPink:記録スタートするぜ！;
+
 if (早くおわる) then (yes)
 
 elseif (ぴったり終わる) then (yes)
