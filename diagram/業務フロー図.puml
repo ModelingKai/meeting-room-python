@@ -1,6 +1,6 @@
 @startuml
 
-title 業務フロー図 - 会議室を予約する
+title 業務フロー図 - 会議室を予約してから使い終わるまで
 
 
 |予約者|
@@ -20,6 +20,36 @@ partition 会議室を予約 {
   end split
 }
 
+|会議参加者|
+
+partition 会議をする {
+:会議の時間になりました;
+:会議室に入る;
+:会議をするぜ;
+
+if (早くおわる) then (yes)
+
+elseif (ぴったり終わる) then (yes)
+
+elseif (長引きそうだ)
+  if (延長をする？) then (延長する)
+    if (延長を試みる) then (延長できた)
+      :会議続行する;
+      note left : 延長は15分×2回まで
+      note left : TODO: 本当はループで書く(if文が気持ち悪くなるし、ループの書き方わからん)
+    else (延長不可能だった)
+
+    endif
+  else (延長しない)
+
+  endif
+endif
+
+#HotPink:会議に掛かった時間を記録する;
+note left: 社長がちゃんと見たいから、新しくやってくれと依頼している
+:解散;
+
+}
 
 stop
 
