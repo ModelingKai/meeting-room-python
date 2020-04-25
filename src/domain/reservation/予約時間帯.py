@@ -24,3 +24,6 @@ class 予約時間帯:
         MAXIMUM_SECONDS = 60 * 60 * 2
 
         return MAXIMUM_SECONDS < (self.end - self.start).total_seconds()
+
+    def is_overlap(self, 予約時間帯):
+        pass

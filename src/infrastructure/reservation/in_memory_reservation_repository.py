@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
@@ -10,3 +10,6 @@ class InMemoryReservationRepository(ReservationRepository):
 
     def reserve(self, reservation: Reservation) -> None:
         self.data[reservation.id] = reservation
+
+    def find_all(self) -> List[Reservation]:
+        return list(self.data.values())
