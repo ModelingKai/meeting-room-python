@@ -15,3 +15,6 @@ class 使用日時は過去であってはいけないんだよError(Exception):
 
 class 予約時間が長すぎError(Exception):
     pass
+
+class 既に予約されているものがあるよエラー(Exception):
+    pass
