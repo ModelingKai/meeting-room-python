@@ -19,7 +19,6 @@ def test_reservation():
 
     assert sut is not None
 
-
 @freezegun.freeze_time('2020-4-1 10:00')
 def test_延長ができること():
     # 会議中のときに延長をするよね
