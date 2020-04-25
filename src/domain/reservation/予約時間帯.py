@@ -28,9 +28,7 @@ class 予約時間帯:
         return MAXIMUM_SECONDS < (self.end - self.start).total_seconds()
 
     def is_overlap(self, other: 予約時間帯) -> bool:
-        if self == other:  # 完全に一致しているとき
-            return True
-
+        # 重なりがある場合を考えるのが難しかったので、重ならない場合の余事象を考えた
         is_先後_かぶりなし = (self.start < self.end <= other.start < other.end)
         is_後先_かぶりなし = (other.start < other.end <= self.start < self.end)
 
