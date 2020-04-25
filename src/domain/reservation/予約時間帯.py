@@ -28,4 +28,5 @@ class 予約時間帯:
         return MAXIMUM_SECONDS < (self.end - self.start).total_seconds()
 
     def is_overlap(self, other: 予約時間帯) -> bool:
-        return self == other  # 仮の実装だよ
+        if self == other:  # 完全に一致しているトキ
+            return True
