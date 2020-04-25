@@ -28,6 +28,7 @@ def test_会議室を予約する_正常系():
 
     assert expected == reservation_repository.data[expected.id]
 
+
 @freezegun.freeze_time('2020-4-1 10:00')
 def test_会議室を予約する_異常系_会議室と予約時間帯が完全に被っている():
     meeting_room_id = 会議室ID(str(uuid.uuid4()))

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 from dataclasses import dataclass
 
@@ -25,5 +27,5 @@ class 予約時間帯:
 
         return MAXIMUM_SECONDS < (self.end - self.start).total_seconds()
 
-    def is_overlap(self, 予約時間帯):
-        pass
+    def is_overlap(self, other: 予約時間帯) -> bool:
+        return self == other  # 仮の実装だよ
