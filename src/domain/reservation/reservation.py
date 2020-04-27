@@ -24,3 +24,11 @@ class Reservation:
             return False
 
         return self.予約時間帯.is_overlap(other.予約時間帯)
+
+    def cancel(self) -> Reservation:
+        return Reservation(self.id,
+                           self.予約時間帯,
+                           self.使用人数,
+                           self.meeting_room_id,
+                           self.reserver_id,
+                           reservation_status=ReservationStatus.Canceled)

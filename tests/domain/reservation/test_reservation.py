@@ -21,3 +21,27 @@ def test_reservation():
                       reserver_id=社員ID(str(uuid.uuid4())))
 
     assert sut is not None
+
+
+@freezegun.freeze_time('2020-4-1 10:00')
+def test_予約ステータスをキャンセル済に変更できる():
+    reservation_id = ReservationId(str(uuid.uuid4()))
+    meeting_room_id = 会議室ID(str(uuid.uuid4()))
+    reserver_id = 社員ID(str(uuid.uuid4()))
+    reservation_予約時間帯 = 予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
+    reservation_使用人数 = 使用人数(4)
+
+    reservation = Reservation(reservation_id,
+                              reservation_予約時間帯,
+                              reservation_使用人数,
+                              meeting_room_id,
+                              reserver_id)
+
+    expected = Reservation(reservation_id,
+                           reservation_予約時間帯,
+                           reservation_使用人数,
+                           meeting_room_id,
+                           reserver_id,
+                           reservation_status=ReservationStatus.Canceled)
+
+    assert expected == reservation.cancel()
