@@ -22,7 +22,7 @@ def test_会議室を予約する_正常系():
                            予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            使用人数(4),
                            会議室ID(str(uuid.uuid4())),
-                           reserver_id=社員ID(str(uuid.uuid4())))
+                           社員ID(str(uuid.uuid4())))
 
     reservation_repository = InMemoryReservationRepository()
     domain_service = ReservationDomainService(reservation_repository)
@@ -45,13 +45,13 @@ def test_会議室を予約する_異常系_会議室と予約時間帯が完全
                                     reservation_予約時間帯,
                                     使用人数(3),
                                     meeting_room_id,
-                                    reserver_id=社員ID(str(uuid.uuid4())))
+                                    社員ID(str(uuid.uuid4())))
 
     new_reservation = Reservation(ReservationId(str(uuid.uuid4())),
                                   reservation_予約時間帯,
                                   使用人数(4),
                                   meeting_room_id,
-                                  reserver_id=社員ID(str(uuid.uuid4())))
+                                  社員ID(str(uuid.uuid4())))
 
     reservation_repository = InMemoryReservationRepository()
     reservation_repository.data[exist_reservation.id] = exist_reservation
