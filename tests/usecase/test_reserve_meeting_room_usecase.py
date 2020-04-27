@@ -17,81 +17,73 @@ from src.infrastructure.reservation.in_memory_reservation_repository import InMe
 from src.usecase.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
 
 
-@freezegun.freeze_time('2020-4-1 10:00')
-def test_会議室を予約する_正常系():
-    expected = Reservation(ReservationId(str(uuid.uuid4())),
-                           予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                           使用人数(4),
-                           会議室ID(str(uuid.uuid4())),
-                           社員ID(str(uuid.uuid4())))
+class TestReserveMeetingRoomUsecase:
+    def setup(self):
+        self.reservation_repository = InMemoryReservationRepository()
+        self.domain_service = ReservationDomainService(self.reservation_repository)
+        self.usecase = ReserveMeetingRoomUsecase(self.reservation_repository, self.domain_service)
 
-    reservation_repository = InMemoryReservationRepository()
-    domain_service = ReservationDomainService(reservation_repository)
-    usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_会議室を予約する_正常系(self):
+        expected = Reservation(ReservationId(str(uuid.uuid4())),
+                               予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                               使用人数(4),
+                               会議室ID(str(uuid.uuid4())),
+                               社員ID(str(uuid.uuid4())))
 
-    usecase.reserve_meeting_room(expected)
+        self.usecase.reserve_meeting_room(expected)
 
-    assert expected == reservation_repository.data[expected.id]
+        assert expected == self.reservation_repository.data[expected.id]
 
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_会議室を予約する_異常系_会議室と予約時間帯が完全に被っている(self):
+        # テストケースとしては、完全一致しかないが、他のパターンは時間帯予約のテストケースでクリアしている
+        # ので、特に不安はない
+        # 予約エラーを細分化するのであれば、その分類ごとにテストを用意してもいいかもしれない。でも用意しない
+        meeting_room_id = 会議室ID(str(uuid.uuid4()))
+        reservation_予約時間帯 = 予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
 
-@freezegun.freeze_time('2020-4-1 10:00')
-def test_会議室を予約する_異常系_会議室と予約時間帯が完全に被っている():
-    # テストケースとしては、完全一致しかないが、他のパターンは時間帯予約のテストケースでクリアしている
-    # ので、特に不安はない
-    # 予約エラーを細分化するのであれば、その分類ごとにテストを用意してもいいかもしれない。でも用意しない
-    meeting_room_id = 会議室ID(str(uuid.uuid4()))
-    reservation_予約時間帯 = 予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
+        exist_reservation = Reservation(ReservationId(str(uuid.uuid4())),
+                                        reservation_予約時間帯,
+                                        使用人数(3),
+                                        meeting_room_id,
+                                        社員ID(str(uuid.uuid4())))
 
-    exist_reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                    reservation_予約時間帯,
-                                    使用人数(3),
-                                    meeting_room_id,
-                                    社員ID(str(uuid.uuid4())))
+        new_reservation = Reservation(ReservationId(str(uuid.uuid4())),
+                                      reservation_予約時間帯,
+                                      使用人数(4),
+                                      meeting_room_id,
+                                      社員ID(str(uuid.uuid4())))
 
-    new_reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                  reservation_予約時間帯,
-                                  使用人数(4),
-                                  meeting_room_id,
-                                  社員ID(str(uuid.uuid4())))
+        self.reservation_repository.data[exist_reservation.id] = exist_reservation
 
-    reservation_repository = InMemoryReservationRepository()
-    reservation_repository.data[exist_reservation.id] = exist_reservation
+        with pytest.raises(その会議室はその時間帯では予約ができませんよエラー):
+            self.usecase.reserve_meeting_room(new_reservation)
 
-    domain_service = ReservationDomainService(reservation_repository)
-    usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_会議室を予約する_正常系_会議室と時間帯的には予約できないけどキャンセル済みだから予約できるんだなあ(self):
+        meeting_room_id = 会議室ID(str(uuid.uuid4()))
+        reservation_予約時間帯 = 予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
+        reserver_id = 社員ID(str(uuid.uuid4()))
+        reservation_人数 = 使用人数(3)
 
-    with pytest.raises(その会議室はその時間帯では予約ができませんよエラー):
-        usecase.reserve_meeting_room(new_reservation)
+        exist_reservation_id = ReservationId(str(uuid.uuid4()))
+        exist_reservation = Reservation(exist_reservation_id,
+                                        reservation_予約時間帯,
+                                        reservation_人数,
+                                        meeting_room_id,
+                                        reserver_id,
+                                        ReservationStatus.Canceled)
 
+        new_reservation_id = ReservationId(str(uuid.uuid4()))
+        new_reservation = Reservation(new_reservation_id,
+                                      reservation_予約時間帯,
+                                      reservation_人数,
+                                      meeting_room_id,
+                                      reserver_id)
 
-@freezegun.freeze_time('2020-4-1 10:00')
-def test_会議室を予約する_正常系_会議室と時間帯的には予約できないけどキャンセル済みだから予約できるんだなあ():
-    meeting_room_id = 会議室ID(str(uuid.uuid4()))
-    reservation_予約時間帯 = 予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
-    reserver_id = 社員ID(str(uuid.uuid4()))
-    reservation_人数 = 使用人数(3)
+        self.reservation_repository.data[exist_reservation.id] = exist_reservation
 
-    exist_reservation_id = ReservationId(str(uuid.uuid4()))
-    exist_reservation = Reservation(exist_reservation_id,
-                                    reservation_予約時間帯,
-                                    reservation_人数,
-                                    meeting_room_id,
-                                    reserver_id,
-                                    ReservationStatus.Canceled)
+        self.usecase.reserve_meeting_room(new_reservation)
 
-    new_reservation_id = ReservationId(str(uuid.uuid4()))
-    new_reservation = Reservation(new_reservation_id,
-                                  reservation_予約時間帯,
-                                  reservation_人数,
-                                  meeting_room_id,
-                                  reserver_id)
-
-    reservation_repository = InMemoryReservationRepository()
-    reservation_repository.data[exist_reservation.id] = exist_reservation
-
-    domain_service = ReservationDomainService(reservation_repository)
-    usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
-
-    usecase.reserve_meeting_room(new_reservation)
-
-    assert reservation_repository.data[new_reservation_id] == new_reservation
+        assert self.reservation_repository.data[new_reservation_id] == new_reservation
