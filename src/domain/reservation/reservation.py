@@ -21,8 +21,7 @@ class Reservation:
     def __post_init__(self):
         self.id = ReservationId(str(uuid4()))
 
-    def is_かぶり(self, other: Reservation):
-        # 会議室と予約時間帯が被っているかどうか
+    def is_かぶり(self, other: Reservation) -> bool:
         if self.meeting_room_id != other.meeting_room_id:
             return False
 

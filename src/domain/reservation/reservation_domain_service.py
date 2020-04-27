@@ -6,11 +6,10 @@ from src.domain.reservation.reservation_repository import ReservationRepository
 
 
 @dataclass
-class ReservationDomainService(object):
+class ReservationDomainService:
     reservation_repository: ReservationRepository
 
-    def is_かぶり(self, reservation: Reservation) -> bool:
-
+    def can_not_reserve(self, reservation: Reservation) -> bool:
         # TODO: いずれは性能面を考えると、日付で検索した方がよさそう
         reservations: List[Reservation] = self.reservation_repository.find_all()
 
