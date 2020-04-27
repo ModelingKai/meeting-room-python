@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import dataclasses
 from dataclasses import dataclass
 
 from src.domain.employee.社員ID import 社員ID
@@ -26,9 +27,4 @@ class Reservation:
         return self.予約時間帯.is_overlap(other.予約時間帯)
 
     def cancel(self) -> Reservation:
-        return Reservation(self.id,
-                           self.予約時間帯,
-                           self.使用人数,
-                           self.meeting_room_id,
-                           self.reserver_id,
-                           reservation_status=ReservationStatus.Canceled)
+        return dataclasses.replace(self, reservation_status=ReservationStatus.Canceled)
