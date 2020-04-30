@@ -8,7 +8,7 @@ from src.domain.reservation.errors import 使用時間帯の範囲がおかし�
 
 
 @dataclass(frozen=True)
-class 予約時間帯:
+class TimeRangeToReserve:
     start: 使用日時
     end: 使用日時
 
@@ -27,7 +27,7 @@ class 予約時間帯:
 
         return MAXIMUM_SECONDS < (self.end - self.start).total_seconds()
 
-    def is_overlap(self, other: 予約時間帯) -> bool:
+    def is_overlap(self, other: TimeRangeToReserve) -> bool:
         # 重なりがある場合を考えるのが難しかったので、重ならない場合の余事象を考えた
         is_先後_かぶりなし = (self.start < self.end <= other.start < other.end)
         is_後先_かぶりなし = (other.start < other.end <= self.start < self.end)

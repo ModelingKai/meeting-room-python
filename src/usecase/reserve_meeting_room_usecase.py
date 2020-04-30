@@ -13,6 +13,7 @@ class ReserveMeetingRoomUsecase:
 
     def reserve_meeting_room(self, reservation: Reservation) -> None:
         if self.domain_service.can_not_reserve(reservation):
-            raise その会議室はその時間帯では予約ができませんよエラー(f'先約があるのでごめん！: {reservation.予約時間帯}と{reservation.meeting_room_id}')
+            raise その会議室はその時間帯では予約ができませんよエラー(
+                f'先約があるのでごめん！: {reservation.time_range_to_reserve}と{reservation.meeting_room_id}')
 
         self.repository.reserve_new_meeting_room(reservation)

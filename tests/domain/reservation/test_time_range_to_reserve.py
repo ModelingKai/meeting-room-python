@@ -2,12 +2,12 @@ import freezegun
 import pytest
 
 from src.domain.reservation.errors import 使用時間帯の範囲がおかしいよError, 予約時間が長すぎError
-from src.domain.reservation.予約時間帯 import 予約時間帯
+from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 
 
 @freezegun.freeze_time('2020-4-1 10:00')
-class Test予約時間帯:
+class TestTimeRangeToReserve:
     @pytest.mark.parametrize('expected, start1, end1, start2, end2', [
         pytest.param(False,
                      (2020, 4, 1, 10, 00), (2020, 4, 1, 12, 00),  # |========        |
@@ -35,8 +35,8 @@ class Test予約時間帯:
                      id='Overlap 04'),
     ])
     def test_予約時間帯が重なっているかを判断できる(self, expected, start1, end1, start2, end2):
-        time_range1 = 予約時間帯(使用日時(*start1), 使用日時(*end1))
-        time_range2 = 予約時間帯(使用日時(*start2), 使用日時(*end2))
+        time_range1 = TimeRangeToReserve(使用日時(*start1), 使用日時(*end1))
+        time_range2 = TimeRangeToReserve(使用日時(*start2), 使用日時(*end2))
 
         assert expected is time_range1.is_overlap(time_range2)
 
@@ -48,8 +48,8 @@ class Test予約時間帯:
     ])
     def test_予約できる時間帯は1000から1900までであること(self, start, end):
         with pytest.raises(使用時間帯の範囲がおかしいよError):
-            予約時間帯(使用日時(*start), 使用日時(*end))
+            TimeRangeToReserve(使用日時(*start), 使用日時(*end))
 
     def test_1回の予約における使用時間は最大で2時間でなければならない(self):
         with pytest.raises(予約時間が長すぎError):
-            予約時間帯(使用日時(2020, 4, 1, 10, 00), 使用日時(2020, 4, 1, 12, 15))
+            TimeRangeToReserve(使用日時(2020, 4, 1, 10, 00), 使用日時(2020, 4, 1, 12, 15))

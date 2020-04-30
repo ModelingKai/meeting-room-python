@@ -10,7 +10,7 @@ from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_status import ReservationStatus
-from src.domain.reservation.予約時間帯 import 予約時間帯
+from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用人数 import 使用人数
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
@@ -26,7 +26,7 @@ class TestReserveMeetingRoomUsecase:
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_会議室を予約する_正常系(self):
         expected = Reservation(ReservationId(str(uuid.uuid4())),
-                               予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                               TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                                使用人数(4),
                                会議室ID(str(uuid.uuid4())),
                                社員ID(str(uuid.uuid4())))
@@ -41,16 +41,16 @@ class TestReserveMeetingRoomUsecase:
         # ので、特に不安はない
         # 予約エラーを細分化するのであれば、その分類ごとにテストを用意してもいいかもしれない。でも用意しない
         meeting_room_id = 会議室ID(str(uuid.uuid4()))
-        reservation_予約時間帯 = 予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
+        time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
 
         exist_reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                        reservation_予約時間帯,
+                                        time_range_to_reserve,
                                         使用人数(3),
                                         meeting_room_id,
                                         社員ID(str(uuid.uuid4())))
 
         new_reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                      reservation_予約時間帯,
+                                      time_range_to_reserve,
                                       使用人数(4),
                                       meeting_room_id,
                                       社員ID(str(uuid.uuid4())))
@@ -63,13 +63,13 @@ class TestReserveMeetingRoomUsecase:
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_会議室を予約する_正常系_会議室と時間帯的には予約できないけどキャンセル済みだから予約できるんだなあ(self):
         meeting_room_id = 会議室ID(str(uuid.uuid4()))
-        reservation_予約時間帯 = 予約時間帯(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
+        time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
         reserver_id = 社員ID(str(uuid.uuid4()))
         reservation_人数 = 使用人数(3)
 
         exist_reservation_id = ReservationId(str(uuid.uuid4()))
         exist_reservation = Reservation(exist_reservation_id,
-                                        reservation_予約時間帯,
+                                        time_range_to_reserve,
                                         reservation_人数,
                                         meeting_room_id,
                                         reserver_id,
@@ -77,7 +77,7 @@ class TestReserveMeetingRoomUsecase:
 
         new_reservation_id = ReservationId(str(uuid.uuid4()))
         new_reservation = Reservation(new_reservation_id,
-                                      reservation_予約時間帯,
+                                      time_range_to_reserve,
                                       reservation_人数,
                                       meeting_room_id,
                                       reserver_id)
