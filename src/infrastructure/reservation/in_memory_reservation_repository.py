@@ -13,3 +13,6 @@ class InMemoryReservationRepository(ReservationRepository):
 
     def find_all(self) -> List[Reservation]:
         return list(self.data.values())
+
+    def find_by_id(self, reservation_id: ReservationId) -> Reservation:
+        return self.data[reservation_id]
