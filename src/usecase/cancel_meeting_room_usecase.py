@@ -11,8 +11,6 @@ class CancelMeetingRoomUsecase:
     def cancel_meeting_room(self, reservation_id: ReservationId) -> None:
         reservation = self.reservation_repository.find_by_id(reservation_id)
 
-        # いきなりリポジトリでCancelを呼んでもいいのではないか
-        # なんでダメなのか
         canceled_reservation = reservation.cancel()
 
-        self.reservation_repository.reserve(canceled_reservation)
+        self.reservation_repository.cancel_meeting_room(canceled_reservation)

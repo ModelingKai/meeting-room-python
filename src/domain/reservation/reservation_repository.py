@@ -7,7 +7,11 @@ from src.domain.reservation.reservation_id import ReservationId
 
 class ReservationRepository(metaclass=ABCMeta):
     @abstractmethod
-    def reserve(self, reservation: Reservation) -> None:
+    def reserve_new_meeting_room(self, reservation: Reservation) -> None:
+        pass
+
+    @abstractmethod
+    def cancel_meeting_room(self, reservation: Reservation) -> None:
         pass
 
     @abstractmethod

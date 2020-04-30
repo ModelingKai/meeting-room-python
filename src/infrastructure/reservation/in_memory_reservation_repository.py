@@ -8,7 +8,7 @@ from src.domain.reservation.reservation_repository import ReservationRepository
 class InMemoryReservationRepository(ReservationRepository):
     data: Dict[ReservationId, Reservation] = {}
 
-    def reserve(self, reservation: Reservation) -> None:
+    def reserve_new_meeting_room(self, reservation: Reservation) -> None:
         self.data[reservation.id] = reservation
 
     def find_all(self) -> List[Reservation]:
@@ -16,3 +16,6 @@ class InMemoryReservationRepository(ReservationRepository):
 
     def find_by_id(self, reservation_id: ReservationId) -> Reservation:
         return self.data[reservation_id]
+
+    def cancel_meeting_room(self, reservation: Reservation) -> None:
+        self.data[reservation.id] = reservation
