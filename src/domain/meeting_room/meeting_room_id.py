@@ -2,5 +2,5 @@ from dataclasses import dataclass
 
 
 @dataclass
-class 社員ID:
+class MeetingRoomId:
     value: str

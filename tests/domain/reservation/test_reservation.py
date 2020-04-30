@@ -3,13 +3,13 @@ import uuid
 import freezegun
 import pytest
 
-from src.domain.employee.社員ID import 社員ID
-from src.domain.meeting_room.会議室ID import 会議室ID
+from src.domain.employee.employee_id import EmployeeId
+from src.domain.meeting_room.meeting_room_id import MeetingRoomId
+from src.domain.reservation.number_of_participants import NumberOfParticipants
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
-from src.domain.reservation.使用人数 import 使用人数
 from src.domain.reservation.使用日時 import 使用日時
 
 
@@ -17,9 +17,9 @@ from src.domain.reservation.使用日時 import 使用日時
 def test_reservation():
     sut = Reservation(ReservationId(str(uuid.uuid4())),
                       TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                      使用人数(4),
-                      会議室ID(str(uuid.uuid4())),
-                      reserver_id=社員ID(str(uuid.uuid4())))
+                      NumberOfParticipants(4),
+                      MeetingRoomId(str(uuid.uuid4())),
+                      reserver_id=EmployeeId(str(uuid.uuid4())))
 
     assert sut is not None
 
@@ -27,10 +27,10 @@ def test_reservation():
 @freezegun.freeze_time('2020-4-1 10:00')
 def test_予約ステータスをキャンセル済に変更できる():
     reservation_id = ReservationId(str(uuid.uuid4()))
-    meeting_room_id = 会議室ID(str(uuid.uuid4()))
-    reserver_id = 社員ID(str(uuid.uuid4()))
+    meeting_room_id = MeetingRoomId(str(uuid.uuid4()))
+    reserver_id = EmployeeId(str(uuid.uuid4()))
     reservation_予約時間帯 = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
-    reservation_使用人数 = 使用人数(4)
+    reservation_使用人数 = NumberOfParticipants(4)
 
     reservation = Reservation(reservation_id,
                               reservation_予約時間帯,
@@ -52,9 +52,9 @@ def test_予約ステータスをキャンセル済に変更できる():
 def test_キャンセル済みの予約をもう一度キャンセルしようとしてエラーになること():
     sut = Reservation(ReservationId(str(uuid.uuid4())),
                       TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                      使用人数(4),
-                      会議室ID(str(uuid.uuid4())),
-                      reserver_id=社員ID(str(uuid.uuid4())))
+                      NumberOfParticipants(4),
+                      MeetingRoomId(str(uuid.uuid4())),
+                      reserver_id=EmployeeId(str(uuid.uuid4())))
 
     with pytest.raises(ValueError):
         sut.cancel().cancel()

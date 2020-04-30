@@ -3,21 +3,21 @@ from __future__ import annotations
 import dataclasses
 from dataclasses import dataclass
 
-from src.domain.employee.社員ID import 社員ID
-from src.domain.meeting_room.会議室ID import 会議室ID
+from src.domain.employee.employee_id import EmployeeId
+from src.domain.meeting_room.meeting_room_id import MeetingRoomId
+from src.domain.reservation.number_of_participants import NumberOfParticipants
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
-from src.domain.reservation.使用人数 import 使用人数
 
 
 @dataclass(frozen=True)
 class Reservation:
     id: ReservationId
     time_range_to_reserve: TimeRangeToReserve
-    使用人数: 使用人数
-    meeting_room_id: 会議室ID
-    reserver_id: 社員ID
+    使用人数: NumberOfParticipants
+    meeting_room_id: MeetingRoomId
+    reserver_id: EmployeeId
     reservation_status: [ReservationStatus] = ReservationStatus.Reserved
 
     def is_かぶり(self, other: Reservation) -> bool:
