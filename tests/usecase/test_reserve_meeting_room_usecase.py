@@ -5,7 +5,6 @@ import pytest
 
 from src.domain.employee.employee_id import EmployeeId
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
-from src.domain.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
 from src.domain.reservation.number_of_participants import NumberOfParticipants
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
@@ -14,7 +13,8 @@ from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
-from src.usecase.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
+from src.usecase.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
+from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
 
 
 class TestReserveMeetingRoomUsecase:

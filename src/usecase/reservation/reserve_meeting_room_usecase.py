@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from src.domain.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
 from src.domain.reservation.reservation_repository import ReservationRepository
+from src.usecase.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
 
 
 @dataclass

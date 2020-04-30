@@ -11,7 +11,7 @@ from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
-from src.usecase.cancel_meeting_room_usecase import CancelMeetingRoomUsecase
+from src.usecase.reservation.cancel_meeting_room_usecase import CancelMeetingRoomUsecase
 
 
 @freezegun.freeze_time('2020-4-1 10:00')

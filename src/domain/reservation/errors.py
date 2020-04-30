@@ -13,8 +13,6 @@ class 未来過ぎて予約できないよError(Exception):
 class 使用日時は過去であってはいけないんだよError(Exception):
     pass
 
-class 予約時間が長すぎError(Exception):
-    pass
 
-class その会議室はその時間帯では予約ができませんよエラー(Exception):
+class 予約時間が長すぎError(Exception):
     pass
