@@ -27,4 +27,7 @@ class Reservation:
         return self.予約時間帯.is_overlap(other.予約時間帯)
 
     def cancel(self) -> Reservation:
+        if self.reservation_status == ReservationStatus.Canceled:
+            raise ValueError('既にキャンセル済みですよ')
+
         return dataclasses.replace(self, reservation_status=ReservationStatus.Canceled)
