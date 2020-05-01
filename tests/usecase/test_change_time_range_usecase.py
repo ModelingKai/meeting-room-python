@@ -13,7 +13,7 @@ from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
-from src.usecase.reservation.errors import NotFoundReservationError
+from src.usecase.reservation.errors import NotFoundReservationError, その会議室はその時間帯では予約ができませんよエラー
 from src.usecase.resevation.change_time_range_usecase import ChangeTimeRangeUsecase
 
 
@@ -50,3 +50,21 @@ class TestChangeTimeRangeUsecase:
 
         with pytest.raises(NotFoundReservationError):
             self.usecase.change_time_range(reservation.id, new_time_range_to_reserve)
+
+    def test_予約時間帯変更後の予約が既存の予約とぶつかっていたらダメだよ(self):
+        reservation1 = Reservation(ReservationId(str(uuid.uuid4())),
+                                   TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                                   NumberOfParticipants(4),
+                                   MeetingRoomId(str(uuid.uuid4())),
+                                   EmployeeId(str(uuid.uuid4())))
+
+        reservation2 = dataclasses.replace(reservation1,
+                                           id=ReservationId(str(uuid.uuid4())),
+                                           time_range_to_reserve=TimeRangeToReserve(使用日時(2020, 4, 2, 15, 00),
+                                                                                    使用日時(2020, 4, 2, 17, 00)))
+
+        self.repository.data[reservation1.id] = reservation1
+        self.repository.data[reservation2.id] = reservation2
+
+        with pytest.raises(その会議室はその時間帯では予約ができませんよエラー):
+            self.usecase.change_time_range(reservation2.id, reservation1.time_range_to_reserve)
