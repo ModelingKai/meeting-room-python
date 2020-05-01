@@ -1,3 +1,4 @@
+import dataclasses
 import uuid
 
 import freezegun
@@ -24,27 +25,16 @@ class TestChangeMeetingRoomUsecase:
         self.usecase = ChangeMeetingRoomUseCase(self.repository, domain_service)
 
     def test_既存の予約を別の会議室に変更ができること(self):
-        reservation_id = ReservationId(str(uuid.uuid4()))
-        time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
-        reservation_人数 = NumberOfParticipants(4)
-        meeting_room_id = MeetingRoomId(str(uuid.uuid4()))
-        reserver_id = EmployeeId(str(uuid.uuid4()))
+        reservation = Reservation(ReservationId(str(uuid.uuid4())),
+                                  TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                                  NumberOfParticipants(4),
+                                  MeetingRoomId(str(uuid.uuid4())),
+                                  EmployeeId(str(uuid.uuid4())))
 
-        reservation = Reservation(reservation_id,
-                                  time_range_to_reserve,
-                                  reservation_人数,
-                                  meeting_room_id,
-                                  reserver_id)
-
-        new_meeting_room_id = MeetingRoomId(str(uuid.uuid4()))
-        expected = Reservation(reservation_id,
-                               time_range_to_reserve,
-                               reservation_人数,
-                               new_meeting_room_id,
-                               reserver_id)
+        expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId(str(uuid.uuid4())))
 
         self.repository.data[reservation.id] = reservation
-        self.usecase.change_meeting_room(reservation.id, new_meeting_room_id)
+        self.usecase.change_meeting_room(reservation.id, expected.meeting_room_id)
 
         assert expected == self.repository.data[reservation.id]
 
@@ -59,25 +49,18 @@ class TestChangeMeetingRoomUsecase:
             self.usecase.change_meeting_room(reservation.id, MeetingRoomId(str(uuid.uuid4())))
 
     def test_会議室変更後の予約が既存の予約とぶつかっていたらダメだよ(self):
-        reservation1_meeting_id = MeetingRoomId(str(uuid.uuid4()))
-        reservation2_meeting_id = MeetingRoomId(str(uuid.uuid4()))
-
-        time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
-
         reservation1 = Reservation(ReservationId(str(uuid.uuid4())),
-                                   time_range_to_reserve,
+                                   TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                                    NumberOfParticipants(4),
-                                   reservation1_meeting_id,
+                                   MeetingRoomId(str(uuid.uuid4())),
                                    EmployeeId(str(uuid.uuid4())))
 
-        reservation2 = Reservation(ReservationId(str(uuid.uuid4())),
-                                   time_range_to_reserve,
-                                   NumberOfParticipants(4),
-                                   reservation2_meeting_id,
-                                   EmployeeId(str(uuid.uuid4())))
+        reservation2 = dataclasses.replace(reservation1,
+                                           id=ReservationId(str(uuid.uuid4())),
+                                           meeting_room_id=MeetingRoomId(str(uuid.uuid4())))
 
         self.repository.data[reservation1.id] = reservation1
         self.repository.data[reservation2.id] = reservation2
 
         with pytest.raises(その会議室はその時間帯では予約ができませんよエラー):
-            self.usecase.change_meeting_room(reservation2.id, reservation1_meeting_id)
+            self.usecase.change_meeting_room(reservation2.id, reservation1.meeting_room_id)

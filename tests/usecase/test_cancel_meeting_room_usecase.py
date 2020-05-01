@@ -21,18 +21,11 @@ from src.usecase.reservation.errors import NotFoundReservationError
 class TestCancelMeetingRoomUsecase:
 
     def test_予約をキャンセルができること(self):
-        reservation_id = ReservationId(str(uuid.uuid4()))
-
-        time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
-        reservation_人数 = NumberOfParticipants(4)
-        meeting_room_id = MeetingRoomId(str(uuid.uuid4()))
-        reserver_id = EmployeeId(str(uuid.uuid4()))
-
-        reservation = Reservation(reservation_id,
-                                  time_range_to_reserve,
-                                  reservation_人数,
-                                  meeting_room_id,
-                                  reserver_id)
+        reservation = Reservation(ReservationId(str(uuid.uuid4())),
+                                  TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                                  NumberOfParticipants(4),
+                                  MeetingRoomId(str(uuid.uuid4())),
+                                  EmployeeId(str(uuid.uuid4())))
 
         expected = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)
 
@@ -40,9 +33,9 @@ class TestCancelMeetingRoomUsecase:
         reservation_repository.data[reservation.id] = reservation
 
         usecase = CancelMeetingRoomUsecase(reservation_repository)
-        usecase.cancel_meeting_room(reservation_id)
+        usecase.cancel_meeting_room(reservation.id)
 
-        assert expected == reservation_repository.data[reservation_id]
+        assert expected == reservation_repository.data[reservation.id]
 
     def test_存在しない予約に対してキャンセルするのはダメだよ(self):
         reservation = Reservation(ReservationId(str(uuid.uuid4())),
