@@ -21,3 +21,7 @@ class ReservationRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         pass
+
+    @abstractmethod
+    def change_meeting_room(self, reservation: Reservation) -> None:
+        pass

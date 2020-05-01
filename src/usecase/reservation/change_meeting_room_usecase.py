@@ -10,4 +10,8 @@ class ChangeMeetingRoomUseCase:
     reservation_repository: ReservationRepository
 
     def change_meeting_room(self, reservation_id: ReservationId, new_meeting_room_id: MeetingRoomId) -> None:
-        pass
+        reservation = self.reservation_repository.find_by_id(reservation_id)
+
+        changed_reservation = reservation.change_meeting_room(new_meeting_room_id)
+
+        self.reservation_repository.change_meeting_room(changed_reservation)

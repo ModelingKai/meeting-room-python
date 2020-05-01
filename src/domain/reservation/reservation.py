@@ -31,3 +31,6 @@ class Reservation:
             raise ValueError('既にキャンセル済みですよ')
 
         return dataclasses.replace(self, reservation_status=ReservationStatus.Canceled)
+
+    def change_meeting_room(self, meeting_room_id: MeetingRoomId) -> Reservation:
+        return dataclasses.replace(self, meeting_room_id=meeting_room_id)
