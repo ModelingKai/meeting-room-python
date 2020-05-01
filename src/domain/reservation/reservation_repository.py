@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import List
+from typing import List, Union
 
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
@@ -19,5 +19,5 @@ class ReservationRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_by_id(self, reservation_id: ReservationId) -> Reservation:
+    def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         pass

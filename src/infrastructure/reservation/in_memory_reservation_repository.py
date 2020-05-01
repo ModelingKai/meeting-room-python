@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
@@ -14,7 +14,7 @@ class InMemoryReservationRepository(ReservationRepository):
     def find_all(self) -> List[Reservation]:
         return list(self.data.values())
 
-    def find_by_id(self, reservation_id: ReservationId) -> Reservation:
+    def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         return self.data.get(reservation_id)
 
     def cancel_meeting_room(self, reservation: Reservation) -> None:
