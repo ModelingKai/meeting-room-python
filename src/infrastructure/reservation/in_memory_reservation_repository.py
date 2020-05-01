@@ -15,7 +15,7 @@ class InMemoryReservationRepository(ReservationRepository):
         return list(self.data.values())
 
     def find_by_id(self, reservation_id: ReservationId) -> Reservation:
-        return self.data[reservation_id]
+        return self.data.get(reservation_id)
 
     def cancel_meeting_room(self, reservation: Reservation) -> None:
         self.data[reservation.id] = reservation
