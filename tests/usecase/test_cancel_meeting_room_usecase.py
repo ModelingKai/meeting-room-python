@@ -1,3 +1,4 @@
+import dataclasses
 import uuid
 
 import freezegun
@@ -33,12 +34,7 @@ class TestCancelMeetingRoomUsecase:
                                   meeting_room_id,
                                   reserver_id)
 
-        expected = Reservation(reservation_id,
-                               time_range_to_reserve,
-                               reservation_人数,
-                               meeting_room_id,
-                               reserver_id,
-                               reservation_status=ReservationStatus.Canceled)
+        expected = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)
 
         reservation_repository = InMemoryReservationRepository()
         reservation_repository.data[reservation.id] = reservation
