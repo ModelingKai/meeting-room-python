@@ -24,6 +24,15 @@ class TestChangeTimeRangeUsecase:
         domain_service = ReservationDomainService(self.repository)
         self.usecase = ChangeTimeRangeUsecase(self.repository, domain_service)
 
+    @pytest.fixture
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def reservation_20200402_1300_1400(self) -> Reservation:
+        return Reservation(ReservationId(str(uuid.uuid4())),
+                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                           NumberOfParticipants(4),
+                           MeetingRoomId(str(uuid.uuid4())),
+                           EmployeeId(str(uuid.uuid4())))
+
     def test_既存の予約を別の時間帯に変更ができること(self):
         reservation = Reservation(ReservationId(str(uuid.uuid4())),
                                   TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
@@ -68,3 +77,15 @@ class TestChangeTimeRangeUsecase:
 
         with pytest.raises(その会議室はその時間帯では予約ができませんよエラー):
             self.usecase.change_time_range(reservation2.id, reservation1.time_range_to_reserve)
+
+    @freezegun.freeze_time('2020-4-10 10:00')
+    def test_予約時点では未来過ぎたが変更時点ではちゃんとした予約時間帯になっているから大丈夫(self, reservation_20200402_1300_1400):
+        # テストのために、 '2020-4-10 10:00' 時点では本来不正である過去の予約時間帯を持つデータを入れているんだよ
+        self.repository.data[reservation_20200402_1300_1400.id] = reservation_20200402_1300_1400
+
+        new_time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 24, 13, 00), 使用日時(2020, 4, 24, 14, 00))
+        expected = dataclasses.replace(reservation_20200402_1300_1400, time_range_to_reserve=new_time_range_to_reserve)
+
+        self.usecase.change_time_range(reservation_20200402_1300_1400.id, new_time_range_to_reserve)
+
+        assert expected == self.repository.data[reservation_20200402_1300_1400.id]
