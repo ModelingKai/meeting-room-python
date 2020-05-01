@@ -15,7 +15,7 @@ from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 class Reservation:
     id: ReservationId
     time_range_to_reserve: TimeRangeToReserve
-    使用人数: NumberOfParticipants
+    number_of_participants: NumberOfParticipants
     meeting_room_id: MeetingRoomId
     reserver_id: EmployeeId
     reservation_status: [ReservationStatus] = ReservationStatus.Reserved
