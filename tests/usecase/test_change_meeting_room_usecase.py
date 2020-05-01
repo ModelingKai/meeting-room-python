@@ -59,22 +59,25 @@ class TestChangeMeetingRoomUsecase:
             self.usecase.change_meeting_room(reservation.id, MeetingRoomId(str(uuid.uuid4())))
 
     def test_会議室変更後の予約が既存の予約とぶつかっていたらダメだよ(self):
-        exist_meeting_room_id = MeetingRoomId(str(uuid.uuid4()))
-        exist_reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                        TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                                        NumberOfParticipants(4),
-                                        exist_meeting_room_id,
-                                        EmployeeId(str(uuid.uuid4())))
+        reservation1_meeting_id = MeetingRoomId(str(uuid.uuid4()))
+        reservation2_meeting_id = MeetingRoomId(str(uuid.uuid4()))
 
-        meeting_room_id = MeetingRoomId(str(uuid.uuid4()))
-        reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                  TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                                  NumberOfParticipants(4),
-                                  meeting_room_id,
-                                  EmployeeId(str(uuid.uuid4())))
+        time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
 
-        self.repository.data[exist_reservation.id] = exist_reservation
-        self.repository.data[reservation.id] = reservation
+        reservation1 = Reservation(ReservationId(str(uuid.uuid4())),
+                                   time_range_to_reserve,
+                                   NumberOfParticipants(4),
+                                   reservation1_meeting_id,
+                                   EmployeeId(str(uuid.uuid4())))
+
+        reservation2 = Reservation(ReservationId(str(uuid.uuid4())),
+                                   time_range_to_reserve,
+                                   NumberOfParticipants(4),
+                                   reservation2_meeting_id,
+                                   EmployeeId(str(uuid.uuid4())))
+
+        self.repository.data[reservation1.id] = reservation1
+        self.repository.data[reservation2.id] = reservation2
 
         with pytest.raises(その会議室はその時間帯では予約ができませんよエラー):
-            self.usecase.change_meeting_room(reservation.id, exist_meeting_room_id)
+            self.usecase.change_meeting_room(reservation2.id, reservation1_meeting_id)
