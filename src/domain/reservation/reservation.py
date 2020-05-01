@@ -34,3 +34,6 @@ class Reservation:
 
     def change_meeting_room(self, meeting_room_id: MeetingRoomId) -> Reservation:
         return dataclasses.replace(self, meeting_room_id=meeting_room_id)
+
+    def change_time_range(self, time_range_to_reserve: TimeRangeToReserve) -> Reservation:
+        return dataclasses.replace(self, time_range_to_reserve=time_range_to_reserve)
