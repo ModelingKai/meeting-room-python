@@ -1,3 +1,4 @@
+import dataclasses
 import uuid
 
 import freezegun
@@ -20,8 +21,8 @@ from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingR
 class TestReserveMeetingRoomUsecase:
     def setup(self):
         self.reservation_repository = InMemoryReservationRepository()
-        self.domain_service = ReservationDomainService(self.reservation_repository)
-        self.usecase = ReserveMeetingRoomUsecase(self.reservation_repository, self.domain_service)
+        domain_service = ReservationDomainService(self.reservation_repository)
+        self.usecase = ReserveMeetingRoomUsecase(self.reservation_repository, domain_service)
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_会議室を予約する_正常系(self):
@@ -40,20 +41,15 @@ class TestReserveMeetingRoomUsecase:
         # テストケースとしては、完全一致しかないが、他のパターンは時間帯予約のテストケースでクリアしている
         # ので、特に不安はない
         # 予約エラーを細分化するのであれば、その分類ごとにテストを用意してもいいかもしれない。でも用意しない
-        meeting_room_id = MeetingRoomId(str(uuid.uuid4()))
-        time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
-
         exist_reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                        time_range_to_reserve,
+                                        TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                                         NumberOfParticipants(3),
-                                        meeting_room_id,
+                                        MeetingRoomId(str(uuid.uuid4())),
                                         EmployeeId(str(uuid.uuid4())))
 
-        new_reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                      time_range_to_reserve,
-                                      NumberOfParticipants(4),
-                                      meeting_room_id,
-                                      EmployeeId(str(uuid.uuid4())))
+        new_reservation = dataclasses.replace(exist_reservation,
+                                              id=ReservationId(str(uuid.uuid4())),
+                                              number_of_participants=NumberOfParticipants(4))
 
         self.reservation_repository.data[exist_reservation.id] = exist_reservation
 
@@ -62,28 +58,20 @@ class TestReserveMeetingRoomUsecase:
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_会議室を予約する_正常系_会議室と時間帯的には予約できないけどキャンセル済みだから予約できるんだなあ(self):
-        meeting_room_id = MeetingRoomId(str(uuid.uuid4()))
-        time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00))
-        reserver_id = EmployeeId(str(uuid.uuid4()))
-        reservation_人数 = NumberOfParticipants(3)
-
         exist_reservation_id = ReservationId(str(uuid.uuid4()))
         exist_reservation = Reservation(exist_reservation_id,
-                                        time_range_to_reserve,
-                                        reservation_人数,
-                                        meeting_room_id,
-                                        reserver_id,
+                                        TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                                        NumberOfParticipants(3),
+                                        MeetingRoomId(str(uuid.uuid4())),
+                                        EmployeeId(str(uuid.uuid4())),
                                         ReservationStatus.Canceled)
 
-        new_reservation_id = ReservationId(str(uuid.uuid4()))
-        new_reservation = Reservation(new_reservation_id,
-                                      time_range_to_reserve,
-                                      reservation_人数,
-                                      meeting_room_id,
-                                      reserver_id)
+        new_reservation = dataclasses.replace(exist_reservation,
+                                              id=ReservationId(str(uuid.uuid4())),
+                                              reservation_status=ReservationStatus.Reserved)
 
         self.reservation_repository.data[exist_reservation.id] = exist_reservation
 
         self.usecase.reserve_meeting_room(new_reservation)
 
-        assert self.reservation_repository.data[new_reservation_id] == new_reservation
+        assert self.reservation_repository.data[new_reservation.id] == new_reservation
