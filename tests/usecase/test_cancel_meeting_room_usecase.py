@@ -61,3 +61,19 @@ class TestCancelMeetingRoomUsecase:
 
         with pytest.raises(NotFoundReservationError):
             usecase.cancel_meeting_room(reservation.id)
+
+    def test_キャンセル済みに対してキャンセルするのもダメだよ(self):
+        canceled_reservation = Reservation(ReservationId(str(uuid.uuid4())),
+                                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                                           NumberOfParticipants(4),
+                                           MeetingRoomId(str(uuid.uuid4())),
+                                           EmployeeId(str(uuid.uuid4())),
+                                           reservation_status=ReservationStatus.Canceled)
+
+        reservation_repository = InMemoryReservationRepository()
+        reservation_repository.data[canceled_reservation.id] = canceled_reservation
+
+        usecase = CancelMeetingRoomUsecase(reservation_repository)
+
+        with pytest.raises(ValueError):
+            usecase.cancel_meeting_room(canceled_reservation.id)
