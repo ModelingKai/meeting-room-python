@@ -38,3 +38,15 @@ class TestChangeTimeRangeUsecase:
         self.usecase.change_time_range(reservation.id, new_time_range_to_reserve)
 
         assert expected == self.repository.data[reservation.id]
+
+    def test_存在しない予約に対する予約時間帯の変更依頼はダメだよ(self):
+        reservation = Reservation(ReservationId(str(uuid.uuid4())),
+                                  TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                                  NumberOfParticipants(4),
+                                  MeetingRoomId(str(uuid.uuid4())),
+                                  EmployeeId(str(uuid.uuid4())))
+
+        new_time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 15, 00), 使用日時(2020, 4, 2, 17, 00))
+
+        with pytest.raises(NotFoundReservationError):
+            self.usecase.change_time_range(reservation.id, new_time_range_to_reserve)
