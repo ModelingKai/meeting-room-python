@@ -15,7 +15,6 @@ from src.domain.reservation.reservation_repository import ReservationRepository
 from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
-from src.usecase.reservation.errors import NotFoundReservationError
 
 
 class OratorReservation(Model):
@@ -86,7 +85,7 @@ class OratorReservationRepository(ReservationRepository):
         orator_reservation = OratorReservation.find(reservation_id.value)
 
         if orator_reservation is None:
-            raise NotFoundReservationError('そんな予約ないよ')
+            return None
 
         return OratorReservation.to_reservation(orator_reservation)
 
