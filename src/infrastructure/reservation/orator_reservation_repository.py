@@ -29,27 +29,17 @@ class OratorReservation(Model):
         return repr_like_dataclass
 
     @classmethod
-    def to_reserve_model(cls, from_: OratorReservation) -> Reservation:
-        id = ReservationId(from_.id)
-        meeting_room_id = MeetingRoomId(from_.meeting_room_id)
-        reserver_id = EmployeeId(from_.reserver_id)
+    def to_reservation(cls, source: OratorReservation) -> Reservation:
+        start_yyyy_mm_dd_HH_MM = datetime.datetime.strptime(source.start_datetime, '%Y-%m-%d %H:%M:%S').timetuple()[:5]
+        end_yyyy_mm_dd_HH_MM = datetime.datetime.strptime(source.end_datetime, '%Y-%m-%d %H:%M:%S').timetuple()[:5]
+        time_range_to_reserve = TimeRangeToReserve(使用日時(*start_yyyy_mm_dd_HH_MM), 使用日時(*end_yyyy_mm_dd_HH_MM))
 
-        number_of_participants = NumberOfParticipants(from_.number_of_participants)
-
-        start_yyyy_mm_dd_HH_MM = datetime.datetime.strptime(from_.start_datetime, '%Y-%m-%d %H:%M:%S').timetuple()[:5]
-        start_datetime = 使用日時(*start_yyyy_mm_dd_HH_MM)
-
-        end_yyyy_mm_dd_HH_MM = datetime.datetime.strptime(from_.end_datetime, '%Y-%m-%d %H:%M:%S').timetuple()[:5]
-        end_datetime = 使用日時(*end_yyyy_mm_dd_HH_MM)
-
-        reservation_status = ReservationStatus.from_str(from_.reservation_status)
-
-        return Reservation(id,
-                           TimeRangeToReserve(start_datetime, end_datetime),
-                           number_of_participants,
-                           meeting_room_id,
-                           reserver_id,
-                           reservation_status)
+        return Reservation(ReservationId(source.id),
+                           time_range_to_reserve,
+                           NumberOfParticipants(source.number_of_participants),
+                           MeetingRoomId(source.meeting_room_id),
+                           EmployeeId(source.reserver_id),
+                           ReservationStatus.from_str(source.reservation_status))
 
     @classmethod
     def to_datetime(cls, from_: 使用日時) -> datetime.datetime:
@@ -90,7 +80,7 @@ class OratorReservationRepository(ReservationRepository):
         orator_reservation.update
 
     def find_all(self) -> List[Reservation]:
-        return [OratorReservation.to_reserve_model(r) for r in OratorReservation.all()]
+        return [OratorReservation.to_reservation(r) for r in OratorReservation.all()]
 
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         orator_reservation = OratorReservation.find(reservation_id.value)
@@ -98,7 +88,7 @@ class OratorReservationRepository(ReservationRepository):
         if orator_reservation is None:
             raise NotFoundReservationError('そんな予約ないよ')
 
-        return OratorReservation.to_reserve_model(orator_reservation)
+        return OratorReservation.to_reservation(orator_reservation)
 
     def change_meeting_room(self, reservation: Reservation) -> None:
         pass
