@@ -15,7 +15,7 @@ from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
-from src.infrastructure.reservation.orator_reservation_repository import OratorReservationRepository
+from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
 from src.usecase.reservation.cancel_meeting_room_usecase import CancelMeetingRoomUsecase
 
 
