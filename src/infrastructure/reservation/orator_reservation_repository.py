@@ -21,7 +21,6 @@ from src.infrastructure.init_db import DB_CONFIG
 
 class OratorReservation(Model):
     __table__ = 'reservations'
-    __timestamps__ = False  # MEMO: テーブルに created_at は 入れたほうが良いかも？
 
     @classmethod
     def to_datetime(cls, from_: 使用日時) -> datetime.datetime:
@@ -42,6 +41,7 @@ class OratorReservation(Model):
         orator_reservation.end_datetime = OratorReservation.to_datetime(reservation.time_range_to_reserve.end)
 
         return orator_reservation
+
 
 @dataclass
 class OratorReservationRepository(ReservationRepository):

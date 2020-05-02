@@ -27,10 +27,13 @@ def main():
         table.string('id').unique()
         table.string('meeting_room_id')
         table.string('reserver_id')
-        table.string('reservation_status')  # MEMO: Enumが良いと思う
+        table.enum('reservation_status', ['予約中', 'キャンセル済み'])
         table.integer('number_of_participants')
         table.datetime('start_datetime')
         table.datetime('end_datetime')
+
+        table.datetime('created_at')
+        table.datetime('updated_at')
 
 
 if __name__ == '__main__':
