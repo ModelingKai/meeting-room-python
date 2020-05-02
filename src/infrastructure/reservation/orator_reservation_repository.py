@@ -55,8 +55,9 @@ class OratorReservation(Model):
 
         orator_reservation.number_of_participants = reservation.number_of_participants.value
 
-        orator_reservation.start_datetime = OratorReservation.to_datetime(reservation.time_range_to_reserve.start)
-        orator_reservation.end_datetime = OratorReservation.to_datetime(reservation.time_range_to_reserve.end)
+        orator_reservation.start_datetime = OratorReservation.to_datetime(
+            reservation.time_range_to_reserve.start_datetime)
+        orator_reservation.end_datetime = OratorReservation.to_datetime(reservation.time_range_to_reserve.end_datetime)
 
         return orator_reservation
 
@@ -92,11 +93,14 @@ class OratorReservationRepository(ReservationRepository):
     def change_meeting_room(self, reservation: Reservation) -> None:
         orator_reservation = OratorReservation.to_orator_model(reservation)
 
-        OratorReservation.update(orator_reservation, meeting_room_id=reservation.meeting_room_id.value)
+        update_param_dict = dict(meeting_room_id=reservation.meeting_room_id.value)
+        OratorReservation.update(orator_reservation, update_param_dict)
 
     def change_time_range(self, reservation: Reservation) -> None:
         orator_reservation = OratorReservation.to_orator_model(reservation)
 
-        OratorReservation.update(orator_reservation,
-                                 start_datetime=OratorReservation.to_datetime(reservation.time_range_to_reserve.start),
-                                 end_datetime=OratorReservation.to_datetime(reservation.time_range_to_reserve.end))
+        update_param_dict = dict(
+            start_datetime=OratorReservation.to_datetime(reservation.time_range_to_reserve.start_datetime),
+            end_datetime=OratorReservation.to_datetime(reservation.time_range_to_reserve.end_datetime))
+
+        OratorReservation.update(orator_reservation, update_param_dict)
