@@ -93,3 +93,8 @@ class OratorReservationRepository(ReservationRepository):
         orator_reservation = OratorReservation.to_orator_model(reservation)
 
         OratorReservation.update(orator_reservation, meeting_room_id=reservation.meeting_room_id.value)
+
+    def change_time_range(self, reservation: Reservation) -> None:
+        orator_reservation = OratorReservation.to_orator_model(reservation)
+
+        OratorReservation.update(orator_reservation, time_range_to_reserve=reservation.time_range_to_reserve)

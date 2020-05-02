@@ -22,3 +22,6 @@ class InMemoryReservationRepository(ReservationRepository):
 
     def cancel_meeting_room(self, reservation: Reservation) -> None:
         self.data[reservation.id] = reservation
+
+    def change_time_range(self, reservation: Reservation) -> None:
+        self.data[reservation.id] = reservation

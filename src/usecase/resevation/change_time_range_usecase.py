@@ -23,4 +23,4 @@ class ChangeTimeRangeUsecase:
         if self.reservation_domain_service.can_not_reserve(changed_reservation):
             raise その会議室はその時間帯では予約ができませんよエラー('ダメだよ')
 
-        self.reservation_repository.change_meeting_room(changed_reservation)
+        self.reservation_repository.change_time_range(changed_reservation)
