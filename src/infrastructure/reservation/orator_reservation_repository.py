@@ -5,7 +5,6 @@ import uuid
 from dataclasses import dataclass
 from typing import Union, List
 
-import freezegun
 from orator import DatabaseManager, Model
 
 from src.domain.employee.employee_id import EmployeeId
@@ -14,6 +13,7 @@ from src.domain.reservation.number_of_participants import NumberOfParticipants
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_repository import ReservationRepository
+from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.init_db import DB_CONFIG
@@ -21,6 +21,43 @@ from src.infrastructure.init_db import DB_CONFIG
 
 class OratorReservation(Model):
     __table__ = 'reservations'
+
+    def __repr__(self) -> str:
+        # ださいけど、情報がわかりやすくなるので実装している
+        tmp = ', '.join([f'{k}={v}' for k, v in self.to_dict().items()])
+        repr_like_dataclass = f'{self.__class__.__name__}({tmp})'
+
+        return repr_like_dataclass
+
+    @classmethod
+    def to_reserve_model(cls, from_: OratorReservation) -> Reservation:
+        id = ReservationId(from_.id)
+        meeting_room_id = MeetingRoomId(from_.meeting_room_id)
+        reserver_id = EmployeeId(from_.reserver_id)
+
+        number_of_participants = NumberOfParticipants(from_.number_of_participants)
+
+        start_datetime_temp = datetime.datetime.strptime(from_.start_datetime, '%Y-%m-%d %H:%M:%S')
+        end_datetime_temp = datetime.datetime.strptime(from_.end_datetime, '%Y-%m-%d %H:%M:%S')
+
+        start_datetime = 使用日時(start_datetime_temp.year,
+                              start_datetime_temp.month,
+                              start_datetime_temp.day,
+                              start_datetime_temp.hour,
+                              start_datetime_temp.minute)
+        end_datetime = 使用日時(end_datetime_temp.year,
+                            end_datetime_temp.month,
+                            end_datetime_temp.day,
+                            end_datetime_temp.hour,
+                            end_datetime_temp.minute)
+
+        reservation_status = ReservationStatus.from_str(from_.reservation_status)
+
+        return Reservation(id, TimeRangeToReserve(start_datetime, end_datetime),
+                           number_of_participants,
+                           meeting_room_id,
+                           reserver_id,
+                           reservation_status)
 
     @classmethod
     def to_datetime(cls, from_: 使用日時) -> datetime.datetime:
@@ -56,10 +93,19 @@ class OratorReservationRepository(ReservationRepository):
         orator_reservation.save()
 
     def cancel_meeting_room(self, reservation: Reservation) -> None:
-        pass
+        orator_reservation = OratorReservation.to_orator_model(reservation)
+
+        orator_reservation.update
 
     def find_all(self) -> List[Reservation]:
-        pass
+        reservations = OratorReservation.all()
+
+        results: List[Reservation] = []
+        for reservation in reservations:
+            r = OratorReservation.to_reserve_model(reservation)
+            results.append(r)
+
+        return results
 
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         pass
@@ -68,10 +114,9 @@ class OratorReservationRepository(ReservationRepository):
         pass
 
 
-@freezegun.freeze_time('2020-4-1 10:00')
 def main():
     reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                              TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                              TimeRangeToReserve(使用日時(2020, 5, 3, 13, 00), 使用日時(2020, 5, 3, 14, 00)),
                               NumberOfParticipants(4),
                               MeetingRoomId(str(uuid.uuid4())),
                               EmployeeId(str(uuid.uuid4())))
@@ -81,6 +126,10 @@ def main():
     repository = OratorReservationRepository(database_manager)
 
     repository.reserve_new_meeting_room(reservation)
+
+    canceled_reservation = reservation.cancel()
+
+    repository.cancel_meeting_room(canceled_reservation)
 
 
 if __name__ == '__main__':

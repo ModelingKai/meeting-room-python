@@ -35,5 +35,6 @@ class TestReserveMeetingRoomUsecase:
                            MeetingRoomId(str(uuid.uuid4())),
                            EmployeeId(str(uuid.uuid4())))
 
+    @freezegun.freeze_time('2020-4-1 10:00')
     def test_予約ができること_正常系_(self, reservation):
         self.usecase.reserve_meeting_room(reservation)
