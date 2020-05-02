@@ -23,13 +23,17 @@ class TestCancelMeetingRoomUsecase:
         self.reservation_repository = InMemoryReservationRepository()
         self.usecase = CancelMeetingRoomUsecase(self.reservation_repository)
 
-    def test_予約をキャンセルができること(self):
-        reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                  TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                                  NumberOfParticipants(4),
-                                  MeetingRoomId(str(uuid.uuid4())),
-                                  EmployeeId(str(uuid.uuid4())))
+    @pytest.fixture
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def reservation(self) -> Reservation:
+        """不正でないReservationインスタンスを作成するだけのfixture"""
+        return Reservation(ReservationId(str(uuid.uuid4())),
+                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                           NumberOfParticipants(4),
+                           MeetingRoomId(str(uuid.uuid4())),
+                           EmployeeId(str(uuid.uuid4())))
 
+    def test_予約をキャンセルができること(self, reservation):
         expected = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)
 
         self.reservation_repository.data[reservation.id] = reservation
@@ -38,23 +42,12 @@ class TestCancelMeetingRoomUsecase:
 
         assert expected == self.reservation_repository.data[reservation.id]
 
-    def test_存在しない予約に対してキャンセルするのはダメだよ(self):
-        reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                  TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                                  NumberOfParticipants(4),
-                                  MeetingRoomId(str(uuid.uuid4())),
-                                  EmployeeId(str(uuid.uuid4())))
-
+    def test_存在しない予約に対してキャンセルするのはダメだよ(self, reservation):
         with pytest.raises(NotFoundReservationError):
             self.usecase.cancel_meeting_room(reservation.id)
 
-    def test_キャンセル済みに対してキャンセルするのもダメだよ(self):
-        canceled_reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                                           NumberOfParticipants(4),
-                                           MeetingRoomId(str(uuid.uuid4())),
-                                           EmployeeId(str(uuid.uuid4())),
-                                           reservation_status=ReservationStatus.Canceled)
+    def test_キャンセル済みに対してキャンセルするのもダメだよ(self, reservation):
+        canceled_reservation = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)
 
         self.reservation_repository.data[canceled_reservation.id] = canceled_reservation
 
