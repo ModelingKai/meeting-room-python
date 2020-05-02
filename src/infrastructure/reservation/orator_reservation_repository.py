@@ -91,4 +91,6 @@ class OratorReservationRepository(ReservationRepository):
         return OratorReservation.to_reservation(orator_reservation)
 
     def change_meeting_room(self, reservation: Reservation) -> None:
-        pass
+        orator_reservation = OratorReservation.to_orator_model(reservation)
+
+        OratorReservation.update(orator_reservation, meeting_room_id=reservation.meeting_room_id.value)
