@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 import uuid
 from dataclasses import dataclass
@@ -25,17 +27,9 @@ class OratorReservation(Model):
     def to_datetime(cls, from_: 使用日時) -> datetime.datetime:
         return datetime.datetime(from_.year, from_.month, from_.day, from_.hour, from_.minute)
 
-
-@dataclass
-class OratorReservationRepository(ReservationRepository):
-    database_manager: DatabaseManager
-
-    def __post_init__(self):
-        Model.set_connection_resolver(self.database_manager)
-
-    def reserve_new_meeting_room(self, reservation: Reservation) -> None:
+    @classmethod
+    def to_orator_model(cls, reservation: Reservation) -> OratorReservation:
         orator_reservation = OratorReservation()
-
         orator_reservation.id = reservation.id.value
         orator_reservation.meeting_room_id = reservation.meeting_room_id.value
         orator_reservation.reserver_id = reservation.reserver_id.value
@@ -46,6 +40,18 @@ class OratorReservationRepository(ReservationRepository):
 
         orator_reservation.start_datetime = OratorReservation.to_datetime(reservation.time_range_to_reserve.start)
         orator_reservation.end_datetime = OratorReservation.to_datetime(reservation.time_range_to_reserve.end)
+
+        return orator_reservation
+
+@dataclass
+class OratorReservationRepository(ReservationRepository):
+    database_manager: DatabaseManager
+
+    def __post_init__(self):
+        Model.set_connection_resolver(self.database_manager)
+
+    def reserve_new_meeting_room(self, reservation: Reservation) -> None:
+        orator_reservation = OratorReservation.to_orator_model(reservation)
 
         orator_reservation.save()
 
