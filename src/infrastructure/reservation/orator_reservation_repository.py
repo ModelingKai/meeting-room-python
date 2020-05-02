@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import datetime
-import uuid
 from dataclasses import dataclass
 from typing import Union, List
 
@@ -16,7 +15,7 @@ from src.domain.reservation.reservation_repository import ReservationRepository
 from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
-from src.infrastructure.init_db import DB_CONFIG
+from src.usecase.reservation.errors import NotFoundReservationError
 
 
 class OratorReservation(Model):
@@ -37,23 +36,16 @@ class OratorReservation(Model):
 
         number_of_participants = NumberOfParticipants(from_.number_of_participants)
 
-        start_datetime_temp = datetime.datetime.strptime(from_.start_datetime, '%Y-%m-%d %H:%M:%S')
-        end_datetime_temp = datetime.datetime.strptime(from_.end_datetime, '%Y-%m-%d %H:%M:%S')
+        start_yyyy_mm_dd_HH_MM = datetime.datetime.strptime(from_.start_datetime, '%Y-%m-%d %H:%M:%S').timetuple()[:5]
+        start_datetime = 使用日時(*start_yyyy_mm_dd_HH_MM)
 
-        start_datetime = 使用日時(start_datetime_temp.year,
-                              start_datetime_temp.month,
-                              start_datetime_temp.day,
-                              start_datetime_temp.hour,
-                              start_datetime_temp.minute)
-        end_datetime = 使用日時(end_datetime_temp.year,
-                            end_datetime_temp.month,
-                            end_datetime_temp.day,
-                            end_datetime_temp.hour,
-                            end_datetime_temp.minute)
+        end_yyyy_mm_dd_HH_MM = datetime.datetime.strptime(from_.end_datetime, '%Y-%m-%d %H:%M:%S').timetuple()[:5]
+        end_datetime = 使用日時(*end_yyyy_mm_dd_HH_MM)
 
         reservation_status = ReservationStatus.from_str(from_.reservation_status)
 
-        return Reservation(id, TimeRangeToReserve(start_datetime, end_datetime),
+        return Reservation(id,
+                           TimeRangeToReserve(start_datetime, end_datetime),
                            number_of_participants,
                            meeting_room_id,
                            reserver_id,
@@ -98,39 +90,15 @@ class OratorReservationRepository(ReservationRepository):
         orator_reservation.update
 
     def find_all(self) -> List[Reservation]:
-        reservations = OratorReservation.all()
-
-        results: List[Reservation] = []
-        for reservation in reservations:
-            r = OratorReservation.to_reserve_model(reservation)
-            results.append(r)
-
-        return results
+        return [OratorReservation.to_reserve_model(r) for r in OratorReservation.all()]
 
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
-        pass
+        orator_reservation = OratorReservation.find(reservation_id.value)
+
+        if orator_reservation is None:
+            raise NotFoundReservationError('そんな予約ないよ')
+
+        return OratorReservation.to_reserve_model(orator_reservation)
 
     def change_meeting_room(self, reservation: Reservation) -> None:
         pass
-
-
-def main():
-    reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                              TimeRangeToReserve(使用日時(2020, 5, 3, 13, 00), 使用日時(2020, 5, 3, 14, 00)),
-                              NumberOfParticipants(4),
-                              MeetingRoomId(str(uuid.uuid4())),
-                              EmployeeId(str(uuid.uuid4())))
-
-    database_manager = DatabaseManager(DB_CONFIG)
-
-    repository = OratorReservationRepository(database_manager)
-
-    repository.reserve_new_meeting_room(reservation)
-
-    canceled_reservation = reservation.cancel()
-
-    repository.cancel_meeting_room(canceled_reservation)
-
-
-if __name__ == '__main__':
-    main()
