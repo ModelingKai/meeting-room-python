@@ -19,6 +19,9 @@ from src.usecase.reservation.errors import NotFoundReservationError
 
 @freezegun.freeze_time('2020-4-1 10:00')
 class TestCancelMeetingRoomUsecase:
+    def setup(self):
+        self.reservation_repository = InMemoryReservationRepository()
+        self.usecase = CancelMeetingRoomUsecase(self.reservation_repository)
 
     def test_予約をキャンセルができること(self):
         reservation = Reservation(ReservationId(str(uuid.uuid4())),
@@ -29,13 +32,11 @@ class TestCancelMeetingRoomUsecase:
 
         expected = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)
 
-        reservation_repository = InMemoryReservationRepository()
-        reservation_repository.data[reservation.id] = reservation
+        self.reservation_repository.data[reservation.id] = reservation
 
-        usecase = CancelMeetingRoomUsecase(reservation_repository)
-        usecase.cancel_meeting_room(reservation.id)
+        self.usecase.cancel_meeting_room(reservation.id)
 
-        assert expected == reservation_repository.data[reservation.id]
+        assert expected == self.reservation_repository.data[reservation.id]
 
     def test_存在しない予約に対してキャンセルするのはダメだよ(self):
         reservation = Reservation(ReservationId(str(uuid.uuid4())),
@@ -44,12 +45,8 @@ class TestCancelMeetingRoomUsecase:
                                   MeetingRoomId(str(uuid.uuid4())),
                                   EmployeeId(str(uuid.uuid4())))
 
-        reservation_repository = InMemoryReservationRepository()
-
-        usecase = CancelMeetingRoomUsecase(reservation_repository)
-
         with pytest.raises(NotFoundReservationError):
-            usecase.cancel_meeting_room(reservation.id)
+            self.usecase.cancel_meeting_room(reservation.id)
 
     def test_キャンセル済みに対してキャンセルするのもダメだよ(self):
         canceled_reservation = Reservation(ReservationId(str(uuid.uuid4())),
@@ -59,10 +56,7 @@ class TestCancelMeetingRoomUsecase:
                                            EmployeeId(str(uuid.uuid4())),
                                            reservation_status=ReservationStatus.Canceled)
 
-        reservation_repository = InMemoryReservationRepository()
-        reservation_repository.data[canceled_reservation.id] = canceled_reservation
-
-        usecase = CancelMeetingRoomUsecase(reservation_repository)
+        self.reservation_repository.data[canceled_reservation.id] = canceled_reservation
 
         with pytest.raises(ValueError):
-            usecase.cancel_meeting_room(canceled_reservation.id)
+            self.usecase.cancel_meeting_room(canceled_reservation.id)
