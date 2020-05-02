@@ -29,4 +29,4 @@ jobs:
         pipenv install --dev
     - name: Pytest with pipenv
       run: |
-        pipenv run pytest -v
+        pipenv run pytest -v --cov=src
