@@ -13,9 +13,9 @@ from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
+from src.usecase.reservation.change_time_range_usecase import ChangeTimeRangeUsecase
 from src.usecase.reservation.errors import NotFoundReservationError
 from src.usecase.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
-from src.usecase.resevation.change_time_range_usecase import ChangeTimeRangeUsecase
 
 
 class TestChangeTimeRangeUsecase:
