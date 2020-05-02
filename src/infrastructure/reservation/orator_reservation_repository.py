@@ -97,4 +97,6 @@ class OratorReservationRepository(ReservationRepository):
     def change_time_range(self, reservation: Reservation) -> None:
         orator_reservation = OratorReservation.to_orator_model(reservation)
 
-        OratorReservation.update(orator_reservation, time_range_to_reserve=reservation.time_range_to_reserve)
+        OratorReservation.update(orator_reservation,
+                                 start_datetime=OratorReservation.to_datetime(reservation.time_range_to_reserve.start),
+                                 end_datetime=OratorReservation.to_datetime(reservation.time_range_to_reserve.end))

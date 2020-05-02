@@ -1,3 +1,4 @@
+import dataclasses
 import uuid
 from pathlib import Path
 
@@ -67,13 +68,13 @@ class TestOratorChangeTimeRangeUsecase:
                            MeetingRoomId(str(uuid.uuid4())),
                            EmployeeId(str(uuid.uuid4())))
 
-    # @freezegun.freeze_time('2020-4-1 10:00')
-    # def test_既存の予約を別の時間帯に変更ができること(self, reservation):
-    #     self.repository.reserve_new_meeting_room(reservation)
-    #
-    #     new_time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 15, 00), 使用日時(2020, 4, 2, 17, 00))
-    #     expected = dataclasses.replace(reservation, time_range_to_reserve=new_time_range_to_reserve)
-    #
-    #     self.usecase.change_time_range(reservation.id, expected.time_range_to_reserve)
-    #
-    #     assert expected == self.repository.find_by_id(reservation.id)
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_既存の予約を別の時間帯に変更ができること(self, reservation):
+        self.repository.reserve_new_meeting_room(reservation)
+
+        new_time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 15, 00), 使用日時(2020, 4, 2, 17, 00))
+        expected = dataclasses.replace(reservation, time_range_to_reserve=new_time_range_to_reserve)
+
+        self.usecase.change_time_range(reservation.id, expected.time_range_to_reserve)
+
+        assert expected == self.repository.find_by_id(reservation.id)
