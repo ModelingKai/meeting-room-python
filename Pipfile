@@ -8,6 +8,10 @@ freezegun = "*"
 pytest = "*"
 
 [packages]
+django = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+djoser = "*"
 
 [requires]
 python_version = "3.7"
