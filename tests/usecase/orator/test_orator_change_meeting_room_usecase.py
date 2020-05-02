@@ -19,7 +19,7 @@ from src.infrastructure.reservation.orator_reservation_repository import OratorR
 from src.usecase.reservation.change_meeting_room_usecase import ChangeMeetingRoomUseCase
 
 
-class TestOratorReserveMeetingRoomUsecase:
+class TestOratorChangeMeetingRoomUsecase:
     TEST_DB_CONFIG = {
         'test': {
             'driver': 'sqlite',
