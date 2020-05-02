@@ -77,7 +77,7 @@ class OratorReservationRepository(ReservationRepository):
     def cancel_meeting_room(self, reservation: Reservation) -> None:
         orator_reservation = OratorReservation.to_orator_model(reservation)
 
-        orator_reservation.update
+        OratorReservation.update(orator_reservation, reservation_status=reservation.reservation_status.value)
 
     def find_all(self) -> List[Reservation]:
         return [OratorReservation.to_reservation(r) for r in OratorReservation.all()]
