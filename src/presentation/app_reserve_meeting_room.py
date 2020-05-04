@@ -1,6 +1,5 @@
 import datetime
 import uuid
-from collections import Callable
 from dataclasses import dataclass
 
 from orator import Schema, DatabaseManager
@@ -107,10 +106,30 @@ class ResponseObject:
         return f'{yyyy}年{mm}月{dd}日 {start_hhii}-{end_hhii}'
 
 
+class FindEmployeeUseCase:
+    def find_by_id(self, employee_id: EmployeeId) -> Employee:
+        pass
+
+
+class MockFindEmployeeUseCase(FindEmployeeUseCase):
+    def find_by_id(self, employee_id: EmployeeId) -> Employee:
+        return Employee(employee_id, name='Bob')
+
+
+class FindMeetingRoomUseCase:
+    def find_by_id(self, meeting_room_id: MeetingRoomId) -> MeetingRoom:
+        pass
+
+
+class MockFindMeetingRoomUseCase(FindMeetingRoomUseCase):
+    def find_by_id(self, meeting_room_id: MeetingRoomId) -> MeetingRoom:
+        return MeetingRoom(meeting_room_id, name='会議室A')
+
+
 @dataclass
 class ResponseObjectFactory:
-    find_employee_usecase: Callable
-    find_mtg_room_usecase: Callable
+    find_employee_usecase: FindEmployeeUseCase
+    find_mtg_room_usecase: FindMeetingRoomUseCase
 
     def create(self, reservation: Reservation) -> ResponseObject:
         time_to_range = reservation.time_range_to_reserve
@@ -120,8 +139,8 @@ class ResponseObjectFactory:
         year, month, day = start_datetime.year, start_datetime.month, start_datetime.day
         start_time, end_time = start_datetime.time(), end_datetime.time()
 
-        reserver_name = self.find_employee_usecase(reservation.reserver_id).name
-        meeting_room_name = self.find_mtg_room_usecase(reservation.meeting_room_id).name
+        reserver_name = self.find_employee_usecase.find_by_id(reservation.reserver_id).name
+        meeting_room_name = self.find_mtg_room_usecase.find_by_id(reservation.meeting_room_id).name
 
         number_of_participants = reservation.number_of_participants.value
 
@@ -135,16 +154,19 @@ class ResponseObjectFactory:
                               number_of_participants)
 
 
-class ReservationCommandVaridator:
+class ReservationCommandValidator:
 
     @classmethod
     def validate(cls, user_raw_input: UserRawInput):
         # バリデーション結果
-        return True
+        # MEMO: True/False は わかりにくい
+        # MEMO: もしかしたら、バリデーション結果オブジェクトとかもあるかもしれない
+        return True  # とりあえず絶対にバリデーションが通らないようにしておく
+
 
 def main():
     # DB用意
-    #init_dev_db()
+    # init_dev_db()
 
     # usecaseの準備
     database_manager = DatabaseManager(DEV_DB_CONFIG)
@@ -153,13 +175,13 @@ def main():
     domain_service = ReservationDomainService(reservation_repository)
     usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
 
-    # 0. ユーザからの入力を受け取する
-    input_date = input('日付は？') # '20200505'
-    input_start_time = input('開始時刻は？') # '1100'
-    input_end_time = input('終了時刻は？') # '1200'
-    input_meeting_room_id = input('会議室は？') # 'A'
-    input_reserver_id = input('あなたはだれ？') # 'Bob'
-    input_number_of_participants = input('何人くらいで利用する？') # '4'
+    # 0. ユーザからの入力を受け取る
+    input_date = '20200505'  # input('日付は？')
+    input_start_time = '1100'  # input('開始時刻は？')
+    input_end_time = '1200'  # input('終了時刻は？')
+    input_meeting_room_id = 'A'  # input('会議室は？')
+    input_reserver_id = 'Bob'  # input('あなたはだれ？')
+    input_number_of_participants = '4'  # input('何人くらいで利用する？')
 
     # 1. バックエンドに行く前のバリデーション
     user_raw_input = UserRawInput(input_date,
@@ -170,7 +192,7 @@ def main():
                                   input_number_of_participants)
 
     # Trueでバリデーション失敗というのは、どうなんだろう
-    if ReservationCommandVaridator.validate(user_raw_input):
+    if ReservationCommandValidator.validate(user_raw_input):
         raise ValueError('不正な値が入力されたよ')
 
     # 2. ユースケースクラスに渡せるような形に変換する
@@ -187,16 +209,12 @@ def main():
         print(e)
         exit()
     except Exception as e:
-        # 500番 エラー
+        # Webでいう 500番 エラー
         print('なんか落ちた。ごめんね。')
         exit()
 
-
-    MockFindEmployeeUseCase_find_by_id = lambda x: Employee(EmployeeId('1'), name='Bob')
-    MockFindMeetingRoomUseCase_find_by_id = lambda x: MeetingRoom(MeetingRoomId('1'), name='会議室A')
-
-    factory = ResponseObjectFactory(MockFindEmployeeUseCase_find_by_id,
-                                    MockFindMeetingRoomUseCase_find_by_id)
+    # MEMO: モックやぞ！
+    factory = ResponseObjectFactory(MockFindEmployeeUseCase(), MockFindMeetingRoomUseCase())
 
     response_object = factory.create(reservation)
 
@@ -207,5 +225,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
