@@ -1,5 +1,6 @@
 import datetime
 import uuid
+from collections import Callable
 from dataclasses import dataclass
 
 from orator import Schema, DatabaseManager
@@ -94,7 +95,7 @@ class ResponseObject:
     def __str__(self) -> str:
         return f'{self.reserver_name}さん名義で、{self.fmt_datetime()} {self.meeting_room_name} を {self.number_of_participants}名で 予約しましたよ'
 
-    def fmt_datetime(self):
+    def fmt_datetime(self) -> str:
         yyyy = self.year
         mm = f'{self.month:02d}'
         dd = f'{self.day:02d}'
@@ -104,16 +105,23 @@ class ResponseObject:
         return f'{yyyy}年{mm}月{dd}日 {start_hhii}-{end_hhii}'
 
 
-class Darekaga:
-    def to_response_object(self, reservation: Reservation) -> ResponseObject:
-        year = reservation.time_range_to_reserve.start_datetime.year
-        month = reservation.time_range_to_reserve.start_datetime.month
-        day = reservation.time_range_to_reserve.start_datetime.day
-        start_time = reservation.time_range_to_reserve.start_datetime.time()
-        end_time = reservation.time_range_to_reserve.end_datetime.time()
+@dataclass
+class Dareka:
+    reservation: Reservation
+    find_employee_usecase: Callable
+    find_mtg_room_usecase: Callable
 
-        meeting_room_name = reservation.meeting_room_id.value  # 本当は ID じゃなくて、会議室の名前をとってくる
-        reserver_name = reservation.reserver_id.value  # 本当は ID じゃなくて、会議室の名前をとってくる
+    def to_response_object(self, reservation: Reservation) -> ResponseObject:
+        time_to_range = reservation.time_range_to_reserve
+        start_datetime = time_to_range.start_datetime
+        end_datetime = time_to_range.end_datetime
+
+        year, month, day = start_datetime.year, start_datetime.month, start_datetime.day
+        start_time, end_time = start_datetime.time(), end_datetime.time()
+
+        reserver_name = self.find_employee_usecase(reservation.reserver_id).name
+        meeting_room_name = self.find_mtg_room_usecase(reservation.meeting_room_id).name
+
         number_of_participants = reservation.number_of_participants.value
 
         return ResponseObject(year,
@@ -172,11 +180,26 @@ def main():
         print('なんか落ちた。ごめんね。')
         exit()
 
-    # もし、社員名が欲しい場合には、社員名を取得するような
-    # reserver_name = FindEmployeeUseCase().find_by_id(reservation.reserver_id)
+    @dataclass
+    class Employee:
+        id: EmployeeId
+        name: str
+
+    @dataclass
+    class MeetingRoom:
+        id: MeetingRoomId
+        name: str
+
+    MockFindEmployeeUseCase_find_by_id = lambda x: Employee(EmployeeId('1'), name='Bob')
+    MockFindMeetingRoomUseCase_find_by_id = lambda x: MeetingRoom(MeetingRoomId('1'), name='会議室A')
+
+    dareka = Dareka(reservation,
+                    MockFindEmployeeUseCase_find_by_id,
+                    MockFindMeetingRoomUseCase_find_by_id)
+
+    response_object = dareka.to_response_object(reservation)
 
     # 4. ユースケースでの処理結果に応じて、なんかする。
-    response_object: ResponseObject = Darekaga().to_response_object(reservation)
     # ResponseObjectは __str__()を持っているようにする
     print(response_object)
 
