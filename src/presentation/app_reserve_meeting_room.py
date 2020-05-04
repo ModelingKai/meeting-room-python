@@ -6,7 +6,9 @@ from dataclasses import dataclass
 from orator import Schema, DatabaseManager
 from orator.schema import Blueprint
 
+from src.domain.employee.employee import Employee
 from src.domain.employee.employee_id import EmployeeId
+from src.domain.meeting_room.meeting_room import MeetingRoom
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
 from src.domain.reservation.number_of_participants import NumberOfParticipants
 from src.domain.reservation.reservation import Reservation
@@ -106,12 +108,11 @@ class ResponseObject:
 
 
 @dataclass
-class Dareka:
-    reservation: Reservation
+class ResponseObjectFactory:
     find_employee_usecase: Callable
     find_mtg_room_usecase: Callable
 
-    def to_response_object(self, reservation: Reservation) -> ResponseObject:
+    def create(self, reservation: Reservation) -> ResponseObject:
         time_to_range = reservation.time_range_to_reserve
         start_datetime = time_to_range.start_datetime
         end_datetime = time_to_range.end_datetime
@@ -134,9 +135,16 @@ class Dareka:
                               number_of_participants)
 
 
+class ReservationCommandVaridator:
+
+    @classmethod
+    def validate(cls, user_raw_input: UserRawInput):
+        # バリデーション結果
+        return True
+
 def main():
     # DB用意
-    init_dev_db()
+    #init_dev_db()
 
     # usecaseの準備
     database_manager = DatabaseManager(DEV_DB_CONFIG)
@@ -146,23 +154,26 @@ def main():
     usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
 
     # 0. ユーザからの入力を受け取する
-    input_date = '20200505'
-    input_start_time = '1100'
-    input_end_time = '1200'
-    input_meeting_room_id = 'A'
-    input_reserver_id = 'Bob'
-    input_number_of_participants = '4'
+    input_date = input('日付は？') # '20200505'
+    input_start_time = input('開始時刻は？') # '1100'
+    input_end_time = input('終了時刻は？') # '1200'
+    input_meeting_room_id = input('会議室は？') # 'A'
+    input_reserver_id = input('あなたはだれ？') # 'Bob'
+    input_number_of_participants = input('何人くらいで利用する？') # '4'
 
     # 1. バックエンドに行く前のバリデーション
-    # ここは一旦考えない
-
-    # 2. ユースケースクラスに渡せるような形に変換する
     user_raw_input = UserRawInput(input_date,
                                   input_start_time,
                                   input_end_time,
                                   input_meeting_room_id,
                                   input_reserver_id,
                                   input_number_of_participants)
+
+    # Trueでバリデーション失敗というのは、どうなんだろう
+    if ReservationCommandVaridator.validate(user_raw_input):
+        raise ValueError('不正な値が入力されたよ')
+
+    # 2. ユースケースクラスに渡せるような形に変換する
 
     # ユーザからの文字列入力を、 Reservation に変換をする
     # to_reservation の責務は正しいドメインオブジェクトに変換をする
@@ -180,24 +191,14 @@ def main():
         print('なんか落ちた。ごめんね。')
         exit()
 
-    @dataclass
-    class Employee:
-        id: EmployeeId
-        name: str
-
-    @dataclass
-    class MeetingRoom:
-        id: MeetingRoomId
-        name: str
 
     MockFindEmployeeUseCase_find_by_id = lambda x: Employee(EmployeeId('1'), name='Bob')
     MockFindMeetingRoomUseCase_find_by_id = lambda x: MeetingRoom(MeetingRoomId('1'), name='会議室A')
 
-    dareka = Dareka(reservation,
-                    MockFindEmployeeUseCase_find_by_id,
-                    MockFindMeetingRoomUseCase_find_by_id)
+    factory = ResponseObjectFactory(MockFindEmployeeUseCase_find_by_id,
+                                    MockFindMeetingRoomUseCase_find_by_id)
 
-    response_object = dareka.to_response_object(reservation)
+    response_object = factory.create(reservation)
 
     # 4. ユースケースでの処理結果に応じて、なんかする。
     # ResponseObjectは __str__()を持っているようにする
@@ -206,3 +207,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
