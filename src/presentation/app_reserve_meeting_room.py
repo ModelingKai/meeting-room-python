@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from dataclasses import dataclass
 
@@ -79,14 +80,50 @@ class SomeOne:
         return reservation
 
 
+@dataclass
 class ResponseObject:
+    year: int  # 2019
+    month: int  # 5
+    day: int  # 6
+    start_time: datetime.time  # datetime.time(10,00)
+    end_time: datetime.time  # datetime.time(12,00)
+    meeting_room_name: str  # 'A'
+    reserver_name: str  # 'Bob'
+    number_of_participants: int  # 4
+
     def __str__(self) -> str:
-        return 'なんかいい感じのメッセージ'
+        return f'{self.reserver_name}さん名義で、{self.fmt_datetime()} {self.meeting_room_name} を {self.number_of_participants}名で 予約しましたよ'
+
+    def fmt_datetime(self):
+        yyyy = self.year
+        mm = f'{self.month:02d}'
+        dd = f'{self.day:02d}'
+        start_hhii = self.start_time.strftime('%H:%M')
+        end_hhii = self.end_time.strftime('%H:%M')
+
+        return f'{yyyy}年{mm}月{dd}日 {start_hhii}-{end_hhii}'
 
 
 class Darekaga:
-    def nankasuru(self, reservation: Reservation) -> ResponseObject:
-        pass
+    def to_response_object(self, reservation: Reservation) -> ResponseObject:
+        year = reservation.time_range_to_reserve.start_datetime.year
+        month = reservation.time_range_to_reserve.start_datetime.month
+        day = reservation.time_range_to_reserve.start_datetime.day
+        start_time = reservation.time_range_to_reserve.start_datetime.time()
+        end_time = reservation.time_range_to_reserve.end_datetime.time()
+
+        meeting_room_name = reservation.meeting_room_id.value  # 本当は ID じゃなくて、会議室の名前をとってくる
+        reserver_name = reservation.reserver_id.value  # 本当は ID じゃなくて、会議室の名前をとってくる
+        number_of_participants = reservation.number_of_participants.value
+
+        return ResponseObject(year,
+                              month,
+                              day,
+                              start_time,
+                              end_time,
+                              meeting_room_name,
+                              reserver_name,
+                              number_of_participants)
 
 
 def main():
@@ -139,7 +176,7 @@ def main():
     # reserver_name = FindEmployeeUseCase().find_by_id(reservation.reserver_id)
 
     # 4. ユースケースでの処理結果に応じて、なんかする。
-    response_object: ResponseObject = Darekaga().nankasuru(reservation)
+    response_object: ResponseObject = Darekaga().to_response_object(reservation)
     # ResponseObjectは __str__()を持っているようにする
     print(response_object)
 
