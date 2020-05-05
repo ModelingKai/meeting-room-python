@@ -59,8 +59,10 @@
       submitSave: function () {
         api({
           // 登録済みかどうかでHTTPメソッドとエンドポイントを切り替える
-          method: this.isCreated ? 'put' : 'post',
-          url: this.isCreated ? '/books/' + this.form.book.id + '/' : '/books/',
+          // method: this.isCreated ? 'put' : 'post',
+          method: 'post',
+          //url: this.isCreated ? '/books/' + this.form.book.id + '/' : '/books/',
+          url: '/api/reserve/',
           data: {
             'id': this.form.book.id,
             'title': this.form.book.title,
@@ -68,6 +70,7 @@
           }
         })
                 .then(response => {
+                  console.log(response.data)
                   const message = this.isCreated ? '更新しました。' : '登録しました。'
                   this.$store.dispatch('message/setInfoMessage', {message: message})
                   this.form.book = response.data
