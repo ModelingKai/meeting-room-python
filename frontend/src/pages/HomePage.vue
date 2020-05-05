@@ -57,10 +57,13 @@
     methods: {
       // 登録・更新ボタン押下
       submitSave: function () {
+        api.defaults.xsrfCookieName = 'csrftoken' // ←ココと追加しました
+        api.defaults.xsrfHeaderName = "X-CSRFTOKEN" // ←ココに追加しました
         api({
           // 登録済みかどうかでHTTPメソッドとエンドポイントを切り替える
-          method: this.isCreated ? 'put' : 'post',
-          url: this.isCreated ? '/books/' + this.form.book.id + '/' : '/books/',
+          method: 'get', //this.isCreated ? 'put' : 'post',
+          //url: this.isCreated ? '/api/reserve' : '/api/reserve',
+          url: '/api/get_reserve/',
           data: {
             'id': this.form.book.id,
             'title': this.form.book.title,
@@ -68,6 +71,7 @@
           }
         })
                 .then(response => {
+                  console.log(response.data)
                   const message = this.isCreated ? '更新しました。' : '登録しました。'
                   this.$store.dispatch('message/setInfoMessage', {message: message})
                   this.form.book = response.data
