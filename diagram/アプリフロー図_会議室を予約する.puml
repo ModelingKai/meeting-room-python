@@ -1,0 +1,51 @@
+@startuml
+
+title  アプリフロー図: 会議室を予約する
+
+
+top to bottom direction
+
+@startuml
+start
+:機能選択画面を表示する;
+note left
+どうするか？
+0: やめる
+1: 予約
+2: キャンセル
+3: 変更
+end note
+
+if (予約) then (yes)
+  :必要な情報を聞く;
+  note left
+  Q. 日にち？(yyyymmdd) > 20200511
+  Q. 開始？(hhii) > 1000
+  Q. 終了？(hhii) > 1200
+  Q. どの会議室を使いますか？(RoomA or RoomB or RoomC) > RoomA
+  Q. 社員番号は？ > 001(社員番号)
+  Q. 何人くらいで使う予定？ > 5
+  end note
+  if (入力に不備があるか) then (yes)
+    :もう一回打ち直してね、と言う;
+    stop
+  else (no)
+    if (予約が被ってないか) then (yes)
+        :既存の予約と被っています、と言う;
+        stop
+    else (no)
+        :Successメッセージを出す;
+        stop
+    endif
+  endif
+elseif (キャンセル) then (yes)
+  :別フロー図参照;
+  stop
+elseif (変更) then (yes)
+  :別フロー図参照;
+  stop
+  else
+  stop
+endif
+@enduml
+
