@@ -63,7 +63,7 @@
           // 登録済みかどうかでHTTPメソッドとエンドポイントを切り替える
           method: 'get', //this.isCreated ? 'put' : 'post',
           //url: this.isCreated ? '/api/reserve' : '/api/reserve',
-          url: '/api/get_reserve/',
+          url: '/api/reserve/',
           data: {
             'id': this.form.book.id,
             'title': this.form.book.title,

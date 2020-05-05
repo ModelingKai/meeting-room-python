@@ -3,11 +3,19 @@ import logging
 from django.http.response import JsonResponse
 
 
-def json_reserve(self, request):
-    logging.debug("Whatever to log")
+def json_reserve(request):
 
 
-def json_get_reserve(self):
+    id_ = 'datades'
+    return JsonResponse(
+        data={
+            "question": "結果ですよpost"
+        },
+        status=200
+    )
+
+
+def json_get_reserve():
     return JsonResponse(
         data={
             "question": "結果だよ"

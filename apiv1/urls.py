@@ -17,6 +17,6 @@ urlpatterns += [
         'api/reserve/', api.json_reserve, name='reserve_api'
     ),
     path(
-        'api/get_reserve/', api.json_get_reserve, name='reserve_api'
+        'api/get_reserve/', api.json_get_reserve, name='get_reserve_api'
     ),
 ]
