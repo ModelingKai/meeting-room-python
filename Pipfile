@@ -10,6 +10,11 @@ pytest = "*"
 [packages]
 orator = "*"
 pytest-cov = "*"
+django = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+djoser = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.7"
