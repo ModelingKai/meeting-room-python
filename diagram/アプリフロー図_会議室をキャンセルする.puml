@@ -1,6 +1,6 @@
 @startuml
 
-title  アプリフロー図: 予約内容をキャンセルする
+title 業務フロー図 - 会議室を予約してから使い終わるまで
 
 
 top to bottom direction
