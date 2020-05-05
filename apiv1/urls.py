@@ -1,8 +1,8 @@
 from django.urls import path, include
 from rest_framework import routers
 
-# from . import views
 from . import api
+from . import views
 
 router = routers.DefaultRouter()
 
@@ -12,6 +12,9 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    path(
+        'api/books/', views.BookCreateAPIView.as_view()
+    ),
     path(
         'api/reserve/', api.json_reserve, name='reserve_api'
     ),

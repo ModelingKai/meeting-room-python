@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     # My applications
     'apiv1.apps.Apiv1Config',
     'shop.apps.ShopConfig',
+    'meeting_room.apps.MeetingRoomConfig',
 ]
 
 MIDDLEWARE = [
