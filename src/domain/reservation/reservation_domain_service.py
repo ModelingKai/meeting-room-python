@@ -11,7 +11,7 @@ class ReservationDomainService:
 
     def can_not_reserve(self, reservation: Reservation) -> bool:
         # TODO: 性能面を考えると、クエリをカスタマイズしたほうがよさそう
-        all_reservations = self.reservation_repository.find_all()
+        all_reservations = self.reservation_repository.find_available_reservations()
 
         # 変数名的には NotCanceled だけど、フィルタ条件的には Reservedである なのはツラい
         not_canceled_reservation = [r for r in all_reservations if r.reservation_status == ReservationStatus.Reserved]

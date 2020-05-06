@@ -11,7 +11,7 @@ class InMemoryReservationRepository(ReservationRepository):
     def reserve_new_meeting_room(self, reservation: Reservation) -> None:
         self.data[reservation.id] = reservation
 
-    def find_all(self) -> List[Reservation]:
+    def find_available_reservations(self) -> List[Reservation]:
         return list(self.data.values())
 
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:

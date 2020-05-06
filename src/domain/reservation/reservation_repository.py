@@ -15,7 +15,7 @@ class ReservationRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_all(self) -> List[Reservation]:
+    def find_available_reservations(self) -> List[Reservation]:
         pass
 
     @abstractmethod

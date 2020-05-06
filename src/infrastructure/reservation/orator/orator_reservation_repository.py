@@ -28,7 +28,7 @@ class OratorReservationRepository(ReservationRepository):
 
         OratorReservationModel.update(orator_reservation, reservation_status=reservation.reservation_status.value)
 
-    def find_all(self) -> List[Reservation]:
+    def find_available_reservations(self) -> List[Reservation]:
         return [OratorReservationModel.to_reservation(r) for r in OratorReservationModel.all()]
 
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:

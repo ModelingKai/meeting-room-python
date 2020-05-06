@@ -101,4 +101,4 @@ class TestDebug:
                                 MeetingRoomId('RoomA'),
                                 EmployeeId('001'))]
 
-        assert expected == self.repository.find_all()
+        assert expected == self.repository.find_available_reservations()
