@@ -31,9 +31,6 @@ class OratorReservationRepository(ReservationRepository):
         OratorReservationModel.update(orator_reservation, reservation_status=reservation.reservation_status.value)
 
     def find_available_reservations(self) -> List[Reservation]:
-        return [OratorReservationModel.to_reservation(r) for r in OratorReservationModel.all()]
-
-    def find_available_reservations_for_debug(self) -> List[Reservation]:
         now = datetime.datetime.now()
 
         reservations = self.database_manager.table('reservation') \
