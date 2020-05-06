@@ -16,8 +16,10 @@ class InMemoryReservationRepository(ReservationRepository):
     def find_available_reservations(self) -> List[Reservation]:
         now = datetime.datetime.now()
 
-        not_canceled_reservation = [r for r in self.data.values() if r.reservation_status == ReservationStatus.Reserved]
-        available_reservations = [r for r in not_canceled_reservation if r.time_range_to_reserve.start_datetime > now]
+        is_available_reservation = lambda x: x.reservation_status == ReservationStatus.Reserved \
+                                             and x.time_range_to_reserve.start_datetime > now
+
+        available_reservations = list(filter(is_available_reservation, self.data.values()))
 
         return available_reservations
 
