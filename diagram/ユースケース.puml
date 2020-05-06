@@ -5,16 +5,32 @@ actor 会議前_予約者 as a1
 actor 会議中_会議参加者  as a3
 actor 会議終了後_分析する人 as a2
 
+
 rectangle {
-    a1 --> (会議室を予約する)
-    (会議室を予約する) ..> (会議室名の一覧を取得する)
-    (会議室を予約する) ..> (予約した社員の名前を取得する)
-    a1 --> (予約済みの会議室をキャンセルする)
-    a1 --> (予約内容を変更する)
-    (予約内容を変更する) ..>  (現在有効な予約を取得する)
-    (予約内容を変更する) ..>  (会議室名の一覧を取得する)
-    (予約内容を変更する) ..>  (予約した社員の名前を取得する)
-    (予約済みの会議室をキャンセルする) ..>  (現在有効な予約を取得する)
+    usecase 会議室を予約する as ReservationUseCase
+
+    agent 会議室名の一覧を取得する機能 as FindAllMeetingRoom #Turquoise
+    agent 予約した社員の名前を取得する機能 as FindEmployee #Turquoise
+    agent 現在有効な予約をすべて取得する機能 as FindAvailableReservations #Turquoise
+    agent 予約できるかを確かめる機能 as ReservationDomainServiceCanNotReserve #Turquoise
+
+    a1 --> (ReservationUseCase)
+    ReservationUseCase ..> FindAllMeetingRoom
+    ReservationUseCase ..> FindEmployee
+    ReservationUseCase ..> ReservationDomainServiceCanNotReserve
+
+    usecase 予約内容を変更する as ChangeReservationUseCase
+    a1 --> ChangeReservationUseCase
+    ChangeReservationUseCase ..> FindAllMeetingRoom
+    ChangeReservationUseCase ..> FindEmployee
+    ChangeReservationUseCase ..> FindAvailableReservations
+    ChangeReservationUseCase ..> ReservationDomainServiceCanNotReserve
+
+    usecase 予約済みの会議室をキャンセルする as CancelMeetingRoomUsecase
+    a1 --> CancelMeetingRoomUsecase
+    CancelMeetingRoomUsecase ..>  FindAvailableReservations
+
+    ReservationDomainServiceCanNotReserve ..> FindAvailableReservations
 }
 
 rectangle {
