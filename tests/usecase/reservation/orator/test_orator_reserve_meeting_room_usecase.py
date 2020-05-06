@@ -1,4 +1,3 @@
-import dataclasses
 import uuid
 from pathlib import Path
 
@@ -11,12 +10,12 @@ from src.domain.employee.employee_id import EmployeeId
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
 from src.domain.reservation.number_of_participants import NumberOfParticipants
 from src.domain.reservation.reservation import Reservation
+from src.domain.reservation.reservation_domain_service import ReservationDomainService
 from src.domain.reservation.reservation_id import ReservationId
-from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
-from src.usecase.reservation.cancel_meeting_room_usecase import CancelMeetingRoomUsecase
+from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
 
 
 class TestOratorReserveMeetingRoomUsecase:
@@ -30,7 +29,7 @@ class TestOratorReserveMeetingRoomUsecase:
     def init_test_db(self):
         schema = Schema(DatabaseManager(self.TEST_DB_CONFIG))
 
-        table_name = 'reservations'
+        table_name = 'reservation'
         schema.drop_if_exists(table_name)
 
         with schema.create(table_name) as table:
@@ -52,7 +51,8 @@ class TestOratorReserveMeetingRoomUsecase:
         database_manager = DatabaseManager(self.TEST_DB_CONFIG)
 
         self.repository = OratorReservationRepository(database_manager)
-        self.usecase = CancelMeetingRoomUsecase(self.repository)
+        domain_service = ReservationDomainService(self.repository)
+        self.usecase = ReserveMeetingRoomUsecase(self.repository, domain_service)
 
     def teardown(self):
         Path(self.TEST_DB_CONFIG['test']['database']).unlink()
@@ -68,12 +68,7 @@ class TestOratorReserveMeetingRoomUsecase:
                            EmployeeId(str(uuid.uuid4())))
 
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_キャンセルができること_正常系(self, reservation):
-        # 既に予約されているデータとする
-        self.repository.reserve_new_meeting_room(reservation)
+    def test_予約ができること_正常系(self, reservation):
+        self.usecase.reserve_meeting_room(reservation)
 
-        expected = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)
-
-        self.usecase.cancel_meeting_room(reservation.id)
-
-        assert expected == self.repository.find_by_id(reservation.id)
+        assert reservation == self.repository.find_by_id(reservation.id)

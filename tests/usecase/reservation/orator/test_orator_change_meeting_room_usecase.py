@@ -1,3 +1,4 @@
+import dataclasses
 import uuid
 from pathlib import Path
 
@@ -15,10 +16,10 @@ from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
-from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
+from src.usecase.reservation.change_meeting_room_usecase import ChangeMeetingRoomUseCase
 
 
-class TestOratorReserveMeetingRoomUsecase:
+class TestOratorChangeMeetingRoomUsecase:
     TEST_DB_CONFIG = {
         'test': {
             'driver': 'sqlite',
@@ -29,7 +30,7 @@ class TestOratorReserveMeetingRoomUsecase:
     def init_test_db(self):
         schema = Schema(DatabaseManager(self.TEST_DB_CONFIG))
 
-        table_name = 'reservations'
+        table_name = 'reservation'
         schema.drop_if_exists(table_name)
 
         with schema.create(table_name) as table:
@@ -52,7 +53,7 @@ class TestOratorReserveMeetingRoomUsecase:
 
         self.repository = OratorReservationRepository(database_manager)
         domain_service = ReservationDomainService(self.repository)
-        self.usecase = ReserveMeetingRoomUsecase(self.repository, domain_service)
+        self.usecase = ChangeMeetingRoomUseCase(self.repository, domain_service)
 
     def teardown(self):
         Path(self.TEST_DB_CONFIG['test']['database']).unlink()
@@ -68,7 +69,11 @@ class TestOratorReserveMeetingRoomUsecase:
                            EmployeeId(str(uuid.uuid4())))
 
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_予約ができること_正常系(self, reservation):
-        self.usecase.reserve_meeting_room(reservation)
+    def test_既存の予約を別の会議室に変更ができること(self, reservation):
+        self.repository.reserve_new_meeting_room(reservation)
 
-        assert reservation == self.repository.find_by_id(reservation.id)
+        expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId(str(uuid.uuid4())))
+
+        self.usecase.change_meeting_room(reservation.id, expected.meeting_room_id)
+
+        assert expected == self.repository.find_by_id(reservation.id)

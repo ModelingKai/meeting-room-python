@@ -12,7 +12,7 @@ DEV_DB_CONFIG = {
 def init_dev_db():
     schema = Schema(DatabaseManager(DEV_DB_CONFIG))
 
-    table_name = 'reservations'
+    table_name = 'reservation'
     schema.drop_if_exists(table_name)
 
     with schema.create(table_name) as table:
