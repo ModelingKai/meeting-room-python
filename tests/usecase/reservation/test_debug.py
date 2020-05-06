@@ -12,7 +12,6 @@ from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
-from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
 
 
 class TestDebug:
@@ -50,7 +49,6 @@ class TestDebug:
 
         self.repository = OratorReservationRepository(database_manager)
         self.domain_service = ReservationDomainService(self.repository)
-        self.usecase = ReserveMeetingRoomUsecase(self.repository, self.domain_service)
 
         self.過去のデータを混入させる()
         self.有効な予約データを登録する()
@@ -70,7 +68,7 @@ class TestDebug:
                              MeetingRoomId('RoomA'),
                              EmployeeId('001'))
 
-        self.usecase.reserve_meeting_room(r_0402)
+        self.repository.reserve_new_meeting_room(r_0402)
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def 有効な予約データを登録する(self):
@@ -80,7 +78,7 @@ class TestDebug:
                                  MeetingRoomId('RoomA'),
                                  EmployeeId('001'))
 
-        self.usecase.reserve_meeting_room(r_0415_予約中)
+        self.repository.reserve_new_meeting_room(r_0415_予約中)
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def 未来だがキャンセル済みの予約データを登録する(self):
@@ -91,7 +89,7 @@ class TestDebug:
                                      EmployeeId('001'),
                                      ReservationStatus.Canceled)
 
-        self.usecase.reserve_meeting_room(r_0414_キャンセル済み)
+        self.repository.reserve_new_meeting_room(r_0414_キャンセル済み)
 
     @freezegun.freeze_time('2020-4-5 10:00')
     def test_再現(self):
