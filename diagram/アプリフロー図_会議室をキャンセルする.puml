@@ -20,6 +20,10 @@ if (予約) then (yes)
   :別フロー図参照;
   stop
 elseif (キャンセル) then (yes)
+  if (有効な予約が無い場合) then (yes)
+    stop
+  else (no)
+  endif
   :対象の予約を選んでください;
   note left
   キャンセル済みでない予約一覧を出す
