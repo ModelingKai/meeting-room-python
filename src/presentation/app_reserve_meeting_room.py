@@ -34,7 +34,7 @@ def main():
 
     # TODO: input()でユーザからデータ入力する
     # 0. ユーザからの入力を受け取る
-    input_date = '20200505'  # input('日付は？')
+    input_date = '20200516'  # input('日付は？')
     input_start_time = '1100'  # input('開始時刻は？')
     input_end_time = '1200'  # input('終了時刻は？')
     input_meeting_room_id = 'A'  # input('会議室は？')

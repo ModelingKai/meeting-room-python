@@ -8,4 +8,4 @@ class ReservationCommandValidator:
         # バリデーション結果
         # MEMO: True/False は わかりにくい
         # MEMO: もしかしたら、バリデーション結果オブジェクトとかもあるかもしれない
-        return True  # とりあえず絶対にバリデーションが通らないようにしておく
+        return False  # とりあえず絶対にバリデーションが通るようにしておく
