@@ -1,3 +1,4 @@
+import datetime
 from typing import Dict, Union
 
 from src.domain.reservation.reservation import Reservation
@@ -14,7 +15,8 @@ class InMemoryReservationRepository(ReservationRepository):
         self.data[reservation.id] = reservation
 
     def find_available_reservations(self) -> AvailableReservations:
-        available_reservations = [r for r in self.data.values() if r.is_available()]
+        now = datetime.datetime.now()
+        available_reservations = [r for r in self.data.values() if r.is_available(now)]
 
         return AvailableReservations(available_reservations)
 

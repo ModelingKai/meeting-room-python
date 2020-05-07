@@ -39,9 +39,7 @@ class Reservation:
     def change_time_range(self, time_range_to_reserve: TimeRangeToReserve) -> Reservation:
         return dataclasses.replace(self, time_range_to_reserve=time_range_to_reserve)
 
-    def is_available(self):
-        now = datetime.datetime.now()
-
+    def is_available(self, now: datetime.datetime):
         is_reserved = self.reservation_status == ReservationStatus.Reserved
         is_future = self.time_range_to_reserve.start_datetime > now
         return is_reserved and is_future
