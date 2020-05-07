@@ -1,4 +1,5 @@
 import dataclasses
+import datetime
 import uuid
 
 import freezegun
@@ -47,4 +48,5 @@ class TestInMemoryFindAvailableReservations:
         available_reservations = AvailableReservations()
         available_reservations = available_reservations.add(r1_有効)
 
-        assert reservation_repository.find_available_reservations() == available_reservations
+        now = datetime.datetime(2020, 4, 1, 10, 0)
+        assert reservation_repository.find_available_reservations(now) == available_reservations

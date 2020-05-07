@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import datetime
 from dataclasses import dataclass
 from typing import Union, List
 
@@ -10,6 +9,7 @@ from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_repository import ReservationRepository
 from src.domain.reservation.reservation_status import ReservationStatus
+from src.domain.shared.clock import Clock
 from src.infrastructure.reservation.orator.orator_reservation_model import OratorReservationModel
 
 
@@ -30,12 +30,10 @@ class OratorReservationRepository(ReservationRepository):
 
         OratorReservationModel.update(orator_reservation, reservation_status=reservation.reservation_status.value)
 
-    def find_available_reservations(self) -> List[Reservation]:
-        now = datetime.datetime.now()
-
+    def find_available_reservations(self, clock: Clock) -> List[Reservation]:
         reservations = self.database_manager.table('reservation') \
             .where('reservation_status', ReservationStatus.Reserved.value) \
-            .where('start_datetime', '>', now).get()
+            .where('start_datetime', '>', clock.now()).get()
 
         return [OratorReservationModel.to_reservation(r) for r in reservations]
 

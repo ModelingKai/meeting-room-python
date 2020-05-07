@@ -3,6 +3,7 @@ from typing import Union
 
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
+from src.domain.shared.clock import Clock
 from tests.usecase.reservation.available_reservations import AvailableReservations
 
 
@@ -16,7 +17,7 @@ class ReservationRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_available_reservations(self) -> AvailableReservations:
+    def find_available_reservations(self, clock: Clock) -> AvailableReservations:
         pass
 
     @abstractmethod

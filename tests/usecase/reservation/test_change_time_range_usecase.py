@@ -12,6 +12,7 @@ from src.domain.reservation.reservation_domain_service import ReservationDomainS
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
+from src.domain.shared.system_clock import SystemClock
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
 from src.usecase.reservation.change_time_range_usecase import ChangeTimeRangeUsecase
 from src.usecase.reservation.errors import NotFoundReservationError
@@ -21,7 +22,7 @@ from src.usecase.reservation.errors import その会議室はその時間帯で�
 class TestChangeTimeRangeUsecase:
     def setup(self):
         self.repository = InMemoryReservationRepository()
-        domain_service = ReservationDomainService(self.repository)
+        domain_service = ReservationDomainService(self.repository, SystemClock())
         self.usecase = ChangeTimeRangeUsecase(self.repository, domain_service)
 
     @pytest.fixture

@@ -15,6 +15,7 @@ from src.domain.reservation.reservation_domain_service import ReservationDomainS
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
+from src.domain.shared.system_clock import SystemClock
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
 from src.usecase.reservation.change_time_range_usecase import ChangeTimeRangeUsecase
 
@@ -52,7 +53,7 @@ class TestOratorChangeTimeRangeUsecase:
         database_manager = DatabaseManager(self.TEST_DB_CONFIG)
 
         self.repository = OratorReservationRepository(database_manager)
-        domain_service = ReservationDomainService(self.repository)
+        domain_service = ReservationDomainService(self.repository, SystemClock())
         self.usecase = ChangeTimeRangeUsecase(self.repository, domain_service)
 
     def teardown(self):
