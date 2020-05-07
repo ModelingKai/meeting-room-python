@@ -1,10 +1,8 @@
-import datetime
 from typing import Dict, Union
 
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_repository import ReservationRepository
-from src.domain.reservation.reservation_status import ReservationStatus
 from tests.usecase.reservation.available_reservations import AvailableReservations
 
 
@@ -16,12 +14,7 @@ class InMemoryReservationRepository(ReservationRepository):
         self.data[reservation.id] = reservation
 
     def find_available_reservations(self) -> AvailableReservations:
-        now = datetime.datetime.now()
-
-        is_available_reservation = lambda x: x.reservation_status == ReservationStatus.Reserved \
-                                             and x.time_range_to_reserve.start_datetime > now
-
-        available_reservations = list(filter(is_available_reservation, self.data.values()))
+        available_reservations = [r for r in self.data.values() if r.is_available()]
 
         return AvailableReservations(available_reservations)
 
