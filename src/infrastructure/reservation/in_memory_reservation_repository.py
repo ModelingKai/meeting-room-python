@@ -8,7 +8,8 @@ from src.domain.reservation.reservation_status import ReservationStatus
 
 
 class InMemoryReservationRepository(ReservationRepository):
-    data: Dict[ReservationId, Reservation] = {}
+    def __init__(self):
+        self.data: Dict[ReservationId, Reservation] = {}
 
     def reserve_new_meeting_room(self, reservation: Reservation) -> None:
         self.data[reservation.id] = reservation
