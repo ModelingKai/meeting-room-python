@@ -46,6 +46,5 @@ class TestInMemoryFindAvailableReservations:
 
         available_reservations = AvailableReservations()
         available_reservations = available_reservations.add(r1_有効)
-        available_reservations = available_reservations.add(r2_キャンセル済み)
 
         assert reservation_repository.find_available_reservations() == available_reservations
