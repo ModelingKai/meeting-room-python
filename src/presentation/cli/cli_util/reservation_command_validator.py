@@ -1,7 +1,7 @@
 from src.presentation.cli.cli_util.user_raw_input import UserRawInput
 
 
-class ReservationCommandValidator:
+class CliReservationCommandValidator:
 
     @classmethod
     def validate(cls, user_raw_input: UserRawInput):

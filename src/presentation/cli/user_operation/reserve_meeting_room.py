@@ -4,7 +4,7 @@ from src.app_environment.init_dev_db import DEV_DB_CONFIG
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
-from src.presentation.cli.cli_util.reservation_command_validator import ReservationCommandValidator
+from src.presentation.cli.cli_util.reservation_command_validator import CliReservationCommandValidator
 from src.presentation.cli.cli_util.response_object_factory import ResponseObjectFactory
 from src.presentation.cli.cli_util.some_one import SomeOne
 from src.presentation.cli.cli_util.user_raw_input import UserRawInput
@@ -25,7 +25,7 @@ def main():
 
     # TODO: input()でユーザからデータ入力する
     # 0. ユーザからの入力を受け取る
-    input_date = '20200516'  # input('日付は？')
+    input_date = ''  # '20200516'  # input('日付は？')
     input_start_time = '1100'  # input('開始時刻は？')
     input_end_time = '1200'  # input('終了時刻は？')
     input_meeting_room_id = 'A'  # input('会議室は？')
@@ -43,7 +43,7 @@ def main():
     # Trueでバリデーション失敗というのは、どうなんだろう
     # TODO:フロントエンド側から来たパラメータのバリデーションをする(空文字チェックなど)
     # TODO:間違った処理を、どうやってユーザに知らせるか（例外で落とすのはあり得ないはずだ）
-    if ReservationCommandValidator.validate(user_raw_input):
+    if CliReservationCommandValidator.validate(user_raw_input):
         raise ValueError('不正な値が入力されたよ')
 
     # 2. ユースケースクラスに渡せるような形に変換する
