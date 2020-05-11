@@ -7,7 +7,7 @@ from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
-from src.presentation.user_raw_input import UserRawInput
+from src.presentation.cli.cli_util.user_raw_input import UserRawInput
 
 
 class SomeOne:

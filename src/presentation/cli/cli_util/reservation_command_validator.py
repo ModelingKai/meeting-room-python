@@ -1,4 +1,4 @@
-from src.presentation.user_raw_input import UserRawInput
+from src.presentation.cli.cli_util.user_raw_input import UserRawInput
 
 
 class ReservationCommandValidator:

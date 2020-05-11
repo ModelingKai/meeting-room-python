@@ -1,29 +1,20 @@
 from orator import DatabaseManager
 
+from src.app_environment.init_dev_db import DEV_DB_CONFIG
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
-from src.presentation.init_dev_db import DEV_DB_CONFIG
-from src.presentation.reservation_command_validator import ReservationCommandValidator
-from src.presentation.response_object_factory import ResponseObjectFactory
-from src.presentation.some_one import SomeOne
-from src.presentation.user_raw_input import UserRawInput
+from src.presentation.cli.cli_util.reservation_command_validator import ReservationCommandValidator
+from src.presentation.cli.cli_util.response_object_factory import ResponseObjectFactory
+from src.presentation.cli.cli_util.some_one import SomeOne
+from src.presentation.cli.cli_util.user_raw_input import UserRawInput
 from src.usecase.employee.mock_find_employee_usecase import MockFindEmployeeUseCase
 from src.usecase.meeting_room.mock_find_meeting_room_usecase import MockFindMeetingRoomUseCase
 from src.usecase.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
 from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
 
 
-# TODO: main() がルーティングの機能になりそう
-# TODO: アクションごとに関数を分けたい
 def main():
-    # TODO: Webで言うRouterみたいなものが必要。
-
-    # DB用意
-    # TODO:毎回DBのセットアップするのはおかしいので、どうすべきか
-    # TODO:Dev、Prodでの切り替えをできるようにする。IOC(DI)コンテナみたいな機構
-    # init_dev_db()
-
     # usecaseの準備
     database_manager = DatabaseManager(DEV_DB_CONFIG)
 
