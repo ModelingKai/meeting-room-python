@@ -27,7 +27,7 @@ def main():
     # 0. ユーザからの入力を受け取る
     input_date = ''  # '20200516'  # input('日付は？')
     input_start_time = '1100'  # input('開始時刻は？')
-    input_end_time = '1200'  # input('終了時刻は？')
+    input_end_time = ''  # input('終了時刻は？')
     input_meeting_room_id = 'A'  # input('会議室は？')
     input_reserver_id = 'Bob'  # input('あなたはだれ？')
     input_number_of_participants = '4'  # input('何人くらいで利用する？')
@@ -40,11 +40,11 @@ def main():
                                   input_reserver_id,
                                   input_number_of_participants)
 
-    # Trueでバリデーション失敗というのは、どうなんだろう
-    # TODO:フロントエンド側から来たパラメータのバリデーションをする(空文字チェックなど)
-    # TODO:間違った処理を、どうやってユーザに知らせるか（例外で落とすのはあり得ないはずだ）
-    if CliReservationCommandValidator.validate(user_raw_input):
-        raise ValueError('不正な値が入力されたよ')
+    validation_result = CliReservationCommandValidator.validate(user_raw_input)
+
+    if validation_result.is_ダメ:
+        validation_result.display_messages()
+        exit()
 
     # 2. ユースケースクラスに渡せるような形に変換する
 
