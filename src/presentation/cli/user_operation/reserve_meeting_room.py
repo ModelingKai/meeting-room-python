@@ -13,7 +13,6 @@ from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingR
 
 
 def main():
-    # usecaseの準備
     database_manager = DatabaseManager(DEV_DB_CONFIG)
 
     # TODO: ここのDIの仕方も、違うところでやるんだろう( Python Injectorとか？）
@@ -22,15 +21,13 @@ def main():
     usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
 
     # TODO: input()でユーザからデータ入力する
-    # 0. ユーザからの入力を受け取る
-    input_date = '20200517'  # '20200516'  # input('日付は？')
-    input_start_time = '1100'  # input('開始時刻は？')
-    input_end_time = '1300'  # input('終了時刻は？')
-    input_meeting_room_id = 'A'  # input('会議室は？')
-    input_reserver_id = 'Bob'  # input('あなたはだれ？')
-    input_number_of_participants = '4'  # input('何人くらいで利用する？')
+    input_date = '20200517'
+    input_start_time = '1100'
+    input_end_time = '1300'
+    input_meeting_room_id = 'A'
+    input_reserver_id = 'Bob'
+    input_number_of_participants = '4'
 
-    # 1. バックエンドに行く前のバリデーション
     user_input = CliUserInput(input_date,
                               input_start_time,
                               input_end_time,
@@ -44,29 +41,22 @@ def main():
         validation_result.display_messages()
         exit()
 
-    # 2. ユースケースクラスに渡せるような形に変換する
     reservation = user_input.to_reservation()
 
-    # 3. ユースケースに依頼する ← ユースケース層の世界で、あとはユースケースに任せる
     try:
         usecase.reserve_meeting_room(reservation)
     except その会議室はその時間帯では予約ができませんよエラー as e:
-        # エラーページみたいなもの
         print(e)
         exit()
     except Exception as e:
-        # Webでいう 500番 エラー
         # TODO: これも独自例外にするかも
         print('なんか落ちた。ごめんね。', e)
         exit()
 
-    # MEMO: モックやぞ！
     # TODO: Mockのユースケースを本物に差し替える
     factory = ResponseObjectFactory(MockFindEmployeeUseCase(), MockFindMeetingRoomUseCase())
     response_object = factory.create(reservation)
 
-    # 4. ユースケースでの処理結果に応じて、なんかする。
-    # ResponseObjectは __str__()を持っているようにする
     print(response_object)
 
 
