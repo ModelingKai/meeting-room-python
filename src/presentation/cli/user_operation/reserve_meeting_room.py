@@ -7,7 +7,7 @@ from src.infrastructure.reservation.orator.orator_reservation_repository import 
 from src.presentation.cli.cli_util.reservation_command_validator import CliReservationCommandValidator
 from src.presentation.cli.cli_util.response_object_factory import ResponseObjectFactory
 from src.presentation.cli.cli_util.some_one import SomeOne
-from src.presentation.cli.cli_util.user_raw_input import UserRawInput
+from src.presentation.cli.cli_util.user_raw_input import CliUserRawInput
 from src.usecase.employee.mock_find_employee_usecase import MockFindEmployeeUseCase
 from src.usecase.meeting_room.mock_find_meeting_room_usecase import MockFindMeetingRoomUseCase
 from src.usecase.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
@@ -33,12 +33,12 @@ def main():
     input_number_of_participants = '4'  # input('何人くらいで利用する？')
 
     # 1. バックエンドに行く前のバリデーション
-    user_raw_input = UserRawInput(input_date,
-                                  input_start_time,
-                                  input_end_time,
-                                  input_meeting_room_id,
-                                  input_reserver_id,
-                                  input_number_of_participants)
+    user_raw_input = CliUserRawInput(input_date,
+                                     input_start_time,
+                                     input_end_time,
+                                     input_meeting_room_id,
+                                     input_reserver_id,
+                                     input_number_of_participants)
 
     validation_result = CliReservationCommandValidator.validate(user_raw_input)
 

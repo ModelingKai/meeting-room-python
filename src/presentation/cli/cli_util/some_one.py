@@ -7,11 +7,15 @@ from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
-from src.presentation.cli.cli_util.user_raw_input import UserRawInput
+from src.presentation.cli.cli_util.user_raw_input import CliUserRawInput
 
 
 class SomeOne:
-    def to_reservation(self, u: UserRawInput) -> Reservation:
+    """
+    正常なRawInputが来たときだけ、処理をする
+    """
+
+    def to_reservation(self, u: CliUserRawInput) -> Reservation:
         year = int(u.date[:4])
         month = int(u.date[4:6])
         day = int(u.date[6:8])
