@@ -42,7 +42,7 @@ def main():
 
     validation_result = CliReservationCommandValidator.validate(user_raw_input)
 
-    if validation_result.is_ダメ():
+    if validation_result.is_not_satisfied():
         validation_result.display_messages()
         exit()
 

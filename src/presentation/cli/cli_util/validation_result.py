@@ -10,5 +10,5 @@ class CliValidationResult:
         for message in self.messages:
             print(message)
 
-    def is_ダメ(self) -> bool:
+    def is_not_satisfied(self) -> bool:
         return len(self.messages) > 0
