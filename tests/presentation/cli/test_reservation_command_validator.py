@@ -17,10 +17,14 @@ class TestCliReservationCommandValidator:
                             reserver_id='Bob',
                             number_of_participants='4')
 
+    def test_入力に不備がない場合はこうなる(self, valid_user_raw_input: UserRawInput):
+        expected = CliValidationResult(is_ダメ=False, messages=[])
+
+        assert expected == CliReservationCommandValidator.validate(valid_user_raw_input)
+
     def test_未入力は許さない_日付(self, valid_user_raw_input: UserRawInput):
         user_raw_input = dataclasses.replace(valid_user_raw_input, date='')
 
         expected = CliValidationResult(is_ダメ=True, messages=['日付が未入力です'])
 
         assert expected == CliReservationCommandValidator.validate(user_raw_input)
-
