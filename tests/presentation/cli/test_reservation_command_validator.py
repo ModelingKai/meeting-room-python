@@ -8,6 +8,26 @@ from src.presentation.cli.cli_util.validation_result import CliValidationResult
 
 
 class TestCliReservationCommandValidator:
+    """
+    - バリデーションする項目
+        - [ ] 空文字チェック
+
+        - [ ] 日付や時刻に関するフォーマットチェック
+            - [ ] 日付+開始時刻 が 正しいdatetime型にできるかどうか
+            - [ ] 日付+終了時刻 が 正しいdatetime型にできるかどうか
+
+        - [ ] 参加人数
+            - [ ] 1以上の整数？
+
+    - バリデーションしない項目
+        - [x] 開始時刻と終了時刻の関係性のチェックはしない
+
+    - 謎の項目
+        - [ ] 全角を許容するか？
+        - [ ] 文字数の最大値(たとえば、文字数が10万文字入力されると困る)
+        - [ ] 他にもたぶんあるけど、まあいいよ。
+    """
+
     @pytest.fixture
     def valid_user_raw_input(self) -> UserRawInput:
         return UserRawInput(date='20200516',
