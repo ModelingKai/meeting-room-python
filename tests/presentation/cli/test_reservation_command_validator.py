@@ -28,3 +28,10 @@ class TestCliReservationCommandValidator:
         expected = CliValidationResult(is_ダメ=True, messages=['日付が未入力です'])
 
         assert expected == CliReservationCommandValidator.validate(user_raw_input)
+
+    def test_未入力は許さない_2つ未入力があるとき_日付と終了時刻(self, valid_user_raw_input: UserRawInput):
+        user_raw_input = dataclasses.replace(valid_user_raw_input, date='', end_time='')
+
+        expected = CliValidationResult(is_ダメ=True, messages=['日付が未入力です', '終了時刻が未入力です'])
+
+        assert expected == CliReservationCommandValidator.validate(user_raw_input)
