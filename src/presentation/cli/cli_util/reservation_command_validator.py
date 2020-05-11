@@ -6,4 +6,5 @@ class CliReservationCommandValidator:
 
     @classmethod
     def validate(cls, user_raw_input: UserRawInput) -> CliValidationResult:
-        return CliValidationResult(is_ダメ=True, messages=['日付が未入力です'])
+        if user_raw_input.date == '':
+            return CliValidationResult(is_ダメ=True, messages=['日付が未入力です'])

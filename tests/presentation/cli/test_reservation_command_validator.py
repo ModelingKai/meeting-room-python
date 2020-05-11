@@ -23,3 +23,4 @@ class TestCliReservationCommandValidator:
         expected = CliValidationResult(is_ダメ=True, messages=['日付が未入力です'])
 
         assert expected == CliReservationCommandValidator.validate(user_raw_input)
+
