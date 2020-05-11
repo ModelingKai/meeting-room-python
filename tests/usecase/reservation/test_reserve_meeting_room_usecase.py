@@ -13,6 +13,7 @@ from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_status import ReservationStatus
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
+from src.domain.shared.system_clock import SystemClock
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
 from src.usecase.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
 from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
@@ -21,7 +22,7 @@ from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingR
 class TestReserveMeetingRoomUsecase:
     def setup(self):
         self.reservation_repository = InMemoryReservationRepository()
-        domain_service = ReservationDomainService(self.reservation_repository)
+        domain_service = ReservationDomainService(self.reservation_repository, SystemClock())
         self.usecase = ReserveMeetingRoomUsecase(self.reservation_repository, domain_service)
 
     @pytest.fixture

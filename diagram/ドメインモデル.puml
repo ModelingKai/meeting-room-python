@@ -70,6 +70,7 @@ rectangle 会議室の使用実績の集約 {
 rectangle 会議室集約 {
     object 会議室 {
         + 会議室ID
+        + 会議室名
         - 想定使用人数
     }
 }

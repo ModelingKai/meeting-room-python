@@ -1,0 +1,48 @@
+@startuml
+
+title 業務フロー図 - 会議室を予約してから使い終わるまで
+
+
+top to bottom direction
+
+@startuml
+start
+:機能選択画面を表示する;
+note left
+どうするか？
+0: やめる
+1: 予約
+2: キャンセル
+3: 変更
+end note
+
+if (予約) then (yes)
+  :別フロー図参照;
+  stop
+elseif (キャンセル) then (yes)
+  if (有効な予約が無い場合) then (yes)
+    stop
+  else (no)
+  endif
+  :対象の予約を選んでください;
+  note left
+  現在有効な予約の一覧を表示する
+  0: 操作をやめる
+  1: 2020年5月6日(水) 11:00-12:00 Bob RoomB 4人
+  2: 2020年5月7日(木) 13:00-15:00 Alice RoomA 10人
+  end note
+  if (0を選ぶ) then (yes)
+    stop
+  else (no)
+    :選ばれた番号の予約を取り消す;
+    :サクセスメッセージを出す;
+    stop
+  endif
+elseif (変更) then (yes)
+  :別フロー図参照;
+  stop
+  else
+  stop
+endif
+@enduml
+

@@ -1,0 +1,60 @@
+@startuml
+
+title アプリフロー図: 予約内容を変更する
+
+@startuml
+start
+:機能選択画面を表示する;
+note left
+どうするか？
+0: やめる
+1: 予約
+2: キャンセル
+3: 変更
+end note
+
+if (予約) then (yes)
+    :別フロー図参照;
+    stop
+elseif (キャンセル) then (yes)
+  :別フロー図参照;
+  stop
+elseif (変更) then (yes)
+  if (有効な予約が無い場合) then (yes)
+    stop
+  else (no)
+  endif
+  :対象の予約を選んでください;
+  note right
+  現在有効な予約の一覧を表示する
+  0: 操作をやめる
+  1: 2020年5月6日(水) 11:00-12:00 Bob RoomB 4人
+  2: 2020年5月7日(木) 13:00-15:00 Alice RoomA 10人
+  end note
+  if (0を選ぶ) then (yes)
+    stop
+  else (no)
+    :選ばれた番号の予約を取り消す;
+    :変更に必要な情報を聞く;
+    note left
+    新規予約と同じインターフェースで聞く。
+    ただし、何も入力しないでEnter押した情報は、変更しない
+    end note
+    if (入力に不備があるか) then (yes)
+      :もう一回打ち直してね、と言う;
+      stop
+    else (no)
+      if (予約が被ってないか) then (yes)
+          :既存の予約と被っています、と言う;
+          stop
+      else (no)
+          :Successメッセージを出す;
+          stop
+      endif
+    endif
+  endif
+  else
+  stop
+endif
+@enduml
+

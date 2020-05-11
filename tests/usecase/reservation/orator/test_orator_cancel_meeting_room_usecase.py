@@ -30,7 +30,7 @@ class TestOratorReserveMeetingRoomUsecase:
     def init_test_db(self):
         schema = Schema(DatabaseManager(self.TEST_DB_CONFIG))
 
-        table_name = 'reservations'
+        table_name = 'reservation'
         schema.drop_if_exists(table_name)
 
         with schema.create(table_name) as table:
