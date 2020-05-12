@@ -1,11 +1,9 @@
-import datetime
 from typing import Dict, List, Union
 
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_repository import ReservationRepository
 from src.domain.reservation.reservation_specification import ReservationSpecification
-from src.domain.reservation.reservation_status import ReservationStatus
 
 
 class InMemoryReservationRepository(ReservationRepository):
@@ -13,16 +11,6 @@ class InMemoryReservationRepository(ReservationRepository):
 
     def reserve_new_meeting_room(self, reservation: Reservation) -> None:
         self.data[reservation.id] = reservation
-
-    def find_available_reservations(self) -> List[Reservation]:
-        now = datetime.datetime.now()
-
-        is_available_reservation = lambda x: x.reservation_status == ReservationStatus.Reserved \
-                                             and x.time_range_to_reserve.start_datetime > now
-
-        available_reservations = list(filter(is_available_reservation, self.data.values()))
-
-        return available_reservations
 
     def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
         available_reservations = list(filter(spec.satisfying_elements_from, self.data.values()))

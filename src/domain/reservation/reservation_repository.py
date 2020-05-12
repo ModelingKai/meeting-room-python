@@ -16,11 +16,6 @@ class ReservationRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_available_reservations(self) -> List[Reservation]:
-        pass
-
-
-    @abstractmethod
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         pass
 
