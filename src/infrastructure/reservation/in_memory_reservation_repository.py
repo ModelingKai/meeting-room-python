@@ -4,6 +4,7 @@ from typing import Dict, List, Union
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_repository import ReservationRepository
+from src.domain.reservation.reservation_specification import ReservationSpecification
 from src.domain.reservation.reservation_status import ReservationStatus
 
 
@@ -20,6 +21,11 @@ class InMemoryReservationRepository(ReservationRepository):
                                              and x.time_range_to_reserve.start_datetime > now
 
         available_reservations = list(filter(is_available_reservation, self.data.values()))
+
+        return available_reservations
+
+    def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
+        available_reservations = list(filter(spec.satisfying_elements_from, self.data.values()))
 
         return available_reservations
 

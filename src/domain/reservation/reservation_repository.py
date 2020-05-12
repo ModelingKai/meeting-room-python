@@ -3,6 +3,7 @@ from typing import List, Union
 
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
+from src.domain.reservation.reservation_specification import ReservationSpecification
 
 
 class ReservationRepository(metaclass=ABCMeta):
@@ -18,6 +19,7 @@ class ReservationRepository(metaclass=ABCMeta):
     def find_available_reservations(self) -> List[Reservation]:
         pass
 
+
     @abstractmethod
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         pass
@@ -28,4 +30,8 @@ class ReservationRepository(metaclass=ABCMeta):
 
     @abstractmethod
     def change_time_range(self, reservation: Reservation) -> None:
+        pass
+
+    @abstractmethod
+    def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
         pass
