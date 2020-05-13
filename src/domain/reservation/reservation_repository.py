@@ -28,5 +28,5 @@ class ReservationRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
+    def find_satisfying(self, specification: ReservationSpecification) -> List[Reservation]:
         pass

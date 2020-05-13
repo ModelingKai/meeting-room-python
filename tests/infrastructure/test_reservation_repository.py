@@ -22,7 +22,6 @@ class TestReservationRepository:
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
     def reservation_0401(self) -> Reservation:
-        """不正でないReservationインスタンスを作成するだけのfixture"""
         return Reservation(ReservationId(str(uuid.uuid4())),
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
@@ -32,7 +31,6 @@ class TestReservationRepository:
     @pytest.fixture
     @freezegun.freeze_time('2020-3-1 10:00')
     def reservation_0301(self) -> Reservation:
-        """不正でないReservationインスタンスを作成するだけのfixture"""
         return Reservation(ReservationId(str(uuid.uuid4())),
                            TimeRangeToReserve(使用日時(2020, 3, 2, 13, 00), 使用日時(2020, 3, 2, 14, 00)),
                            NumberOfParticipants(4),
@@ -43,18 +41,17 @@ class TestReservationRepository:
     def test_find_available_reservations(self, reservation_0401, reservation_0301):
         repository = InMemoryReservationRepository()
 
-        invalid_reservation = dataclasses.replace(reservation_0401, id=ReservationId(str(uuid.uuid4())),
-                                                  reservation_status=ReservationStatus.Canceled)
+        cancelled_reservation = dataclasses.replace(reservation_0401,
+                                                    id=ReservationId(str(uuid.uuid4())),
+                                                    reservation_status=ReservationStatus.Canceled)
 
         repository.data[reservation_0401.id] = reservation_0401
-        repository.data[reservation_0301.id] = reservation_0301
-        repository.data[invalid_reservation.id] = invalid_reservation
+        repository.data[reservation_0301.id] = reservation_0301  # 過去の予約だよ
+        repository.data[cancelled_reservation.id] = cancelled_reservation
 
         expected = [reservation_0401]
 
         # TODO:ここに時間を入れるのは、どうかは、あとで考える
-        spec = AvailableReservationSpecification(datetime.datetime.now())
+        specification = AvailableReservationSpecification(datetime.datetime.now())
 
-        # 仕様を満たしたものをSelectしてくる
-        actual = repository.find_satisfying(spec)
-        assert expected == actual
+        assert expected == repository.find_satisfying(specification)

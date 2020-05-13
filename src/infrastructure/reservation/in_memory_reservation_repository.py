@@ -12,8 +12,8 @@ class InMemoryReservationRepository(ReservationRepository):
     def reserve_new_meeting_room(self, reservation: Reservation) -> None:
         self.data[reservation.id] = reservation
 
-    def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
-        available_reservations = list(filter(spec.satisfying_elements_from, self.data.values()))
+    def find_satisfying(self, specification: ReservationSpecification) -> List[Reservation]:
+        available_reservations = list(filter(specification.satisfying_elements_from, self.data.values()))
 
         return available_reservations
 

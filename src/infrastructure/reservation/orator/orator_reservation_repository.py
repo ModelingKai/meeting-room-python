@@ -29,8 +29,8 @@ class OratorReservationRepository(ReservationRepository):
 
         OratorReservationModel.update(orator_reservation, reservation_status=reservation.reservation_status.value)
 
-    def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
-        return list(filter(spec.satisfying_elements_from, OratorReservationModel.all()))
+    def find_satisfying(self, specification: ReservationSpecification) -> List[Reservation]:
+        return list(filter(specification.satisfying_elements_from, OratorReservationModel.all()))
 
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         orator_reservation = OratorReservationModel.find(reservation_id.value)
