@@ -34,7 +34,47 @@ elseif (変更) then (yes)
   if (0を選ぶ) then (yes)
     stop
   else (no)
-    :選ばれた番号の予約を取り消す;
+    :選ばれた番号の予約を変更する;
+    :どれを変更するか;
+    if (予約者) then (yes)
+        :社員IDを出す;
+        note left
+        現在の予約者は 002 さんです
+        end note
+        note left
+        新しい予約者の社員番号 > 008
+        end note
+    elseif (想定使用人数) then (yes)
+        :;
+    elseif (予約時間帯のみ) then (yes)
+        :予約時間帯を入力する;
+        note left
+        現在予約されている使用日は 20200511 です
+        end note
+        note left
+        現在予約されている開始時刻は 1100 です
+        end note
+        note left
+        現在予約されている終了時刻は 1300 です
+        end note
+        note left
+        新しい使用日 > 20200520
+        end note
+        note left
+        新しい開始時刻 > 1400
+        end note
+        note left
+        新しい終了時刻 > 1600
+        end note
+
+    elseif (会議室のみ) then (yes)
+        :;
+    elseif (予約時間帯と会議室両方) then (yes)
+        :;
+    else
+        stop
+    endif
+
     :変更に必要な情報を聞く;
     note left
     新規予約と同じインターフェースで聞く。
