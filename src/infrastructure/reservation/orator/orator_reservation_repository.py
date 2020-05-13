@@ -8,8 +8,8 @@ from orator import DatabaseManager, Model
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_repository import ReservationRepository
-from src.domain.reservation.reservation_status import ReservationStatus
-from src.domain.shared.clock import Clock
+
+from src.domain.reservation.reservation_specification import ReservationSpecification
 from src.infrastructure.reservation.orator.orator_reservation_model import OratorReservationModel
 
 
@@ -30,12 +30,8 @@ class OratorReservationRepository(ReservationRepository):
 
         OratorReservationModel.update(orator_reservation, reservation_status=reservation.reservation_status.value)
 
-    def find_available_reservations(self, clock: Clock) -> List[Reservation]:
-        reservations = self.database_manager.table('reservation') \
-            .where('reservation_status', ReservationStatus.Reserved.value) \
-            .where('start_datetime', '>', clock.now()).get()
-
-        return [OratorReservationModel.to_reservation(r) for r in reservations]
+    def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
+        return list(filter(spec.satisfying_elements_from, OratorReservationModel.all()))
 
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         orator_reservation = OratorReservationModel.find(reservation_id.value)

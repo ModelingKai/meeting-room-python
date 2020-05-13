@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from src.domain.reservation.reservation import Reservation
-from src.presentation.response_object import ResponseObject
+from src.presentation.cli.cli_util.response_object import ResponseObject
 from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
 

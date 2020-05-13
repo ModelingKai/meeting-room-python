@@ -17,10 +17,6 @@ class ReservationRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_available_reservations(self, clock: Clock) -> AvailableReservations:
-        pass
-
-    @abstractmethod
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         pass
 
@@ -30,4 +26,8 @@ class ReservationRepository(metaclass=ABCMeta):
 
     @abstractmethod
     def change_time_range(self, reservation: Reservation) -> None:
+        pass
+
+    @abstractmethod
+    def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
         pass
