@@ -17,19 +17,59 @@ note left
 end note
 
 if (予約) then (yes)
-  :必要な情報を聞く;
-  note left
-  Q. 日にち？(yyyymmdd) > 20200511
-  Q. 開始？(hhii) > 1000
-  Q. 終了？(hhii) > 1200
-  Q. どの会議室を使いますか？(RoomA or RoomB or RoomC) > RoomA
-  Q. 社員番号は？ > 001(社員番号)
-  Q. 何人くらいで使う予定？ > 5
-  end note
-  if (入力に不備があるか) then (yes)
-    :もう一回打ち直してね、と言う;
+  partition コンポーネント {
+      repeat
+      :日にちを聞く;
+      repeat while (不備がある)
+      note left
+      Q. 日にち？(yyyymmdd) > 20200511
+      end note
+  }
+  partition コンポーネント {
+      repeat
+      :開始時刻を聞く;
+      repeat while (不備がある)
+      note left
+      Q. 開始？(hhii) > 1000
+      end note
+  }
+  partition コンポーネント {
+      repeat
+      :終了時刻を聞く;
+      repeat while (不備がある)
+      note left
+      Q. 終了？(hhii) > 1200
+      end note
+  }
+  partition コンポーネント {
+      repeat
+      :どの会議室を使うか聞く;
+      repeat while (不備がある)
+      note left
+      Q. どの会議室を使いますか？(RoomA or RoomB or RoomC) > RoomA
+      end note
+  }
+  partition コンポーネント {
+      repeat
+      :社員番号を聞く;
+      repeat while (不備がある)
+      note left
+      Q. 社員番号は？ > 001(社員番号)
+      end note
+  }
+  partition コンポーネント {
+      repeat
+      :何人くらいで使うかを聞く;
+      repeat while (不備がある)
+      note left
+      Q. 何人くらいで使う予定？ > 5
+      end note
+  }
+  if (Reservationオブジェクトを生成できましたか) then (できない)
+    :なんで作れなかったかどうかの理由を表示する;
+    :最初から、打ち直してね;
     stop
-  else (no)
+  else (できた)
     if (予約が被ってないか) then (yes)
         :既存の予約と被っています、と言う;
         stop
