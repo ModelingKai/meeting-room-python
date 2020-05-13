@@ -1,10 +1,9 @@
 from abc import ABCMeta, abstractmethod
-from typing import Union
+from typing import Union, List
 
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
-from src.domain.shared.clock import Clock
-from tests.usecase.reservation.available_reservations import AvailableReservations
+from src.domain.reservation.reservation_specification import ReservationSpecification
 
 
 class ReservationRepository(metaclass=ABCMeta):

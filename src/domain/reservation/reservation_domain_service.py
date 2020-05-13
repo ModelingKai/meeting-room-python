@@ -4,13 +4,11 @@ from dataclasses import dataclass
 from src.domain.reservation.available_reservation_specification import AvailableReservationSpecification
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_repository import ReservationRepository
-from src.domain.shared.clock import Clock
 
 
 @dataclass
 class ReservationDomainService:
     reservation_repository: ReservationRepository
-    clock: Clock
 
     def can_not_reserve(self, reservation: Reservation) -> bool:
         # Memo:　外から差し込むかと迷ったが、can_not_reserve は有効な予約を取得するということを明示したいので、

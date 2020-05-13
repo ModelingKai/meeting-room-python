@@ -59,10 +59,10 @@
       submitSave: function () {
         api({
           // 登録済みかどうかでHTTPメソッドとエンドポイントを切り替える
-          method: this.isCreated ? 'put' : 'post',
-          // method: 'post',
-          url: '/api/books/',
-          // url: '/api/reserve/',
+          //method: this.isCreated ? 'put' : 'post',
+           method: 'post',
+          //url: '/api/books/',
+           url: '/api/reserve/',
           data: {
             'id': this.form.book.id,
             'title': this.form.book.title,

@@ -16,7 +16,7 @@ urlpatterns += [
         'api/books/', views.BookCreateAPIView.as_view()
     ),
     path(
-        'api/reserve/', api.json_reserve, name='reserve_api'
+        'api/reserve/', views.ReserveMeetingroomAPIView.as_view(), name='reserve_api'
     ),
     path(
         'api/get_reserve/', api.json_get_reserve, name='get_reserve_api'
