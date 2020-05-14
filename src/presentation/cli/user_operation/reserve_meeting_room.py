@@ -105,6 +105,17 @@ class Task会議室ID:
                 return input_meeting_room_id
 
 
+class Task社員ID:
+    def exe(self) -> str:
+        while True:
+            input_employee_id = input('社員IDは？ > ')
+
+            if input_employee_id == '':
+                print('空文字はだめだぞ？')
+            else:
+                return input_employee_id
+
+
 def 新規予約():
     database_manager = DatabaseManager(DEV_DB_CONFIG)
 
@@ -118,14 +129,14 @@ def 新規予約():
     input_開始時刻 = Task開始時刻().exe()
     input_終了時刻 = Task終了時刻().exe()
     input_会議室ID = Task会議室ID().exe()
-    # input_日時 = task_予約者.exe()
+    input_社員ID = Task社員ID().exe()
     input_使用人数 = Task使用人数().exe()
 
     user_input = CliUserInput(input_使用日,
                               input_開始時刻,
                               input_終了時刻,
                               input_会議室ID,
-                              'Bob',
+                              input_社員ID,
                               input_使用人数)
 
     try:
