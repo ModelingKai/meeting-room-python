@@ -13,8 +13,36 @@ from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingR
 
 
 class Task使用人数:
+    """
+    クラス名どうしよう？
+    メソッド名どうしよう？
+    """
+
     def exe(self) -> str:
-        return '4'
+        """
+        正しい入力が得られるまで、
+            入力の受付と、
+            バリデーションをし続けること
+
+        正しい入力がきたら、それを返す
+
+
+        ~~やめたいトキはどうする？~~ Ctrl-Cで抜けてもらえばよし
+        """
+        while True:
+            input_number_of_participants = input('使用人数は？ > ')
+
+            if self.is_だめ(input_number_of_participants):
+                print('空文字はだめだぞ？')
+            else:
+                return input_number_of_participants
+
+    def is_だめ(self, input_number_of_participants: str) -> bool:
+        # とりあえず空文字だけをチェックする
+        if input_number_of_participants == '':
+            return True
+
+        return False
 
 
 def 新規予約():
@@ -62,10 +90,11 @@ def 新規予約():
 def main():
     try:
         新規予約()
+    except KeyboardInterrupt:
+        print('Bye!')
     except Exception as e:
         print(e)
         print('500 Internal Server Error')
-
 
 
 if __name__ == '__main__':
