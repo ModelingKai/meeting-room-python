@@ -72,6 +72,26 @@ class Task開始時刻:
             return True
 
 
+class Task終了時刻:
+    def exe(self) -> str:
+        while True:
+            input_use_date = input('終了時刻は？(hhii) > ')
+
+            if input_use_date == '':
+                print('空文字はだめだぞ？')
+            elif self.is_hhii_じゃないぞ(input_use_date):
+                print('使用日は hhii のフォーマットで入力してくださいね')
+            else:
+                return input_use_date
+
+    def is_hhii_じゃないぞ(self, input_use_start_time: str) -> bool:
+        try:
+            datetime.datetime.strptime(input_use_start_time, '%H%M')
+            return False
+        except ValueError:
+            return True
+
+
 def 新規予約():
     database_manager = DatabaseManager(DEV_DB_CONFIG)
 
@@ -83,14 +103,14 @@ def 新規予約():
     init_dev_db()  # 検証しやすくするために毎回DBを初期化する
     input_使用日 = Task使用日().exe()
     input_開始時刻 = Task開始時刻().exe()
-    # input_日時 = task_終了時刻.exe()
+    input_終了時刻 = Task終了時刻().exe()
     # input_日時 = task_会議室.exe()
     # input_日時 = task_予約者.exe()
     input_使用人数 = Task使用人数().exe()
 
     user_input = CliUserInput(input_使用日,
                               input_開始時刻,
-                              '1300',
+                              input_終了時刻,
                               'RoomA',
                               'Bob',
                               input_使用人数)
