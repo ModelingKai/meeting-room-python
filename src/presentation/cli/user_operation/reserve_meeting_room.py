@@ -1,6 +1,6 @@
 from orator import DatabaseManager
 
-from src.app_environment.init_dev_db import DEV_DB_CONFIG
+from src.app_environment.init_dev_db import DEV_DB_CONFIG, init_dev_db
 from src.domain.reservation.errors import ReservationDomainObjectError
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
@@ -12,6 +12,11 @@ from src.usecase.reservation.errors import ReservationUsecaseError
 from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
 
 
+class Task使用人数:
+    def exe(self) -> str:
+        return '4'
+
+
 def 新規予約():
     database_manager = DatabaseManager(DEV_DB_CONFIG)
 
@@ -20,12 +25,13 @@ def 新規予約():
     domain_service = ReservationDomainService(reservation_repository)
     usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
 
+    init_dev_db()  # 検証しやすくするために毎回DBを初期化する
     # input_日時 = task_使用日時.exe()  # print('使用日時は？ >') →　入力する　→　バリデーションする
     # input_日時 = task_開始時刻.exe()
     # input_日時 = task_終了時刻.exe()
     # input_日時 = task_会議室.exe()
     # input_日時 = task_予約者.exe()
-    input_使用人数 = task_使用人数.exe()
+    input_使用人数 = Task使用人数().exe()
 
     user_input = CliUserInput('20200515',
                               '1100',
@@ -61,8 +67,6 @@ def main():
         print('500 Internal Server Error')
 
 
-if __name__ == '__main__':
-    main()
 
 if __name__ == '__main__':
     main()
