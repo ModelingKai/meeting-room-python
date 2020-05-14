@@ -19,30 +19,15 @@ class Task使用人数:
     """
 
     def exe(self) -> str:
-        """
-        正しい入力が得られるまで、
-            入力の受付と、
-            バリデーションをし続けること
-
-        正しい入力がきたら、それを返す
-
-
-        ~~やめたいトキはどうする？~~ Ctrl-Cで抜けてもらえばよし
-        """
         while True:
             input_number_of_participants = input('使用人数は？ > ')
 
-            if self.is_だめ(input_number_of_participants):
+            if input_number_of_participants == '':
                 print('空文字はだめだぞ？')
+            elif not input_number_of_participants.isdigit():
+                print('数字を入力してね')
             else:
                 return input_number_of_participants
-
-    def is_だめ(self, input_number_of_participants: str) -> bool:
-        # とりあえず空文字だけをチェックする
-        if input_number_of_participants == '':
-            return True
-
-        return False
 
 
 def 新規予約():
