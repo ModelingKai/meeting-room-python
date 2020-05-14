@@ -1,6 +1,10 @@
-class その会議室はその時間帯では予約ができませんよエラー(Exception):
+class ReservationUsecaseError(Exception):
     pass
 
 
-class NotFoundReservationError(Exception):
+class その会議室はその時間帯では予約ができませんよエラー(ReservationUsecaseError):
+    pass
+
+
+class NotFoundReservationError(ReservationUsecaseError):
     pass
