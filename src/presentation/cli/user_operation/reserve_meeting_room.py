@@ -92,6 +92,19 @@ class Task終了時刻:
             return True
 
 
+class Task会議室ID:
+    def exe(self) -> str:
+        while True:
+            input_meeting_room_id = input('会議室IDは？(RoomA or RoomB or RoomC) > ')
+
+            # 存在する会議室IDの中から選ばせるようにUIで制約を設けるなら、CLIアプリにおいてのみ、
+            # 後半のバリデーションはしなくても、「一応」成立する。
+            if input_meeting_room_id == '':
+                print('空文字はだめだぞ？')
+            else:
+                return input_meeting_room_id
+
+
 def 新規予約():
     database_manager = DatabaseManager(DEV_DB_CONFIG)
 
@@ -104,14 +117,14 @@ def 新規予約():
     input_使用日 = Task使用日().exe()
     input_開始時刻 = Task開始時刻().exe()
     input_終了時刻 = Task終了時刻().exe()
-    # input_日時 = task_会議室.exe()
+    input_会議室ID = Task会議室ID().exe()
     # input_日時 = task_予約者.exe()
     input_使用人数 = Task使用人数().exe()
 
     user_input = CliUserInput(input_使用日,
                               input_開始時刻,
                               input_終了時刻,
-                              'RoomA',
+                              input_会議室ID,
                               'Bob',
                               input_使用人数)
 
