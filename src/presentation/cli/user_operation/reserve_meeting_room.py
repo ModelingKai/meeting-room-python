@@ -39,7 +39,7 @@ class Task使用日:
 
             if input_use_date == '':
                 print('空文字はだめだぞ？')
-            if self.is_yyyymmdd_じゃないぞ(input_use_date):
+            elif self.is_yyyymmdd_じゃないぞ(input_use_date):
                 print('使用日は yyyymmdd のフォーマットで入力してくださいね')
             else:
                 return input_use_date
@@ -47,7 +47,26 @@ class Task使用日:
     def is_yyyymmdd_じゃないぞ(self, input_use_date: str) -> bool:
         pattern = r'\d{4}\d{1,2}\d{1,2}'
 
-        return re.match(pattern, input_use_date) is None
+        return re.fullmatch(pattern, input_use_date) is None
+
+
+class Task開始時刻:
+    def exe(self) -> str:
+        while True:
+            input_use_date = input('開始時刻は？(hhii) > ')
+
+            if input_use_date == '':
+                print('空文字はだめだぞ？')
+            elif self.is_hhii_じゃないぞ(input_use_date):
+                print('使用日は hhii のフォーマットで入力してくださいね')
+            else:
+                return input_use_date
+
+    def is_hhii_じゃないぞ(self, input_use_date: str) -> bool:
+        # ガバガバです(29時とかいけちゃう)
+        pattern = '[0-2][0-9][0-5][0-9]'
+
+        return re.fullmatch(pattern, input_use_date) is None
 
 
 def 新規予約():
@@ -60,14 +79,14 @@ def 新規予約():
 
     init_dev_db()  # 検証しやすくするために毎回DBを初期化する
     input_使用日 = Task使用日().exe()
-    # input_日時 = task_開始時刻.exe()
+    input_開始時刻 = Task開始時刻().exe()
     # input_日時 = task_終了時刻.exe()
     # input_日時 = task_会議室.exe()
     # input_日時 = task_予約者.exe()
     input_使用人数 = Task使用人数().exe()
 
     user_input = CliUserInput(input_使用日,
-                              '1100',
+                              input_開始時刻,
                               '1300',
                               'RoomA',
                               'Bob',
