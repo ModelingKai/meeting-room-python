@@ -1,4 +1,4 @@
-import re
+import datetime
 
 from orator import DatabaseManager
 
@@ -45,9 +45,11 @@ class Task使用日:
                 return input_use_date
 
     def is_yyyymmdd_じゃないぞ(self, input_use_date: str) -> bool:
-        pattern = r'\d{4}\d{1,2}\d{1,2}'
-
-        return re.fullmatch(pattern, input_use_date) is None
+        try:
+            datetime.datetime.strptime(input_use_date, '%Y%m%d')
+            return False
+        except ValueError:
+            return True
 
 
 class Task開始時刻:
@@ -62,11 +64,12 @@ class Task開始時刻:
             else:
                 return input_use_date
 
-    def is_hhii_じゃないぞ(self, input_use_date: str) -> bool:
-        # ガバガバです(29時とかいけちゃう)
-        pattern = '[0-2][0-9][0-5][0-9]'
-
-        return re.fullmatch(pattern, input_use_date) is None
+    def is_hhii_じゃないぞ(self, input_use_start_time: str) -> bool:
+        try:
+            datetime.datetime.strptime(input_use_start_time, '%H%M')
+            return False
+        except ValueError:
+            return True
 
 
 def 新規予約():
