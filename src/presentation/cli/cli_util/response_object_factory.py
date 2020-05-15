@@ -19,7 +19,7 @@ class ResponseObjectFactory:
         year, month, day = start_datetime.year, start_datetime.month, start_datetime.day
         start_time, end_time = start_datetime.time(), end_datetime.time()
 
-        reserver_name = self.find_employee_usecase.find_by_id(reservation.reserver_id).name
+        reserver_name = self.find_employee_usecase.find_employee(reservation.reserver_id).name
         meeting_room_name = self.find_mtg_room_usecase.find_by_id(reservation.meeting_room_id).name
 
         number_of_participants = reservation.number_of_participants.value

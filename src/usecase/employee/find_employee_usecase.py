@@ -10,7 +10,7 @@ from src.usecase.employee.errors import NotFoundEmployeeError
 class FindEmployeeUseCase:
     repository: EmployeeRepository
 
-    def find_by_id(self, employee_id: EmployeeId) -> Employee:
+    def find_employee(self, employee_id: EmployeeId) -> Employee:
         employee = self.repository.find_by_id(employee_id)
 
         if employee is None:

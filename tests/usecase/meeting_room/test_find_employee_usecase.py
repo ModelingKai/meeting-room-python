@@ -19,10 +19,10 @@ class TestFindEmployeeUsecase:
 
         self.repository.data[employee_id] = employee
 
-        assert employee == self.usecase.find_by_id(employee_id)
+        assert employee == self.usecase.find_employee(employee_id)
 
     def test_存在しない社員IDが与えられたらエラーとなる(self):
         employee_id = self.factory.create('NotExistId')
 
         with pytest.raises(NotFoundEmployeeError):
-            self.usecase.find_by_id(employee_id)
+            self.usecase.find_employee(employee_id)
