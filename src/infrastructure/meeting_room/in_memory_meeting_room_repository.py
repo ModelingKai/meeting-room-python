@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from src.domain.meeting_room.meeting_room import MeetingRoom
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
@@ -12,3 +12,6 @@ class InMemoryMeetingRoomRepository(MeetingRoomRepository):
 
     def find_by_id(self, meeting_room_id: MeetingRoomId) -> Optional[MeetingRoom]:
         return self.data.get(meeting_room_id)
+
+    def find_all(self) -> List[MeetingRoom]:
+        return list(self.data.values())

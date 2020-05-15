@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from src.domain.meeting_room.errors import NotFoundMeetingRoomIdError
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
 from src.domain.meeting_room.meeting_room_repository import MeetingRoomRepository
 
@@ -12,14 +13,10 @@ class MeetingRoomIdFactory:
         return MeetingRoomId(meeting_room_id_str)
 
     def create_あとでなおす(self, meeting_room_id_str: str) -> MeetingRoomId:
-        pass
-        # meeting_room_id_str='A'
-        # repository.find_id_by_idを経由して、正しいMeetingRoomの問い合わせをする
-        #
-        # repository に
-        # 存在するMeetingRoomIdが守れればいい
+        meeting_rooms = self.meeting_room_repository.find_all()
 
-        # meeting_room = repository.find_by_id(meeting_room_id_str)
-        #
-        # if 存在したら:
-        # return MeetingRoomId(meeting_room_id_str)
+        for meeting_room in meeting_rooms:
+            if meeting_room.id.value == meeting_room_id_str:
+                return meeting_room.id
+
+        raise NotFoundMeetingRoomIdError('そのような会議室IDはありません')
