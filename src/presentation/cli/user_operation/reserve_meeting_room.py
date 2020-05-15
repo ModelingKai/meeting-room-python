@@ -3,15 +3,18 @@ import datetime
 from orator import DatabaseManager
 
 from src.app_environment.init_dev_db import DEV_DB_CONFIG, init_dev_db
+from src.domain.employee.employee import Employee
+from src.domain.employee.employee_id_factory import EmployeeIdFactory
 from src.domain.meeting_room.meeting_room import MeetingRoom
 from src.domain.meeting_room.meeting_room_id_factory import MeetingRoomIdFactory
 from src.domain.reservation.errors import ReservationDomainObjectError
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
+from src.infrastructure.employee.in_memory_employee_repository import InMemoryEmployeeRepository
 from src.infrastructure.meeting_room.in_memory_meeting_room_repository import InMemoryMeetingRoomRepository
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
 from src.presentation.cli.cli_util.response_object_factory import ResponseObjectFactory
 from src.presentation.cli.cli_util.user_input import CliUserInput
-from src.usecase.employee.mock_find_employee_usecase import MockFindEmployeeUseCase
+from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
 from src.usecase.reservation.errors import ReservationUsecaseError
 from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
@@ -161,16 +164,24 @@ def 新規予約():
         print(e)
         exit()
 
-    # TODO: Mockのユースケースを本物に差し替える
+    # MeetingRoomに関する準備
     meeting_room_repository = InMemoryMeetingRoomRepository()
-    factory = MeetingRoomIdFactory(meeting_room_repository)
-    meeting_room_id = factory.create('A')
+    meeting_room_id_factory = MeetingRoomIdFactory(meeting_room_repository)
+    meeting_room_id = meeting_room_id_factory.create('A')
     meeting_room = MeetingRoom(meeting_room_id, '大会議室')
 
     meeting_room_repository.data[meeting_room_id] = meeting_room
 
-    factory = ResponseObjectFactory(MockFindEmployeeUseCase(), FindMeetingRoomUseCase(meeting_room_repository))
-    response_object = factory.create(reservation)
+    # Employeeに関する準備
+    employee_repository = InMemoryEmployeeRepository()
+    employee_id_factory = EmployeeIdFactory(employee_repository)
+    employee_id = employee_id_factory.create('001')
+    employee = Employee(employee_id, name='Bob')
+    employee_repository.data[employee_id] = employee
+
+    response_object_factory = ResponseObjectFactory(FindEmployeeUseCase(employee_repository),
+                                                    FindMeetingRoomUseCase(meeting_room_repository))
+    response_object = response_object_factory.create(reservation)
 
     print(response_object)
 
