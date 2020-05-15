@@ -13,11 +13,13 @@ rectangle {
     agent 予約した社員の名前を取得する機能 as FindEmployee #Turquoise
     agent 現在有効な予約をすべて取得する機能 as FindAvailableReservations #Turquoise
     agent 予約できるかを確かめる機能 as ReservationDomainServiceCanNotReserve #Turquoise
+    agent 予約した会議室の名前を取得する機能 as FindMeetingRoom #Turquoise
 
     a1 --> (ReservationUseCase)
     ReservationUseCase ..> FindAllMeetingRoom
     ReservationUseCase ..> FindEmployee
     ReservationUseCase ..> ReservationDomainServiceCanNotReserve
+    ReservationUseCase ..> FindMeetingRoom
 
     usecase 予約内容を変更する as ChangeReservationUseCase
     a1 --> ChangeReservationUseCase
@@ -25,6 +27,8 @@ rectangle {
     ChangeReservationUseCase ..> FindEmployee
     ChangeReservationUseCase ..> FindAvailableReservations
     ChangeReservationUseCase ..> ReservationDomainServiceCanNotReserve
+    ChangeReservationUseCase ..> FindMeetingRoom
+
 
     usecase 予約済みの会議室をキャンセルする as CancelMeetingRoomUsecase
     a1 --> CancelMeetingRoomUsecase
