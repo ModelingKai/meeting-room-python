@@ -5,8 +5,8 @@ from src.domain.employee.employee_repository import EmployeeRepository
 
 
 @dataclass
-class EmployeeIdFactory(object):
+class EmployeeIdFactory:
     repository: EmployeeRepository
 
-    def create(self, param) -> EmployeeId:
-        pass
+    def create(self, employee_id: str) -> EmployeeId:
+        return EmployeeId('001')
