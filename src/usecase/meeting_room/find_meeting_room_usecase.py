@@ -7,7 +7,9 @@ from src.domain.meeting_room.meeting_room_repository import MeetingRoomRepositor
 
 @dataclass
 class FindMeetingRoomUseCase:
-    meeting_room_repository: MeetingRoomRepository
+    repository: MeetingRoomRepository
 
     def find_by_id(self, meeting_room_id: MeetingRoomId) -> MeetingRoom:
-        pass
+        meeting_room = self.repository.find_by_id(meeting_room_id)
+
+        return meeting_room

@@ -7,12 +7,14 @@ from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUs
 class TestFindMeetingRoomUsecase:
     def test_会議室のIDを渡したら単一の会議室情報が取得できる(self):
         repository = InMemoryMeetingRoomRepository()
-        factory = MeetingRoomIdFactory(repository)
-        meeting_room_id = factory.create('A')
 
-        expected = MeetingRoom(meeting_room_id, '大会議室')
+        factory = MeetingRoomIdFactory(repository)
+
+        meeting_room_id = factory.create('A')
+        meeting_room = MeetingRoom(meeting_room_id, '大会議室')
+
+        repository.data[meeting_room_id] = meeting_room
 
         usecase = FindMeetingRoomUseCase(repository)
-        actual = usecase.find_by_id(meeting_room_id)
 
-        assert expected == actual
+        assert meeting_room == usecase.find_by_id(meeting_room_id)
