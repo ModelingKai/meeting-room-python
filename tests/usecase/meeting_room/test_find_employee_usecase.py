@@ -1,0 +1,19 @@
+from src.domain.employee.employee import Employee
+from src.domain.employee.employee_id_factory import EmployeeIdFactory
+from src.infrastructure.employee.in_memory_employee_repository import InMemoryEmployeeRepository
+from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
+
+
+class TestFindEmployeeUsecase:
+    def setup(self):
+        self.repository = InMemoryEmployeeRepository()
+        self.factory = EmployeeIdFactory(self.repository)
+        self.usecase = FindEmployeeUseCase(self.repository)
+
+    def test_社員のIDを渡したら単一の社員情報が取得できる(self):
+        employee_id = self.factory.create('001')
+        employee = Employee(employee_id, 'Bob')
+
+        self.repository.data[employee_id] = employee
+
+        assert employee == self.usecase.find_by_id(employee_id)
