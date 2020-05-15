@@ -12,8 +12,8 @@ from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
 class TestFindEmployeeUsecase:
     def setup(self):
         self.repository = InMemoryEmployeeRepository()
-        self.id_factory = EmployeeIdFactory(self.repository)
-        self.usecase = FindEmployeeUseCase(self.repository, self.id_factory)
+        id_factory = EmployeeIdFactory(self.repository)
+        self.usecase = FindEmployeeUseCase(self.repository, id_factory)
 
     def test_社員のIDを渡したら単一の社員情報が取得できる(self):
         employee_id = EmployeeId('001')
