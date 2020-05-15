@@ -13,8 +13,8 @@ class TestFindMeetingRoomUsecase:
     def setup(self):
         self.repository = InMemoryMeetingRoomRepository()
 
-        self.factory = MeetingRoomIdFactory(self.repository)
-        self.usecase = FindMeetingRoomUseCase(self.repository)
+        id_factory = MeetingRoomIdFactory(self.repository)
+        self.usecase = FindMeetingRoomUseCase(self.repository, id_factory)
 
     def test_会議室のIDを渡したら単一の会議室情報が取得できる(self):
         meeting_room_id = MeetingRoomId('A')

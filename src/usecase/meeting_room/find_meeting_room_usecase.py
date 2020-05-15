@@ -9,10 +9,10 @@ from src.usecase.meeting_room.find_meeting_room_commnad import FindMeetingRoomCo
 @dataclass
 class FindMeetingRoomUseCase:
     repository: MeetingRoomRepository
+    id_factory: MeetingRoomIdFactory
 
     def find_meeting_room(self, command: FindMeetingRoomCommand) -> MeetingRoom:
-        id_factory = MeetingRoomIdFactory(self.repository)
-        meeting_room_id = id_factory.create(command.meeting_room_id)
+        meeting_room_id = self.id_factory.create(command.meeting_room_id)
 
         # ID生成用のファクトリを使っているので、Noneになることはないんだぞ
         return self.repository.find_by_id(meeting_room_id)
