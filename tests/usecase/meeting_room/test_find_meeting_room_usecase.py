@@ -1,7 +1,10 @@
+import pytest
+
 from src.domain.meeting_room.meeting_room import MeetingRoom
 from src.domain.meeting_room.meeting_room_domain_service import MeetingRoomDomainService
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
 from src.infrastructure.meeting_room.in_memory_meeting_room_repository import InMemoryMeetingRoomRepository
+from src.usecase.meeting_room.errors import NotFoundMeetingRoomIdError
 from src.usecase.meeting_room.find_meeting_room_commnad import FindMeetingRoomCommand
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
 
@@ -21,17 +24,8 @@ class TestFindMeetingRoomUsecase:
 
         assert meeting_room == self.usecase.find_meeting_room(command)
 
-    # def test_存在しない会議室IDを渡すとエラーになる(self):
-    #     command = FindMeetingRoomCommand('001')
-    #
-    #     # UsecaseErrorではない点に注意
-    #     with pytest.raises(NotFoundMeetingRoomIdError):
-    #         self.usecase.find_meeting_room(command)
+    def test_存在しない会議室IDを渡すとエラーになる(self):
+        command = FindMeetingRoomCommand('Z')
 
-# MeetingRoomId のテスト用↓↓
-# def test_存在しない会議室IDを渡すとエラーになる(self):
-#     command = FindMeetingRoomCommand('NotExistMeetingRoomId')
-#
-#     # UsecaseErrorではない点に注意
-#     with pytest.raises(NotFoundMeetingRoomIdError):
-#         self.usecase.find_meeting_room(command)
+        with pytest.raises(NotFoundMeetingRoomIdError):
+            self.usecase.find_meeting_room(command)

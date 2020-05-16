@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from src.domain.meeting_room.errors import NotFoundMeetingRoomIdError
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
 from src.domain.meeting_room.meeting_room_repository import MeetingRoomRepository
+from src.usecase.meeting_room.errors import NotFoundMeetingRoomIdError
 
 
 @dataclass

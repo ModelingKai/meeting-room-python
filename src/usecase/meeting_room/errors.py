@@ -2,5 +2,5 @@ class MeetingRoomUsecaseError(Exception):
     pass
 
 
-class NotFoundMeetingRoomError(MeetingRoomUsecaseError):
+class NotFoundMeetingRoomIdError(MeetingRoomUsecaseError):
     pass

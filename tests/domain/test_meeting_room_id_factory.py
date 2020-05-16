@@ -1,10 +1,10 @@
 import pytest
 
-from src.domain.meeting_room.errors import NotFoundMeetingRoomIdError
 from src.domain.meeting_room.meeting_room import MeetingRoom
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
 from src.domain.meeting_room.meeting_room_id_factory import MeetingRoomIdFactory
 from src.infrastructure.meeting_room.in_memory_meeting_room_repository import InMemoryMeetingRoomRepository
+from src.usecase.meeting_room.errors import NotFoundMeetingRoomIdError
 
 
 class TestMeetingRoomIdFactory:
