@@ -31,7 +31,7 @@ class TestCancelMeetingRoomUsecase:
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
                            MeetingRoomId('A'),
-                           EmployeeId(str(uuid.uuid4())))
+                           EmployeeId('001'))
 
     def test_予約をキャンセルができること(self, reservation):
         expected = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)

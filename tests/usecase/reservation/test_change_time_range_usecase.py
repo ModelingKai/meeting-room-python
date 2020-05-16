@@ -32,7 +32,7 @@ class TestChangeTimeRangeUsecase:
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
                            MeetingRoomId('A'),
-                           EmployeeId(str(uuid.uuid4())))
+                           EmployeeId('001'))
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_既存の予約を別の時間帯に変更ができること(self, reservation):
@@ -73,7 +73,7 @@ class TestChangeTimeRangeUsecase:
                                TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                                NumberOfParticipants(4),
                                MeetingRoomId('A'),
-                               EmployeeId(str(uuid.uuid4())))
+                               EmployeeId('001'))
 
         exist_reservation = reservation_20200402_1300_1400()
         self.repository.data[exist_reservation.id] = exist_reservation

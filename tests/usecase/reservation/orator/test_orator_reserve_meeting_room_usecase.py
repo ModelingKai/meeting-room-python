@@ -65,7 +65,7 @@ class TestOratorReserveMeetingRoomUsecase:
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
                            MeetingRoomId('A'),
-                           EmployeeId(str(uuid.uuid4())))
+                           EmployeeId('001'))
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_予約ができること_正常系(self, reservation):
