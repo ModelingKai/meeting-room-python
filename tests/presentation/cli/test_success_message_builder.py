@@ -4,13 +4,17 @@ import freezegun
 import pytest
 
 from src.domain.employee.employee_id import EmployeeId
+from src.domain.meeting_room.meeting_room import MeetingRoom
+from src.domain.meeting_room.meeting_room_domain_service import MeetingRoomDomainService
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
 from src.domain.reservation.number_of_participants import NumberOfParticipants
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
+from src.infrastructure.meeting_room.in_memory_meeting_room_repository import InMemoryMeetingRoomRepository
 from src.presentation.cli.cli_util.success_message_builder import SuccessMessageBuilder
+from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
 
 
 class TestSuccessMessageBuilder:
@@ -25,9 +29,19 @@ class TestSuccessMessageBuilder:
                            EmployeeId('001'))
 
     def test_1(self, reservation: Reservation):
-        expected = 'Bobさん名義で、2020年04月02日 13:00-14:00 大会議室 を 4名で 予約しましたよ'
+        # MeetingRoom に関する準備
+        meeting_room_repository = InMemoryMeetingRoomRepository()
+        meeting_room_domain_service = MeetingRoomDomainService(meeting_room_repository)
+        find_meeting_room_usecase = FindMeetingRoomUseCase(meeting_room_repository, meeting_room_domain_service)
+        meeting_room_id = MeetingRoomId('A')
+        meeting_room = MeetingRoom(meeting_room_id, '大会議室')
 
-        success_message_builder = SuccessMessageBuilder()
+        meeting_room_repository.data[meeting_room_id] = meeting_room
+
+        # こっから本編
+        success_message_builder = SuccessMessageBuilder(find_meeting_room_usecase)
+
         success_message = success_message_builder.build(reservation)
 
+        expected = 'Bobさん名義で、2020年04月02日 13:00-14:00 大会議室 を 4名で 予約しましたよ'
         assert expected == str(success_message)

@@ -1,12 +1,19 @@
 import datetime
+from dataclasses import dataclass
 
 from src.domain.reservation.reservation import Reservation
 from src.presentation.cli.cli_util.success_message import SuccessMessage
+from src.usecase.meeting_room.find_meeting_room_commnad import FindMeetingRoomCommand
+from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
 
 
+@dataclass
 class SuccessMessageBuilder:
+    find_meeting_room_usecase: FindMeetingRoomUseCase
+
     def build(self, reservation: Reservation) -> SuccessMessage:
-        meeting_room_name = '大会議室'
+        meeting_room_name = self.find_meeting_room_name(reservation)
+
         reserver_name = 'Bob'
         number_of_participants = reservation.number_of_participants.value
 
@@ -26,3 +33,9 @@ class SuccessMessageBuilder:
             reserver_name,
             number_of_participants
         )
+
+    def find_meeting_room_name(self, reservation: Reservation) -> str:
+        find_meeting_room_command = FindMeetingRoomCommand(meeting_room_id=reservation.meeting_room_id.value)
+        meeting_room = self.find_meeting_room_usecase.find_meeting_room(find_meeting_room_command)
+
+        return meeting_room.name
