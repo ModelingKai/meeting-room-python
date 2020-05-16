@@ -4,3 +4,7 @@ class EmployeeDomainObjectError(Exception):
 
 class NotFoundEmployeeIdError(EmployeeDomainObjectError):
     pass
+
+
+class InvalidFormatEmployeeIdError(EmployeeDomainObjectError):
+    pass
