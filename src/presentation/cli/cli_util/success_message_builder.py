@@ -19,9 +19,9 @@ class SuccessMessageBuilder:
         reserver_name = self.find_reserver_name(reservation)
         number_of_participants = reservation.number_of_participants.value
 
-        year = 2020
-        month = 4
-        day = 2
+        year = reservation.time_range_to_reserve.start_datetime.year
+        month = reservation.time_range_to_reserve.start_datetime.month
+        day = reservation.time_range_to_reserve.start_datetime.day
         start_time = datetime.time(13, 00)
         end_time = datetime.time(14, 00)
 

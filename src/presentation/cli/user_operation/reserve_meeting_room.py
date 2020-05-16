@@ -3,16 +3,14 @@ import datetime
 from orator import DatabaseManager
 
 from src.app_environment.init_dev_db import DEV_DB_CONFIG, init_dev_db
-from src.domain.employee.employee import Employee
-from src.domain.employee.employee_id_factory import EmployeeIdFactory
-from src.domain.meeting_room.meeting_room import MeetingRoom
-from src.domain.meeting_room.meeting_room_id_factory import MeetingRoomIdFactory
+from src.domain.employee.employee_domain_service import EmployeeDomainService
+from src.domain.meeting_room.meeting_room_domain_service import MeetingRoomDomainService
 from src.domain.reservation.errors import ReservationDomainObjectError
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
 from src.infrastructure.employee.in_memory_employee_repository import InMemoryEmployeeRepository
 from src.infrastructure.meeting_room.in_memory_meeting_room_repository import InMemoryMeetingRoomRepository
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
-from src.presentation.cli.cli_util.response_object_factory import ResponseObjectFactory
+from src.presentation.cli.cli_util.success_message_builder import SuccessMessageBuilder
 from src.presentation.cli.cli_util.user_input import CliUserInput
 from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
@@ -145,7 +143,7 @@ def 新規予約():
     #                           input_社員ID,
     #                           input_使用人数)
 
-    user_input = CliUserInput('20200516',
+    user_input = CliUserInput('20200520',
                               '1100',
                               '1300',
                               'A',
@@ -164,26 +162,21 @@ def 新規予約():
         print(e)
         exit()
 
-    # MeetingRoomに関する準備
+    # MeetingRoom に関する準備
     meeting_room_repository = InMemoryMeetingRoomRepository()
-    meeting_room_id_factory = MeetingRoomIdFactory(meeting_room_repository)
-    meeting_room_id = meeting_room_id_factory.create('A')
-    meeting_room = MeetingRoom(meeting_room_id, '大会議室')
+    meeting_room_domain_service = MeetingRoomDomainService(meeting_room_repository)
+    find_meeting_room_usecase = FindMeetingRoomUseCase(meeting_room_repository, meeting_room_domain_service)
 
-    meeting_room_repository.data[meeting_room_id] = meeting_room
-
-    # Employeeに関する準備
+    # Employee に関する準備
     employee_repository = InMemoryEmployeeRepository()
-    employee_id_factory = EmployeeIdFactory(employee_repository)
-    employee_id = employee_id_factory.create('001')
-    employee = Employee(employee_id, name='Bob')
-    employee_repository.data[employee_id] = employee
+    employee_domain_service = EmployeeDomainService(employee_repository)
+    find_employee_usecase = FindEmployeeUseCase(employee_repository, employee_domain_service)
 
-    response_object_factory = ResponseObjectFactory(FindEmployeeUseCase(employee_repository),
-                                                    FindMeetingRoomUseCase(meeting_room_repository))
-    response_object = response_object_factory.create(reservation)
+    success_message_builder = SuccessMessageBuilder(find_meeting_room_usecase, find_employee_usecase)
 
-    print(response_object)
+    success_message = success_message_builder.build(reservation)
+
+    print(success_message)
 
 
 def main():
