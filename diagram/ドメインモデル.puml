@@ -9,6 +9,9 @@ rectangle 社員集約 {
         + 社員ID
         + 社員名
     }
+    note top of 社員
+    ・社員IDは0埋めの数字3桁である
+    end note
 }
 
 rectangle 予約集約 {
@@ -72,6 +75,10 @@ rectangle 会議室集約 {
         + 会議室ID
         + 会議室名
     }
+    note top of 会議室
+    ・会議室IDは大文字のアルファベット1文字である
+    end note
+
 }
 
 
