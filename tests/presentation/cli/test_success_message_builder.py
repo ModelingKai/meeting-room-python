@@ -16,12 +16,13 @@ from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.employee.in_memory_employee_repository import InMemoryEmployeeRepository
 from src.infrastructure.meeting_room.in_memory_meeting_room_repository import InMemoryMeetingRoomRepository
-from src.presentation.cli.cli_util.success_message_builder import SuccessMessageBuilder
+from src.presentation.cli.cli_util.cli_new_reservation_success_message_builder import \
+    CliNewReservationSuccessMessageBuilder
 from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
 
 
-class TestSuccessMessageBuilder:
+class TestCliNewReservationSuccessMessageBuilder:
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
     def reservation(self) -> Reservation:
@@ -52,7 +53,8 @@ class TestSuccessMessageBuilder:
         employee_repository.data[employee_id] = employee
 
         # こっから本編
-        success_message_builder = SuccessMessageBuilder(find_meeting_room_usecase, find_employee_usecase)
+        success_message_builder = CliNewReservationSuccessMessageBuilder(find_meeting_room_usecase,
+                                                                         find_employee_usecase)
 
         success_message = success_message_builder.build(reservation)
 

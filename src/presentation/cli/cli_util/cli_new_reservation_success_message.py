@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class SuccessMessage:
+class CliNewReservationSuccessMessage:
     year: int
     month: int
     day: int

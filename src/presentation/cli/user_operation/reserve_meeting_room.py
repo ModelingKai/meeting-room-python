@@ -10,7 +10,8 @@ from src.domain.reservation.reservation_domain_service import ReservationDomainS
 from src.infrastructure.employee.in_memory_employee_repository import InMemoryEmployeeRepository
 from src.infrastructure.meeting_room.in_memory_meeting_room_repository import InMemoryMeetingRoomRepository
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
-from src.presentation.cli.cli_util.success_message_builder import SuccessMessageBuilder
+from src.presentation.cli.cli_util.cli_new_reservation_success_message_builder import \
+    CliNewReservationSuccessMessageBuilder
 from src.presentation.cli.cli_util.user_input import CliUserInput
 from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
@@ -172,7 +173,7 @@ def 新規予約():
     employee_domain_service = EmployeeDomainService(employee_repository)
     find_employee_usecase = FindEmployeeUseCase(employee_repository, employee_domain_service)
 
-    success_message_builder = SuccessMessageBuilder(find_meeting_room_usecase, find_employee_usecase)
+    success_message_builder = CliNewReservationSuccessMessageBuilder(find_meeting_room_usecase, find_employee_usecase)
 
     success_message = success_message_builder.build(reservation)
 
