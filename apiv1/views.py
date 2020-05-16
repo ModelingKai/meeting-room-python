@@ -1,4 +1,6 @@
 import uuid
+from dataclasses import dataclass
+from typing import List, Union
 
 from rest_framework import viewsets, views, status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -11,6 +13,8 @@ from src.domain.reservation.number_of_participants import NumberOfParticipants
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
 from src.domain.reservation.reservation_id import ReservationId
+from src.domain.reservation.reservation_repository import ReservationRepository
+from src.domain.reservation.reservation_specification import ReservationSpecification
 from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
@@ -44,8 +48,30 @@ class BookCreateAPIView(views.APIView):
         # レスポンスオブジェクトを作成して返す
         return Response(serializer.data, status.HTTP_201_CREATED)
 
+@dataclass
+class DjangoReservationRepository(ReservationRepository):
 
-class ReserveMeetingroomAPIView(views.APIView):
+    def reserve_new_meeting_room(self, reservation: Reservation) -> None:
+        """{'id': 'abc', 'meeting_room_id': 'A', ''}"""
+        pass
+
+    def cancel_meeting_room(self, reservation: Reservation) -> None:
+        pass
+
+    def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
+        pass
+
+    def change_meeting_room(self, reservation: Reservation) -> None:
+        pass
+
+    def change_time_range(self, reservation: Reservation) -> None:
+        pass
+
+    def find_satisfying(self, spec: ReservationSpecification) -> List[Reservation]:
+        pass
+
+
+class ReserveMeetingRoomAPIView(views.APIView):
     """
     予約モデルの登録API
     """
@@ -65,18 +91,30 @@ class ReserveMeetingroomAPIView(views.APIView):
         domain_service = ReservationDomainService(repository)
 
         reservation = Reservation(ReservationId(str(uuid.uuid4())),
-                                  TimeRangeToReserve(使用日時(2020, 5, 14, 13, 00), 使用日時(2020, 5, 14, 14, 00)),
+                                  TimeRangeToReserve(使用日時(2020, 5, 17, 13, 00), 使用日時(2020, 5, 17, 14, 00)),
                                   NumberOfParticipants(4),
                                   MeetingRoomId(str(uuid.uuid4())),
                                   EmployeeId(str(uuid.uuid4())))
+
         # ユースケースを呼ぶ
         usecase = ReserveMeetingRoomUsecase(repository, domain_service)
         usecase.reserve_meeting_room(reservation)
 
         # シリアライザオブジェクトを作成
         print(request.data)
-        serializer = ReserveSerializer(data=request.data)
 
-        # serializer.save()
+        data_dict = {
+            'meeting_room_id': 'A',
+            'reserver_id': '001',
+            'status': '予約中',
+            'number_of_participants':'4',
+            'start_datetime':'2020-05-17 10:00',
+            'end_datetime':'2020-05-17 10:00',
+        }
+
+        serializer = ReserveSerializer(data=data_dict)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
         return Response([], status.HTTP_201_CREATED)
