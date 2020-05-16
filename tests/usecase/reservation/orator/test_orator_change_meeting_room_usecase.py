@@ -65,14 +65,14 @@ class TestOratorChangeMeetingRoomUsecase:
         return Reservation(ReservationId(str(uuid.uuid4())),
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
-                           MeetingRoomId(str(uuid.uuid4())),
+                           MeetingRoomId('A'),
                            EmployeeId(str(uuid.uuid4())))
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_既存の予約を別の会議室に変更ができること(self, reservation):
         self.repository.reserve_new_meeting_room(reservation)
 
-        expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId(str(uuid.uuid4())))
+        expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId('A'))
 
         self.usecase.change_meeting_room(reservation.id, expected.meeting_room_id)
 

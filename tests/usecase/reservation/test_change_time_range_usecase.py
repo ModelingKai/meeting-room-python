@@ -31,7 +31,7 @@ class TestChangeTimeRangeUsecase:
         return Reservation(ReservationId(str(uuid.uuid4())),
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
-                           MeetingRoomId(str(uuid.uuid4())),
+                           MeetingRoomId('A'),
                            EmployeeId(str(uuid.uuid4())))
 
     @freezegun.freeze_time('2020-4-1 10:00')
@@ -72,7 +72,7 @@ class TestChangeTimeRangeUsecase:
             return Reservation(ReservationId(str(uuid.uuid4())),
                                TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                                NumberOfParticipants(4),
-                               MeetingRoomId(str(uuid.uuid4())),
+                               MeetingRoomId('A'),
                                EmployeeId(str(uuid.uuid4())))
 
         exist_reservation = reservation_20200402_1300_1400()

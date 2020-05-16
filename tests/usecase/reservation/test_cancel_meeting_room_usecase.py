@@ -30,7 +30,7 @@ class TestCancelMeetingRoomUsecase:
         return Reservation(ReservationId(str(uuid.uuid4())),
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
-                           MeetingRoomId(str(uuid.uuid4())),
+                           MeetingRoomId('A'),
                            EmployeeId(str(uuid.uuid4())))
 
     def test_予約をキャンセルができること(self, reservation):

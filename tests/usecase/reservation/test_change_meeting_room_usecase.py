@@ -32,11 +32,11 @@ class TestChangeMeetingRoomUsecase:
         return Reservation(ReservationId(str(uuid.uuid4())),
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
-                           MeetingRoomId(str(uuid.uuid4())),
+                           MeetingRoomId('A'),
                            EmployeeId(str(uuid.uuid4())))
 
     def test_既存の予約を別の会議室に変更ができること(self, reservation):
-        expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId(str(uuid.uuid4())))
+        expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId('B'))
 
         self.repository.data[reservation.id] = reservation
         self.usecase.change_meeting_room(reservation.id, expected.meeting_room_id)
@@ -45,12 +45,12 @@ class TestChangeMeetingRoomUsecase:
 
     def test_存在しない予約に対する会議室変更依頼はダメだよ(self, reservation):
         with pytest.raises(NotFoundReservationError):
-            self.usecase.change_meeting_room(reservation.id, MeetingRoomId(str(uuid.uuid4())))
+            self.usecase.change_meeting_room(reservation.id, MeetingRoomId('A'))
 
     def test_会議室変更後の予約が既存の予約とぶつかっていたらダメだよ(self, reservation):
         reservation2 = dataclasses.replace(reservation,
                                            id=ReservationId(str(uuid.uuid4())),
-                                           meeting_room_id=MeetingRoomId(str(uuid.uuid4())))
+                                           meeting_room_id=MeetingRoomId('A'))
 
         self.repository.data[reservation.id] = reservation
         self.repository.data[reservation2.id] = reservation2

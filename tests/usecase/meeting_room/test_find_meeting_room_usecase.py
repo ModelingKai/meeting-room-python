@@ -13,18 +13,25 @@ class TestFindMeetingRoomUsecase:
         self.usecase = FindMeetingRoomUseCase(self.repository, domain_service)
 
     def test_会議室のIDを渡したら単一の会議室情報が取得できる(self):
-        meeting_room_id = MeetingRoomId('001')
+        meeting_room_id = MeetingRoomId('A')
         meeting_room = MeetingRoom(meeting_room_id, '大会議室')
-        command = FindMeetingRoomCommand('001')
+        command = FindMeetingRoomCommand('A')
 
         self.repository.data[meeting_room_id] = meeting_room
 
         assert meeting_room == self.usecase.find_meeting_room(command)
 
-    #
     # def test_存在しない会議室IDを渡すとエラーになる(self):
-    #     command = FindMeetingRoomCommand('NotExistMeetingRoomId')
+    #     command = FindMeetingRoomCommand('001')
     #
     #     # UsecaseErrorではない点に注意
     #     with pytest.raises(NotFoundMeetingRoomIdError):
     #         self.usecase.find_meeting_room(command)
+
+# MeetingRoomId のテスト用↓↓
+# def test_存在しない会議室IDを渡すとエラーになる(self):
+#     command = FindMeetingRoomCommand('NotExistMeetingRoomId')
+#
+#     # UsecaseErrorではない点に注意
+#     with pytest.raises(NotFoundMeetingRoomIdError):
+#         self.usecase.find_meeting_room(command)
