@@ -4,3 +4,7 @@ class MeetingRoomDomainObjectError(Exception):
 
 class NotFoundMeetingRoomIdError(MeetingRoomDomainObjectError):
     pass
+
+
+class InvalidFormatMeetingRoomIdError(MeetingRoomDomainObjectError):
+    pass
