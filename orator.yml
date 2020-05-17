@@ -1,0 +1,4 @@
+databases:
+  dev:
+    driver: 'sqlite'
+    database: 'dev_local_db.sqlite3'
