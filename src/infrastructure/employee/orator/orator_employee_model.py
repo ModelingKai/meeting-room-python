@@ -7,7 +7,7 @@ from src.domain.employee.employee_id import EmployeeId
 
 
 class OratorEmployeeModel(Model):
-    __table__ = 'meeting_rooms'
+    __table__ = 'employees'
 
     def __repr__(self) -> str:
         # ださいけど、情報がわかりやすくなるので実装している
