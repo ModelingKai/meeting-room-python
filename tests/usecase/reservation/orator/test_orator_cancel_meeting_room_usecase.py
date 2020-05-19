@@ -18,7 +18,7 @@ from src.usecase.reservation.cancel_meeting_room_usecase import CancelMeetingRoo
 from tests.usecase.reservation.orator.migrate_in_memory import TEST_DB_CONFIG, migrate_in_memory
 
 
-class TestOratorReserveMeetingRoomUsecase:
+class TestOratorCancelMeetingRoomUsecase:
     def setup(self):
         database_manager = DatabaseManager(TEST_DB_CONFIG)
 
@@ -28,7 +28,6 @@ class TestOratorReserveMeetingRoomUsecase:
 
         self.repository = OratorReservationRepository()
         self.usecase = CancelMeetingRoomUsecase(self.repository)
-
 
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
