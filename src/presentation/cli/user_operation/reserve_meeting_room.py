@@ -130,26 +130,33 @@ def 新規予約():
     domain_service = ReservationDomainService(reservation_repository)
     usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
 
-    # input_使用日 = Task使用日().exe()
-    # input_開始時刻 = Task開始時刻().exe()
-    # input_終了時刻 = Task終了時刻().exe()
-    # input_会議室ID = Task会議室ID().exe()
-    # input_社員ID = Task社員ID().exe()
-    # input_使用人数 = Task使用人数().exe()
+    # MeetingRoom に関する準備
+    meeting_room_repository = OratorMeetingRoomRepository()
+    meeting_room_domain_service = MeetingRoomDomainService(meeting_room_repository)
+    find_meeting_room_usecase = FindMeetingRoomUseCase(meeting_room_repository, meeting_room_domain_service)
 
-    # user_input = CliUserInput(input_使用日,
-    #                           input_開始時刻,
-    #                           input_終了時刻,
-    #                           input_会議室ID,
-    #                           input_社員ID,
-    #                           input_使用人数)
+    # Employee に関する準備
+    employee_repository = OratorEmployeeRepository()
+    employee_domain_service = EmployeeDomainService(employee_repository)
+    find_employee_usecase = FindEmployeeUseCase(employee_repository, employee_domain_service)
 
-    user_input = CliUserInput('20200520',
-                              '1100',
-                              '1300',
-                              'A',
-                              '001',
-                              '5')
+    success_message_builder = CliNewReservationSuccessMessageBuilder(find_meeting_room_usecase, find_employee_usecase)
+
+    # ユーザー入力
+    user_input = CliUserInput(date=Task使用日().exe(),
+                              start_time=Task開始時刻().exe(),
+                              end_time=Task終了時刻().exe(),
+                              meeting_room_id=Task会議室ID().exe(),
+                              reserver_id=Task社員ID().exe(),
+                              number_of_participants=Task使用人数().exe())
+
+    # テスト用
+    # user_input = CliUserInput(date='20200520',
+    #                           start_time='1100',
+    #                           end_time='1300',
+    #                           meeting_room_id='A',
+    #                           reserver_id='001',
+    #                           number_of_participants='5')
 
     try:
         reservation = user_input.to_reservation()
@@ -163,32 +170,20 @@ def 新規予約():
         print(e)
         exit()
 
-    # MeetingRoom に関する準備
-    meeting_room_repository = OratorMeetingRoomRepository()
-    meeting_room_domain_service = MeetingRoomDomainService(meeting_room_repository)
-    find_meeting_room_usecase = FindMeetingRoomUseCase(meeting_room_repository, meeting_room_domain_service)
-
-    # Employee に関する準備
-    employee_repository = OratorEmployeeRepository()
-    employee_domain_service = EmployeeDomainService(employee_repository)
-    find_employee_usecase = FindEmployeeUseCase(employee_repository, employee_domain_service)
-
-    success_message_builder = CliNewReservationSuccessMessageBuilder(find_meeting_room_usecase, find_employee_usecase)
-
     success_message = success_message_builder.build(reservation)
 
     print(success_message)
 
 
 def main():
-    新規予約()
     try:
-        pass
+        新規予約()
     except KeyboardInterrupt:
         print('Bye!')
     except Exception as e:
-        print(e)
+        # TODO: エラー情報はロギングしようね？
         print('500 Internal Server Error')
+        print(e)
 
 
 if __name__ == '__main__':
