@@ -1,7 +1,7 @@
 from orator import Model
 
 
-class OratorMeetingRoom(Model):
+class OratorMeetingRoomModel(Model):
     __table__ = 'meeting_rooms'
 
     def __repr__(self) -> str:

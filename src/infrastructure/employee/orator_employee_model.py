@@ -1,7 +1,7 @@
 from orator import Model
 
 
-class OratorEmployee(Model):
+class OratorEmployeeModel(Model):
     __table__ = 'employees'
 
     def __repr__(self) -> str:
