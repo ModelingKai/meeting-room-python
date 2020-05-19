@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 from dataclasses import dataclass
 from typing import Union, List
 
@@ -7,6 +8,7 @@ from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_repository import ReservationRepository
 from src.domain.reservation.reservation_specification import ReservationSpecification
+from src.domain.reservation.reservation_status import ReservationStatus
 from src.infrastructure.reservation.orator.orator_reservation_model import OratorReservationModel
 
 
@@ -23,7 +25,19 @@ class OratorReservationRepository(ReservationRepository):
         OratorReservationModel.update(orator_reservation, reservation_status=reservation.reservation_status.value)
 
     def find_satisfying(self, specification: ReservationSpecification) -> List[Reservation]:
-        return list(filter(specification.satisfying_elements_from, OratorReservationModel.all()))
+        # フィルタリング → 再構成 は OK! だが 再構成 → フィルタリング は、再構成時点で過去予約はダメよエラーになるぞ！
+        satisfied_orator_reservation_models = []
+
+        for orator_model in OratorReservationModel.all():
+            is_reserved = orator_model.reservation_status == ReservationStatus.Reserved.value
+
+            start_datetime = datetime.datetime.strptime(orator_model.start_datetime, '%Y-%m-%d %H:%M:%S')
+            is_future = start_datetime > datetime.datetime.now()
+
+            if is_reserved and is_future:
+                satisfied_orator_reservation_models.append(orator_model)
+
+        return [OratorReservationModel.to_reservation(o) for o in satisfied_orator_reservation_models]
 
     def find_by_id(self, reservation_id: ReservationId) -> Union[Reservation, None]:
         orator_reservation = OratorReservationModel.find(reservation_id.value)
