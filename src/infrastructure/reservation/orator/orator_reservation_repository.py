@@ -3,8 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Union, List
 
-from orator import DatabaseManager, Model
-
 from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_id import ReservationId
 from src.domain.reservation.reservation_repository import ReservationRepository
@@ -14,11 +12,6 @@ from src.infrastructure.reservation.orator.orator_reservation_model import Orato
 
 @dataclass
 class OratorReservationRepository(ReservationRepository):
-    database_manager: DatabaseManager
-
-    def __post_init__(self):
-        Model.set_connection_resolver(self.database_manager)
-
     def reserve_new_meeting_room(self, reservation: Reservation) -> None:
         orator_reservation = OratorReservationModel.to_orator_model(reservation)
 

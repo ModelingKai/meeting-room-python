@@ -15,7 +15,7 @@ from src.domain.reservation.使用日時 import 使用日時
 
 
 class OratorReservationModel(Model):
-    __table__ = 'reservation'
+    __table__ = 'reservations'
 
     def __repr__(self) -> str:
         # ださいけど、情報がわかりやすくなるので実装している
