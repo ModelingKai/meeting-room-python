@@ -43,7 +43,7 @@ class TestOratorChangeMeetingRoomUsecase:
     def test_既存の予約を別の会議室に変更ができること(self, reservation):
         self.repository.reserve_new_meeting_room(reservation)
 
-        expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId('A'))
+        expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId('B'))
 
         self.usecase.change_meeting_room(reservation.id, expected.meeting_room_id)
 
