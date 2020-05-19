@@ -1,14 +1,14 @@
 import datetime
 
-from orator import DatabaseManager
+from orator import DatabaseManager, Model
 
-from src.app_environment.init_dev_db import DEV_DB_CONFIG, init_dev_db
+from src.app_environment.init_dev_db import DEV_DB_CONFIG
 from src.domain.employee.employee_domain_service import EmployeeDomainService
 from src.domain.meeting_room.meeting_room_domain_service import MeetingRoomDomainService
 from src.domain.reservation.errors import ReservationDomainObjectError
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
-from src.infrastructure.employee.in_memory_employee_repository import InMemoryEmployeeRepository
-from src.infrastructure.meeting_room.in_memory_meeting_room_repository import InMemoryMeetingRoomRepository
+from src.infrastructure.employee.orator.orator_employee_repository import OratorEmployeeRepository
+from src.infrastructure.meeting_room.orator.orator_meeting_room_repository import OratorMeetingRoomRepository
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
 from src.presentation.cli.cli_util.cli_new_reservation_success_message_builder import \
     CliNewReservationSuccessMessageBuilder
@@ -123,13 +123,13 @@ class Task社員ID:
 
 def 新規予約():
     database_manager = DatabaseManager(DEV_DB_CONFIG)
+    Model.set_connection_resolver(database_manager)
 
     # TODO: ここのDIの仕方も、違うところでやるんだろう( Python Injectorとか？）
-    reservation_repository = OratorReservationRepository(database_manager)
+    reservation_repository = OratorReservationRepository()
     domain_service = ReservationDomainService(reservation_repository)
     usecase = ReserveMeetingRoomUsecase(reservation_repository, domain_service)
 
-    init_dev_db()  # 検証しやすくするために毎回DBを初期化する
     # input_使用日 = Task使用日().exe()
     # input_開始時刻 = Task開始時刻().exe()
     # input_終了時刻 = Task終了時刻().exe()
@@ -164,12 +164,12 @@ def 新規予約():
         exit()
 
     # MeetingRoom に関する準備
-    meeting_room_repository = InMemoryMeetingRoomRepository()
+    meeting_room_repository = OratorMeetingRoomRepository()
     meeting_room_domain_service = MeetingRoomDomainService(meeting_room_repository)
     find_meeting_room_usecase = FindMeetingRoomUseCase(meeting_room_repository, meeting_room_domain_service)
 
     # Employee に関する準備
-    employee_repository = InMemoryEmployeeRepository()
+    employee_repository = OratorEmployeeRepository()
     employee_domain_service = EmployeeDomainService(employee_repository)
     find_employee_usecase = FindEmployeeUseCase(employee_repository, employee_domain_service)
 
@@ -181,8 +181,9 @@ def 新規予約():
 
 
 def main():
+    新規予約()
     try:
-        新規予約()
+        pass
     except KeyboardInterrupt:
         print('Bye!')
     except Exception as e:

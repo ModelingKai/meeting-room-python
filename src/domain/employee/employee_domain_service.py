@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from src.domain.employee.employee_id import EmployeeId
 from src.domain.employee.employee_repository import EmployeeRepository
 
 
@@ -7,7 +8,7 @@ from src.domain.employee.employee_repository import EmployeeRepository
 class EmployeeDomainService:
     repository: EmployeeRepository
 
-    def exists_id(self, employee_id):
+    def exists_id(self, employee_id: EmployeeId) -> bool:
         exist_employees = self.repository.find_all()
 
         for exist_employee in exist_employees:
