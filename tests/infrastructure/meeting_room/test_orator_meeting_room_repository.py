@@ -39,3 +39,6 @@ class TestOratorMeetingRoomRepository:
         OratorMeetingRoomModel.to_orator_model(meeting_room).save()
 
         assert self.repository.find_by_id(meeting_room_id) == meeting_room
+
+    def test_find_by_id_return_None_when_not_exist_id(self):
+        assert self.repository.find_by_id(MeetingRoomId('Z')) is None
