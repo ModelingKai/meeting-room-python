@@ -61,5 +61,4 @@ class OratorReservationRepository(ReservationRepository):
         OratorReservationModel \
             .where('id', '=', reservation.id.value) \
             .update(start_datetime=OratorReservationModel.to_datetime(reservation.time_range_to_reserve.start_datetime),
-                    end_datetime=OratorReservationModel.to_datetime(reservation.time_range_to_reserve.end_datetime)
-                    )
+                    end_datetime=OratorReservationModel.to_datetime(reservation.time_range_to_reserve.end_datetime))
