@@ -4,6 +4,7 @@ from orator import DatabaseManager, Model
 
 from src.app_environment.init_dev_db import DEV_DB_CONFIG
 from src.domain.meeting_room.meeting_room_domain_service import MeetingRoomDomainService
+from src.domain.reservation.reservation_id import ReservationId
 from src.infrastructure.meeting_room.orator.orator_meeting_room_repository import OratorMeetingRoomRepository
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
@@ -17,7 +18,7 @@ class CancelMeetingCoordinator:
     cancel_meeting_room_usecase: CancelMeetingRoomUsecase
     message_builder: CliSuccessToCancelMessageBuilder
 
-    def cancel_meeting_room(self):
+    def cancel_meeting_room(self) -> None:
         # メインフローわかりやすくね？
         user_raw_input = self._read_user_raw_input()
 
@@ -34,11 +35,12 @@ class CancelMeetingCoordinator:
         #   - キーボード入力の受け取り
         pass
 
-    def _to_reservation_id(self, user_raw_input):
+    def _to_reservation_id(self, user_raw_input: str) -> ReservationId:
+        # TODO: とりあえず user_raw_input は str としている。無理にクラスに包まなくても良さそう
         # 2: ユーザからの入力をReservationIdにマッピングする
         pass
 
-    def _exe_cancel_usecase(self, target_reservation_id):
+    def _exe_cancel_usecase(self, target_reservation_id: ReservationId) -> None:
         # 3. キャンセルするユースケースの実行
         try:
             self.cancel_meeting_room_usecase.cancel_meeting_room(target_reservation_id)
@@ -46,7 +48,7 @@ class CancelMeetingCoordinator:
             print(e)
             exit()
 
-    def _display_success_message(self, target_reservation_id):
+    def _display_success_message(self, target_reservation_id: ReservationId) -> None:
         # 4. サクセスメッセージ生成と表示
         success_message = self.message_builder.build(target_reservation_id)
 
