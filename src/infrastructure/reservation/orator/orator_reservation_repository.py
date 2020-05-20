@@ -53,10 +53,9 @@ class OratorReservationRepository(ReservationRepository):
         return OratorReservationModel.to_reservation(orator_reservation)
 
     def change_meeting_room(self, reservation: Reservation) -> None:
-        orator_reservation = OratorReservationModel.to_orator_model(reservation)
-
-        update_param_dict = dict(meeting_room_id=reservation.meeting_room_id.value)
-        OratorReservationModel.update(orator_reservation, update_param_dict)
+        OratorReservationModel \
+            .where('id', '=', reservation.id.value) \
+            .update(meeting_room_id=reservation.meeting_room_id.value)
 
     def change_time_range(self, reservation: Reservation) -> None:
         orator_reservation = OratorReservationModel.to_orator_model(reservation)
