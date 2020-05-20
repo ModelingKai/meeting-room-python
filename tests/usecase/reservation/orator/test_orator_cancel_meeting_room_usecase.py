@@ -1,5 +1,4 @@
 import dataclasses
-import uuid
 
 import freezegun
 import pytest
@@ -31,21 +30,49 @@ class TestOratorCancelMeetingRoomUsecase:
 
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
-    def reservation(self) -> Reservation:
+    def reservation_0402_A(self) -> Reservation:
         """不正でないReservationインスタンスを作成するだけのfixture"""
-        return Reservation(ReservationId(str(uuid.uuid4())),
+        return Reservation(ReservationId('0402'),
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
                            MeetingRoomId('A'),
                            EmployeeId('001'))
 
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_キャンセルができること_正常系(self, reservation):
+    def test_キャンセルができること_正常系(self, reservation_0402_A):
         # 既に予約されているデータとする
-        self.repository.reserve_new_meeting_room(reservation)
+        self.repository.reserve_new_meeting_room(reservation_0402_A)
 
-        expected = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)
+        expected = dataclasses.replace(reservation_0402_A, reservation_status=ReservationStatus.Canceled)
 
-        self.usecase.cancel_meeting_room(reservation.id)
+        self.usecase.cancel_meeting_room(reservation_0402_A.id)
 
-        assert expected == self.repository.find_by_id(reservation.id)
+        assert expected == self.repository.find_by_id(reservation_0402_A.id)
+
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_3つの予約が一気にキャンセルされるバグの再現(self, reservation_0402_A):
+        reservation_0402_B = dataclasses.replace(reservation_0402_A,
+                                                 id=(ReservationId('0402_B')),
+                                                 meeting_room_id=MeetingRoomId('B'))
+
+        reservation_0402_C = dataclasses.replace(reservation_0402_A,
+                                                 id=(ReservationId('0402_C')),
+                                                 meeting_room_id=MeetingRoomId('C'))
+
+        self.repository.reserve_new_meeting_room(reservation_0402_A)
+        self.repository.reserve_new_meeting_room(reservation_0402_B)
+        self.repository.reserve_new_meeting_room(reservation_0402_C)
+
+        self.usecase.cancel_meeting_room(reservation_0402_B.id)
+
+        reservation_0402_B_canceled = dataclasses.replace(reservation_0402_B,
+                                                          reservation_status=ReservationStatus.Canceled)
+        expected = [reservation_0402_A,
+                    reservation_0402_B_canceled,
+                    reservation_0402_C]
+        actual = [self.repository.find_by_id(reservation_0402_A.id),
+                  self.repository.find_by_id(reservation_0402_B.id),
+                  self.repository.find_by_id(reservation_0402_C.id),
+                  ]
+
+        assert actual == expected
