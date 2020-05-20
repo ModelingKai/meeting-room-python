@@ -11,9 +11,14 @@ jobs:
     steps:
       - name: Checkout Source 
         uses: actions/checkout@v2
-      - name: Install java
-        run: |
-          sudo apt-get install default-jdk && java -version
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11.0.7' # The JDK version to make available on the path.
+          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          architecture: x64 # (x64 or x86) - defaults to x64
+#      - name: Install java
+#        run: |
+#          sudo apt-get install default-jdk && java -version
       - name: Install graphviz
         run: |
           sudo apt-get install graphviz && dot -v
