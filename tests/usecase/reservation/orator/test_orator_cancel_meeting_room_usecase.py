@@ -50,13 +50,13 @@ class TestOratorCancelMeetingRoomUsecase:
         assert expected == self.repository.find_by_id(reservation_0402_A.id)
 
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_3つの予約が一気にキャンセルされるバグの再現(self, reservation_0402_A):
+    def test_指定した予約のみがキャンセルとなること(self, reservation_0402_A):
         reservation_0402_B = dataclasses.replace(reservation_0402_A,
-                                                 id=(ReservationId('0402_B')),
+                                                 id=ReservationId('0402_B'),
                                                  meeting_room_id=MeetingRoomId('B'))
 
         reservation_0402_C = dataclasses.replace(reservation_0402_A,
-                                                 id=(ReservationId('0402_C')),
+                                                 id=ReservationId('0402_C'),
                                                  meeting_room_id=MeetingRoomId('C'))
 
         self.repository.reserve_new_meeting_room(reservation_0402_A)
@@ -65,14 +65,12 @@ class TestOratorCancelMeetingRoomUsecase:
 
         self.usecase.cancel_meeting_room(reservation_0402_B.id)
 
-        reservation_0402_B_canceled = dataclasses.replace(reservation_0402_B,
-                                                          reservation_status=ReservationStatus.Canceled)
         expected = [reservation_0402_A,
-                    reservation_0402_B_canceled,
+                    dataclasses.replace(reservation_0402_B, reservation_status=ReservationStatus.Canceled),
                     reservation_0402_C]
+
         actual = [self.repository.find_by_id(reservation_0402_A.id),
                   self.repository.find_by_id(reservation_0402_B.id),
-                  self.repository.find_by_id(reservation_0402_C.id),
-                  ]
+                  self.repository.find_by_id(reservation_0402_C.id)]
 
         assert actual == expected
