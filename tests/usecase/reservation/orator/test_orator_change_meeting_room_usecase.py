@@ -56,16 +56,6 @@ class TestOratorChangeMeetingRoomUsecase:
                            EmployeeId('001'))
 
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_既存の予約を別の会議室に変更ができること(self, reservation_0402_A):
-        self.repository.reserve_new_meeting_room(reservation_0402_A)
-
-        expected = dataclasses.replace(reservation_0402_A, meeting_room_id=MeetingRoomId('B'))
-
-        self.usecase.change_meeting_room(reservation_0402_A.id, expected.meeting_room_id)
-
-        assert expected == self.repository.find_by_id(reservation_0402_A.id)
-
-    @freezegun.freeze_time('2020-4-1 10:00')
     def test_指定した予約の会議室を変更できること(self, reservation_0402_A, reservation_0402_B, reservation_0402_C):
         self.repository.reserve_new_meeting_room(reservation_0402_A)
         self.repository.reserve_new_meeting_room(reservation_0402_B)
