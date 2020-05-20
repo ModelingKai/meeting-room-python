@@ -39,6 +39,33 @@ class TestOratorChangeMeetingRoomUsecase:
                            MeetingRoomId('A'),
                            EmployeeId('001'))
 
+    @pytest.fixture
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def reservation_0402_A(self) -> Reservation:
+        return Reservation(ReservationId('0402A'),
+                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                           NumberOfParticipants(4),
+                           MeetingRoomId('A'),
+                           EmployeeId('001'))
+
+    @pytest.fixture
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def reservation_0402_B(self) -> Reservation:
+        return Reservation(ReservationId('0402B'),
+                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                           NumberOfParticipants(4),
+                           MeetingRoomId('B'),
+                           EmployeeId('001'))
+
+    @pytest.fixture
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def reservation_0402_C(self) -> Reservation:
+        return Reservation(ReservationId('0402C'),
+                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                           NumberOfParticipants(4),
+                           MeetingRoomId('C'),
+                           EmployeeId('001'))
+
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_既存の予約を別の会議室に変更ができること(self, reservation):
         self.repository.reserve_new_meeting_room(reservation)
@@ -48,3 +75,23 @@ class TestOratorChangeMeetingRoomUsecase:
         self.usecase.change_meeting_room(reservation.id, expected.meeting_room_id)
 
         assert expected == self.repository.find_by_id(reservation.id)
+
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_指定した予約のみが変更できること(self, reservation_0402_A, reservation_0402_B, reservation_0402_C):
+        self.repository.reserve_new_meeting_room(reservation_0402_A)
+        self.repository.reserve_new_meeting_room(reservation_0402_B)
+        self.repository.reserve_new_meeting_room(reservation_0402_C)
+
+        expected = dataclasses.replace(reservation_0402_B, meeting_room_id=MeetingRoomId('Z'))
+
+        self.usecase.change_meeting_room(reservation_0402_B.id, expected.meeting_room_id)
+
+        expected = [reservation_0402_A,
+                    expected,
+                    reservation_0402_C]
+
+        actual = [self.repository.find_by_id(reservation_0402_A.id),
+                  self.repository.find_by_id(reservation_0402_B.id),
+                  self.repository.find_by_id(reservation_0402_C.id)]
+
+        assert actual == expected
