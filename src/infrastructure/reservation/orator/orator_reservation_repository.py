@@ -20,9 +20,14 @@ class OratorReservationRepository(ReservationRepository):
         orator_reservation.save()
 
     def cancel_meeting_room(self, reservation: Reservation) -> None:
-        orator_reservation = OratorReservationModel.to_orator_model(reservation)
+        OratorReservationModel \
+            .where('id', '=', reservation.id.value) \
+            .update(reservation_status=reservation.reservation_status.value)
 
-        OratorReservationModel.update(orator_reservation, reservation_status=reservation.reservation_status.value)
+        # これでもOKだよ 参考: https://orator-orm.com/docs/0.9/orm.html#updating-a-retrieved-model
+        # orator_reservation = OratorReservationModel.find(reservation.id.value)
+        # orator_reservation.reservation_status = ReservationStatus.Canceled.value
+        # orator_reservation.save()
 
     def find_satisfying(self, specification: ReservationSpecification) -> List[Reservation]:
         # フィルタリング → 再構成 は OK! だが 再構成 → フィルタリング は、再構成時点で過去予約はダメよエラーになるぞ！
