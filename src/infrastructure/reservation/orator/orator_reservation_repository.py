@@ -58,10 +58,8 @@ class OratorReservationRepository(ReservationRepository):
             .update(meeting_room_id=reservation.meeting_room_id.value)
 
     def change_time_range(self, reservation: Reservation) -> None:
-        orator_reservation = OratorReservationModel.to_orator_model(reservation)
-
-        update_param_dict = dict(
-            start_datetime=OratorReservationModel.to_datetime(reservation.time_range_to_reserve.start_datetime),
-            end_datetime=OratorReservationModel.to_datetime(reservation.time_range_to_reserve.end_datetime))
-
-        OratorReservationModel.update(orator_reservation, update_param_dict)
+        OratorReservationModel \
+            .where('id', '=', reservation.id.value) \
+            .update(start_datetime=OratorReservationModel.to_datetime(reservation.time_range_to_reserve.start_datetime),
+                    end_datetime=OratorReservationModel.to_datetime(reservation.time_range_to_reserve.end_datetime)
+                    )

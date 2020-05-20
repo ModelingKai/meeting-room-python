@@ -1,5 +1,4 @@
 import dataclasses
-import uuid
 
 import freezegun
 import pytest
@@ -31,21 +30,46 @@ class TestOratorChangeTimeRangeUsecase:
 
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
-    def reservation(self) -> Reservation:
-        """不正でないReservationインスタンスを作成するだけのfixture"""
-        return Reservation(ReservationId(str(uuid.uuid4())),
+    def reservation_0402_A(self) -> Reservation:
+        return Reservation(ReservationId('0402A'),
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
                            MeetingRoomId('A'),
                            EmployeeId('001'))
 
+    @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_既存の予約を別の時間帯に変更ができること(self, reservation):
-        self.repository.reserve_new_meeting_room(reservation)
+    def reservation_0402_B(self) -> Reservation:
+        return Reservation(ReservationId('0402B'),
+                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                           NumberOfParticipants(4),
+                           MeetingRoomId('B'),
+                           EmployeeId('001'))
 
-        new_time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 2, 15, 00), 使用日時(2020, 4, 2, 17, 00))
-        expected = dataclasses.replace(reservation, time_range_to_reserve=new_time_range_to_reserve)
+    @pytest.fixture
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def reservation_0402_C(self) -> Reservation:
+        return Reservation(ReservationId('0402C'),
+                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                           NumberOfParticipants(4),
+                           MeetingRoomId('C'),
+                           EmployeeId('001'))
 
-        self.usecase.change_time_range(reservation.id, expected.time_range_to_reserve)
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_指定した予約の予約時間帯を変更できること(self, reservation_0402_A, reservation_0402_B, reservation_0402_C):
+        self.repository.reserve_new_meeting_room(reservation_0402_A)
+        self.repository.reserve_new_meeting_room(reservation_0402_B)
+        self.repository.reserve_new_meeting_room(reservation_0402_C)
 
-        assert expected == self.repository.find_by_id(reservation.id)
+        new_time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 9, 15, 00), 使用日時(2020, 4, 9, 17, 00))
+        self.usecase.change_time_range(reservation_0402_B.id, new_time_range_to_reserve)
+
+        expected = [reservation_0402_A,
+                    dataclasses.replace(reservation_0402_B, time_range_to_reserve=new_time_range_to_reserve),
+                    reservation_0402_C]
+
+        actual = [self.repository.find_by_id(reservation_0402_A.id),
+                  self.repository.find_by_id(reservation_0402_B.id),
+                  self.repository.find_by_id(reservation_0402_C.id)]
+
+        assert actual == expected
