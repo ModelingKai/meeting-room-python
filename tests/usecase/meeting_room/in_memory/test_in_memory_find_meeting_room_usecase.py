@@ -9,7 +9,7 @@ from src.usecase.meeting_room.find_meeting_room_commnad import FindMeetingRoomCo
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
 
 
-class TestFindMeetingRoomUsecase:
+class TestInMemoryFindMeetingRoomUsecase:
     def setup(self):
         self.repository = InMemoryMeetingRoomRepository()
         domain_service = MeetingRoomDomainService(self.repository)

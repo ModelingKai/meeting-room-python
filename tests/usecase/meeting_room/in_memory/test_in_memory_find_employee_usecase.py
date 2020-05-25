@@ -9,7 +9,7 @@ from src.usecase.employee.find_employee_command import FindEmployeeCommand
 from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
 
 
-class TestFindEmployeeUsecase:
+class TestInMemoryFindEmployeeUsecase:
     def setup(self):
         self.repository = InMemoryEmployeeRepository()
         domain_service = EmployeeDomainService(self.repository)

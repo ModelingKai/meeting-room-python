@@ -18,7 +18,7 @@ from src.usecase.reservation.errors import その会議室はその時間帯で�
 from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
 
 
-class TestReserveMeetingRoomUsecase:
+class TestInMemoryReserveMeetingRoomUsecase:
     def setup(self):
         self.reservation_repository = InMemoryReservationRepository()
         domain_service = ReservationDomainService(self.reservation_repository)

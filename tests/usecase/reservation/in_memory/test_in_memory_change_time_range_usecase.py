@@ -18,7 +18,7 @@ from src.usecase.reservation.errors import NotFoundReservationError
 from src.usecase.reservation.errors import その会議室はその時間帯では予約ができませんよエラー
 
 
-class TestChangeTimeRangeUsecase:
+class TestInMemoryChangeTimeRangeUsecase:
     def setup(self):
         self.repository = InMemoryReservationRepository()
         domain_service = ReservationDomainService(self.repository)

@@ -18,7 +18,7 @@ from src.usecase.reservation.errors import NotFoundReservationError
 
 
 @freezegun.freeze_time('2020-4-1 10:00')
-class TestCancelMeetingRoomUsecase:
+class TestInMemoryCancelMeetingRoomUsecase:
     def setup(self):
         self.reservation_repository = InMemoryReservationRepository()
         self.usecase = CancelMeetingRoomUsecase(self.reservation_repository)

@@ -17,7 +17,7 @@ from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
 
 
-class TestReservationRepository:
+class TestInMemoryReservationRepository:
 
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')

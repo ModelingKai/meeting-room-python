@@ -17,7 +17,7 @@ from src.infrastructure.meeting_room.in_memory_meeting_room_repository import In
 from src.usecase.meeting_room.errors import NotFoundMeetingRoomIdError
 
 
-class TestReservationFactory:
+class TestInMemoryReservationFactory:
     def setup(self):
         employee_repository = InMemoryEmployeeRepository()
         employee_id = EmployeeId('001')

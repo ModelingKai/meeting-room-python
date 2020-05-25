@@ -19,7 +19,7 @@ from src.usecase.reservation.errors import その会議室はその時間帯で�
 
 
 @freezegun.freeze_time('2020-4-1 10:00')
-class TestChangeMeetingRoomUsecase:
+class TestInMemoryChangeMeetingRoomUsecase:
     def setup(self):
         self.repository = InMemoryReservationRepository()
         domain_service = ReservationDomainService(self.repository)
