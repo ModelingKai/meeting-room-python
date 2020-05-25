@@ -100,7 +100,7 @@ class Task終了時刻:
 class Task会議室ID:
     def exe(self) -> str:
         while True:
-            input_meeting_room_id = input('会議室IDは？(RoomA or RoomB or RoomC) > ')
+            input_meeting_room_id = input('会議室IDは？(A or B or C) > ')
 
             # 存在する会議室IDの中から選ばせるようにUIで制約を設けるなら、CLIアプリにおいてのみ、
             # 後半のバリデーションはしなくても、「一応」成立する。
@@ -151,14 +151,15 @@ def 新規予約():
                               number_of_participants=Task使用人数().exe())
 
     # テスト用
-    # user_input = CliUserInput(date='20200520',
-    #                           start_time='1100',
-    #                           end_time='1300',
-    #                           meeting_room_id='A',
-    #                           reserver_id='001',
-    #                           number_of_participants='5')
+    user_input = CliUserInput(date='20200520',
+                              start_time='1100',
+                              end_time='1300',
+                              meeting_room_id='A',
+                              reserver_id='001',
+                              number_of_participants='5')
 
     try:
+        # TODO: 存在しない
         reservation = user_input.to_reservation()
     except ReservationDomainObjectError as e:
         print(e)
