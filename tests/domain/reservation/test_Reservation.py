@@ -35,14 +35,12 @@ class ReservationFactory(object):
                number_of_participants: str,
                ):
 
-        reserver_id = EmployeeId(reserver_id)
-        employee = self.employee_repository.find_by_id(reserver_id)
+        employee = self.employee_repository.find_by_id(EmployeeId(reserver_id))
 
         if employee is None:
             raise NotFoundEmployeeIdError('そんな社員IDはありませんよ')
 
-        meeting_room_id = MeetingRoomId(meeting_room_id)
-        meeting_room = self.meeting_room_repository.find_by_id(meeting_room_id)
+        meeting_room = self.meeting_room_repository.find_by_id(MeetingRoomId(meeting_room_id))
 
         if meeting_room is None:
             raise NotFoundMeetingRoomIdError('そんな会議室IDはありませんよ')
