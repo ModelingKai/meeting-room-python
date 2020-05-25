@@ -4,16 +4,18 @@ from orator import DatabaseManager, Model
 
 from src.app_environment.init_dev_db import DEV_DB_CONFIG
 from src.domain.employee.employee_domain_service import EmployeeDomainService
+from src.domain.employee.errors import NotFoundEmployeeIdError
 from src.domain.meeting_room.meeting_room_domain_service import MeetingRoomDomainService
 from src.domain.reservation.errors import ReservationDomainObjectError
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
+from src.domain.reservation.reservation_factory import ReservationFactory
 from src.infrastructure.employee.orator.orator_employee_repository import OratorEmployeeRepository
 from src.infrastructure.meeting_room.orator.orator_meeting_room_repository import OratorMeetingRoomRepository
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
 from src.presentation.cli.cli_util.cli_new_reservation_success_message_builder import \
     CliNewReservationSuccessMessageBuilder
-from src.presentation.cli.cli_util.user_input import CliUserInput
 from src.usecase.employee.find_employee_usecase import FindEmployeeUseCase
+from src.usecase.meeting_room.errors import NotFoundMeetingRoomIdError
 from src.usecase.meeting_room.find_meeting_room_usecase import FindMeetingRoomUseCase
 from src.usecase.reservation.errors import ReservationUsecaseError
 from src.usecase.reservation.reserve_meeting_room_usecase import ReserveMeetingRoomUsecase
@@ -142,26 +144,25 @@ def 新規予約():
 
     success_message_builder = CliNewReservationSuccessMessageBuilder(find_meeting_room_usecase, find_employee_usecase)
 
-    # ユーザー入力
-    user_input = CliUserInput(date=Task使用日().exe(),
-                              start_time=Task開始時刻().exe(),
-                              end_time=Task終了時刻().exe(),
-                              meeting_room_id=Task会議室ID().exe(),
-                              reserver_id=Task社員ID().exe(),
-                              number_of_participants=Task使用人数().exe())
+    reservation_factory = ReservationFactory(meeting_room_repository, employee_repository)
 
-    # テスト用
-    user_input = CliUserInput(date='20200520',
-                              start_time='1100',
-                              end_time='1300',
-                              meeting_room_id='A',
-                              reserver_id='001',
-                              number_of_participants='5')
+    # ユーザー入力
+    date = Task使用日().exe()
+    start_time = Task開始時刻().exe()
+    end_time = Task終了時刻().exe()
+    meeting_room_id = Task会議室ID().exe()
+    reserver_id = Task社員ID().exe()
+    number_of_participants = Task使用人数().exe()
 
     try:
-        # TODO: 存在しない
-        reservation = user_input.to_reservation()
-    except ReservationDomainObjectError as e:
+        reservation = reservation_factory.create(date,
+                                                 start_time,
+                                                 end_time,
+                                                 meeting_room_id,
+                                                 reserver_id,
+                                                 number_of_participants)
+
+    except (ReservationDomainObjectError, NotFoundMeetingRoomIdError, NotFoundEmployeeIdError) as e:
         print(e)
         exit()
 

@@ -28,6 +28,7 @@ class Reservation:
 
     def cancel(self) -> Reservation:
         if self.reservation_status == ReservationStatus.Canceled:
+            # TODO: ここはドメインの独自例外にしたほうがいいんじゃないの？
             raise ValueError('既にキャンセル済みですよ')
 
         return dataclasses.replace(self, reservation_status=ReservationStatus.Canceled)
