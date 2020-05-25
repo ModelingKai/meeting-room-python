@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import freezegun
 import pytest
 
+from src.domain.employee.employee import Employee
 from src.domain.employee.employee_id import EmployeeId
 from src.domain.employee.employee_repository import EmployeeRepository
 from src.domain.employee.errors import NotFoundEmployeeIdError
@@ -33,17 +34,18 @@ class ReservationFactory(object):
                reserver_id: str,
                number_of_participants: str,
                ):
-        meeting_room_id = MeetingRoomId(meeting_room_id)
-        meeting_room = self.meeting_room_repository.find_by_id(meeting_room_id)
-
-        if meeting_room is None:
-            raise NotFoundMeetingRoomIdError('そんな会議室IDはありませんよ')
 
         reserver_id = EmployeeId(reserver_id)
         employee = self.employee_repository.find_by_id(reserver_id)
 
         if employee is None:
             raise NotFoundEmployeeIdError('そんな社員IDはありませんよ')
+
+        meeting_room_id = MeetingRoomId(meeting_room_id)
+        meeting_room = self.meeting_room_repository.find_by_id(meeting_room_id)
+
+        if meeting_room is None:
+            raise NotFoundMeetingRoomIdError('そんな会議室IDはありませんよ')
 
         year = int(date[:4])
         month = int(date[4:6])
@@ -73,6 +75,10 @@ class TestReservation:
         meeting_room_repository = InMemoryMeetingRoomRepository()
         employee_repository = InMemoryEmployeeRepository()
         reservation_factory = ReservationFactory(meeting_room_repository, employee_repository)
+
+        employee_id = EmployeeId('001')
+        employee = Employee(employee_id, 'Bob')
+        employee_repository.data[employee_id] = employee
 
         with pytest.raises(NotFoundMeetingRoomIdError):
             reservation_factory.create(date='20200402',
