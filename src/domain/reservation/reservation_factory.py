@@ -26,6 +26,7 @@ class ReservationFactory(object):
                meeting_room_id: str,
                reserver_id: str,
                number_of_participants: str,
+               reservation_id: str = str(uuid.uuid4())
                ) -> Reservation:
 
         employee = self.employee_repository.find_by_id(EmployeeId(reserver_id))
@@ -49,7 +50,7 @@ class ReservationFactory(object):
         start_使用日時 = 使用日時(year, month, day, start_hour, start_minute)
         end_使用日時 = 使用日時(year, month, day, end_hour, end_minute)
 
-        return Reservation(ReservationId(str(uuid.uuid4())),
+        return Reservation(ReservationId(reservation_id),
                            TimeRangeToReserve(start_使用日時, end_使用日時),
                            NumberOfParticipants(int(number_of_participants)),
                            meeting_room.id,
