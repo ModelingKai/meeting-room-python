@@ -7,6 +7,7 @@ import pytest
 from src.domain.employee.employee_id import EmployeeId
 from src.domain.employee.employee_repository import EmployeeRepository
 from src.domain.employee.errors import NotFoundEmployeeIdError
+from src.domain.meeting_room.meeting_room import MeetingRoom
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
 from src.domain.meeting_room.meeting_room_repository import MeetingRoomRepository
 from src.domain.reservation.number_of_participants import NumberOfParticipants
@@ -38,6 +39,12 @@ class ReservationFactory(object):
         if meeting_room is None:
             raise NotFoundMeetingRoomIdError('そんな会議室IDはありませんよ')
 
+        reserver_id = EmployeeId(reserver_id)
+        employee = self.employee_repository.find_by_id(reserver_id)
+
+        if employee is None:
+            raise NotFoundEmployeeIdError('そんな社員IDはありませんよ')
+
         year = int(date[:4])
         month = int(date[4:6])
         day = int(date[6:8])
@@ -61,27 +68,35 @@ class ReservationFactory(object):
 
 
 class TestReservation:
-    def setup(self):
-        meeting_room_repository = InMemoryMeetingRoomRepository()
-        employee_repository = InMemoryEmployeeRepository()
-        self.reservation_factory = ReservationFactory(meeting_room_repository, employee_repository)
-
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_存在しない会議室IDを持つReservationが作れてはいけない(self):
+        meeting_room_repository = InMemoryMeetingRoomRepository()
+        employee_repository = InMemoryEmployeeRepository()
+        reservation_factory = ReservationFactory(meeting_room_repository, employee_repository)
+
         with pytest.raises(NotFoundMeetingRoomIdError):
-            self.reservation_factory.create(date='20200402',
-                                            start_time='1100',
-                                            end_time='1300',
-                                            meeting_room_id='Z',
-                                            reserver_id='001',
-                                            number_of_participants='5')
+            reservation_factory.create(date='20200402',
+                                       start_time='1100',
+                                       end_time='1300',
+                                       meeting_room_id='Z',
+                                       reserver_id='001',
+                                       number_of_participants='5')
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_存在しない社員IDを持つReservationが作れてはいけない(self):
+        meeting_room_repository = InMemoryMeetingRoomRepository()
+        employee_repository = InMemoryEmployeeRepository()
+
+        meeting_room_id = MeetingRoomId('A')
+        meeting_room = MeetingRoom(meeting_room_id, '大会議室')
+        meeting_room_repository.data[meeting_room_id] = meeting_room
+
+        reservation_factory = ReservationFactory(meeting_room_repository, employee_repository)
+
         with pytest.raises(NotFoundEmployeeIdError):
-            self.reservation_factory.create(date='20200402',
-                                            start_time='1100',
-                                            end_time='1300',
-                                            meeting_room_id='A',
-                                            reserver_id='999',
-                                            number_of_participants='5')
+            reservation_factory.create(date='20200402',
+                                       start_time='1100',
+                                       end_time='1300',
+                                       meeting_room_id='A',
+                                       reserver_id='999',
+                                       number_of_participants='5')
