@@ -3,7 +3,6 @@ import uuid
 
 import freezegun
 import pytest
-from orator import DatabaseManager, Model
 
 from src.domain.employee.employee_id import EmployeeId
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
@@ -15,17 +14,9 @@ from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
 from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.in_memory_reservation_repository import InMemoryReservationRepository
 from src.usecase.reservation.find_avalible_reservation_usecase import FindAvailableReservationsUsecase
-from tests.usecase.reservation.orator.migrate_in_memory import TEST_DB_CONFIG, migrate_in_memory
 
 
 class TestInMemoryFindAvailableReservationsUsecase:
-    def setup(self):
-        database_manager = DatabaseManager(TEST_DB_CONFIG)
-
-        Model.set_connection_resolver(database_manager)
-
-        migrate_in_memory(database_manager)
-
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
     def reservation_0402(self) -> Reservation:
@@ -57,6 +48,4 @@ class TestInMemoryFindAvailableReservationsUsecase:
         repository.data[reservation_0301.id] = reservation_0301
         repository.data[cancelled_reservation.id] = cancelled_reservation
 
-        expected = [reservation_0402]
-
-        assert usecase.find_available_reservations() == expected
+        assert usecase.find_available_reservations() == [reservation_0402]
