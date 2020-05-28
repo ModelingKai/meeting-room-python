@@ -21,7 +21,7 @@ class TestInMemoryReservationRepository:
 
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
-    def reservation_0401(self) -> Reservation:
+    def reservation_0402(self) -> Reservation:
         return Reservation(ReservationId(str(uuid.uuid4())),
                            TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
                            NumberOfParticipants(4),
@@ -38,18 +38,18 @@ class TestInMemoryReservationRepository:
                            EmployeeId('001'))
 
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_find_available_reservations(self, reservation_0401, reservation_0301):
+    def test_find_available_reservations(self, reservation_0402, reservation_0301):
         repository = InMemoryReservationRepository()
 
-        cancelled_reservation = dataclasses.replace(reservation_0401,
+        cancelled_reservation = dataclasses.replace(reservation_0402,
                                                     id=ReservationId(str(uuid.uuid4())),
                                                     reservation_status=ReservationStatus.Canceled)
 
-        repository.data[reservation_0401.id] = reservation_0401
+        repository.data[reservation_0402.id] = reservation_0402
         repository.data[reservation_0301.id] = reservation_0301  # 過去の予約だよ
         repository.data[cancelled_reservation.id] = cancelled_reservation
 
-        expected = [reservation_0401]
+        expected = [reservation_0402]
 
         # TODO:ここに時間を入れるのは、どうかは、あとで考える
         specification = AvailableReservationSpecification(datetime.datetime.now())
