@@ -14,5 +14,5 @@ class AvailableReservationSpecification(ReservationSpecification):
     now: datetime.datetime
 
     def satisfying_elements_from(self, reservation: Reservation) -> bool:
-        return reservation.reservation_status == ReservationStatus.Reserved \
+        return reservation.reservation_status == ReservationStatus.Available \
                and reservation.time_range_to_reserve.start_datetime > self.now

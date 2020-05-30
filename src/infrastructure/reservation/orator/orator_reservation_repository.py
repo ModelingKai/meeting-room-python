@@ -34,7 +34,7 @@ class OratorReservationRepository(ReservationRepository):
         satisfied_orator_reservation_models = []
 
         for orator_model in OratorReservationModel.all():
-            is_reserved = orator_model.reservation_status == ReservationStatus.Reserved.value
+            is_reserved = orator_model.reservation_status == ReservationStatus.Available.value
 
             start_datetime = datetime.datetime.strptime(orator_model.start_datetime, '%Y-%m-%d %H:%M:%S')
             is_future = start_datetime > datetime.datetime.now()

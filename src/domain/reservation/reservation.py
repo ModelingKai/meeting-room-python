@@ -18,7 +18,7 @@ class Reservation:
     number_of_participants: NumberOfParticipants
     meeting_room_id: MeetingRoomId
     reserver_id: EmployeeId
-    reservation_status: [ReservationStatus] = ReservationStatus.Reserved
+    reservation_status: [ReservationStatus] = ReservationStatus.Available
 
     def is_かぶり(self, other: Reservation) -> bool:
         if self.meeting_room_id != other.meeting_room_id:

@@ -60,7 +60,7 @@ class TestInMemoryReserveMeetingRoomUsecase:
 
         new_reservation = dataclasses.replace(exist_canceled_reservation,
                                               id=ReservationId(str(uuid.uuid4())),
-                                              reservation_status=ReservationStatus.Reserved)
+                                              reservation_status=ReservationStatus.Available)
 
         self.reservation_repository.data[exist_canceled_reservation.id] = exist_canceled_reservation
 
