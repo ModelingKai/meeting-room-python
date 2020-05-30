@@ -14,5 +14,5 @@ class Reservations:
     def add(self, reservation: Reservation) -> Reservations:
         return Reservations(self.__values + [reservation])
 
-    def not_cancels(self) -> Reservations:
-        return Reservations([r for r in self.__values if r.reservation_status != ReservationStatus.Canceled])
+    def availables(self) -> Reservations:
+        return Reservations([r for r in self.__values if r.reservation_status == ReservationStatus.Available])

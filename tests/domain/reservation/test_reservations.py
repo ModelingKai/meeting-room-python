@@ -45,7 +45,7 @@ class TestReservationsTest:
                            ReservationStatus.Canceled)
 
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_キャンセル済みでは無い予約全てを取得できること(self, reservation_0401, reservation_0402, reservation_0403_canceled):
+    def test_全ての有効な予約を取得できること(self, reservation_0401, reservation_0402, reservation_0403_canceled):
         reservations = Reservations([reservation_0401, reservation_0402, reservation_0403_canceled])
 
-        assert reservations.not_cancels() == Reservations([reservation_0401, reservation_0402])
+        assert reservations.availables() == Reservations([reservation_0401, reservation_0402])
