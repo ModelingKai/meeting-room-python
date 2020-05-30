@@ -20,3 +20,7 @@ class 使用日時は過去であってはいけないんだよError(Reservation
 
 class 予約時間が長すぎError(ReservationDomainObjectError):
     pass
+
+
+class NotAvailableReservationError(ReservationDomainObjectError):
+    pass

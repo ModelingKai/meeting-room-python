@@ -38,3 +38,6 @@ class Reservation:
 
     def change_time_range(self, time_range_to_reserve: TimeRangeToReserve) -> Reservation:
         return dataclasses.replace(self, time_range_to_reserve=time_range_to_reserve)
+
+    def is_available(self) -> bool:
+        return self.reservation_status == ReservationStatus.Available
