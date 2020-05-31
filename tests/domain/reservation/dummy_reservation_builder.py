@@ -34,15 +34,16 @@ class DummyReservationBuilder:
     """
     now: datetime.datetime
     used_reservation_ids: Set[Reservation] = dataclasses.field(default_factory=set)
+    __dummy_reservation: Reservation = dataclasses.field(init=False)
 
     def __post_init__(self):
         time_range_to_reserve = self._make_tomorrow_time_to_range()
 
-        self.dummy_reservation = Reservation(ReservationId('dummy_reservation_id'),
-                                             time_range_to_reserve,
-                                             NumberOfParticipants(4),
-                                             MeetingRoomId('A'),
-                                             EmployeeId('001'))
+        self.__dummy_reservation = Reservation(ReservationId('dummy_reservation_id'),
+                                               time_range_to_reserve,
+                                               NumberOfParticipants(4),
+                                               MeetingRoomId('A'),
+                                               EmployeeId('001'))
 
     def _make_tomorrow_time_to_range(self) -> TimeRangeToReserve:
         tomorrow = self.now + datetime.timedelta(days=1)
@@ -54,31 +55,32 @@ class DummyReservationBuilder:
 
     def with_meeting_room_id(self, meeting_room_id: MeetingRoomId) -> DummyReservationBuilder:
         # テストデータ作成のための強引なミューテーション
-        object.__setattr__(self.dummy_reservation, 'meeting_room_id', meeting_room_id)
+        self.__dummy_reservation = dataclasses.replace(self.__dummy_reservation, meeting_room_id=meeting_room_id)
 
         return self
 
     def with_cancel(self) -> DummyReservationBuilder:
-        self.dummy_reservation = self.dummy_reservation.cancel()
+        self.__dummy_reservation = self.__dummy_reservation.cancel()
 
         return self
 
     def with_reserver_id(self, reserver_id: EmployeeId) -> DummyReservationBuilder:
         # テストデータ作成のための強引なミューテーションだから妥協して使用している
-        object.__setattr__(self.dummy_reservation, 'reserver_id', reserver_id)
+        self.__dummy_reservation = dataclasses.replace(self.__dummy_reservation, reserver_id=reserver_id)
 
         return self
 
     def with_time_range_to_reserve(self, time_range_to_reserve: TimeRangeToReserve) -> DummyReservationBuilder:
         # テストデータ作成のための強引なミューテーションだから妥協して使用している
-        object.__setattr__(self.dummy_reservation, 'time_range_to_reserve', time_range_to_reserve)
+        self.__dummy_reservation = dataclasses.replace(self.__dummy_reservation,
+                                                       time_range_to_reserve=time_range_to_reserve)
 
         return self
 
     def with_random_id(self) -> DummyReservationBuilder:
         # テストデータ作成のための強引なミューテーションだから妥協して使用している
         # ReservationId の生成ルールがガードできていないので注意！
-        self.dummy_reservation = dataclasses.replace(self.dummy_reservation, id=ReservationId(str(uuid.uuid4())))
+        self.__dummy_reservation = dataclasses.replace(self.__dummy_reservation, id=ReservationId(str(uuid.uuid4())))
 
         return self
 
@@ -86,9 +88,9 @@ class DummyReservationBuilder:
         if self._has_already_build_reservation_id():
             self.with_random_id()
 
-        self.used_reservation_ids.add(self.dummy_reservation.id)
+        self.used_reservation_ids.add(self.__dummy_reservation.id)
 
-        return self.dummy_reservation
+        return self.__dummy_reservation
 
     def _has_already_build_reservation_id(self) -> bool:
-        return self.dummy_reservation.id in self.used_reservation_ids
+        return self.__dummy_reservation.id in self.used_reservation_ids
