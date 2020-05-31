@@ -17,28 +17,28 @@ from src.domain.reservation.使用日時 import 使用日時
 
 @dataclass
 class DummyReservationBuilder:
-    """
-    発想: あくまで単体のReservationをつくるのを楽にするクラス
+    """テスト用のReservation生成を楽にするためのクラス
 
-    生成するReservationIdの重複は防いでいる
+    テスト以外では使ってはいけない理由
+        1. 不正なReservationをつくれてしまうから
+            - 存在しない会議室IDや存在しない予約者IDを持つReservationの生成ができてしまう
+        2. Reservation間の整合性(予約時間帯が重なっていないなど)は担保できないから
+            - やろうと思えば、リポジトリやドメインサービスを適用するってことはできるが、それはやりすぎでは？
 
-
-    ReservationId以外の属性や、Reservation間の不正は検知はできない
-        - 会議室や、予約時間帯の被っている不正なデータをつくれてしまう
-        - 存在しない会議室IDや存在しない予約者IDもつくれる
-        - やろうと思えば、生成したReservationをrepositoryに登録して、ドメインサービスを適用するってことはできるが、やりすぎでは？
-
-    過去の日時を持つデータはつくれない
-        - 結局、使用日時クラスのnow で判断しているため
-        - with_time_range_to_reserve を使って差し込もうな
+    その他
+        1. 同一のインスタンスから生成されるReservationのId重複だけは防いでいる
+        2. 過去の日時を持つデータはつくれない
+            - 結局、使用日時クラスの now で判断しているため生成不可能。freezegunなどで日時を固定すること
+        3. reservation_id と number_of_participants の指定はできない(2020年6月1日時点)
+            - 現状、これらを特定の値にしたいモチベーションがないため
     """
     now: datetime.datetime
-    used_reservation_ids: Set[Reservation] = dataclasses.field(default_factory=set)
+    used_reservation_ids: Set[ReservationId] = dataclasses.field(default_factory=set)
     __dummy_reservation: Reservation = dataclasses.field(init=False)
 
     def __post_init__(self):
         self.__dummy_reservation = Reservation(self._default_reservation_id(),
-                                               self._make_tomorrow_time_to_range(),
+                                               self._default_time_to_range(),
                                                NumberOfParticipants(4),
                                                MeetingRoomId('A'),
                                                EmployeeId('001'))
@@ -49,7 +49,7 @@ class DummyReservationBuilder:
 
         return ReservationId('dummy_reservation_id')
 
-    def _make_tomorrow_time_to_range(self) -> TimeRangeToReserve:
+    def _default_time_to_range(self) -> TimeRangeToReserve:
         tomorrow = self.now + datetime.timedelta(days=1)
 
         yyyy, mm, dd, *_ = tomorrow.timetuple()
