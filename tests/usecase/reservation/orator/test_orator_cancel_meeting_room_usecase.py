@@ -1,7 +1,6 @@
 import dataclasses
 import datetime
 
-import freezegun
 from orator import DatabaseManager, Model
 
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
@@ -23,7 +22,6 @@ class TestOratorCancelMeetingRoomUsecase:
         self.repository = OratorReservationRepository()
         self.usecase = CancelMeetingRoomUsecase(self.repository)
 
-    @freezegun.freeze_time('2020-4-1 10:00')
     def test_指定した予約のみがキャンセルとなること(self):
         builder = DummyReservationBuilder(datetime.datetime.now())
         reservation_0402_A = builder.with_meeting_room_id(MeetingRoomId('A')).build()
