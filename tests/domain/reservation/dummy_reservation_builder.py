@@ -37,13 +37,17 @@ class DummyReservationBuilder:
     __dummy_reservation: Reservation = dataclasses.field(init=False)
 
     def __post_init__(self):
-        time_range_to_reserve = self._make_tomorrow_time_to_range()
-
-        self.__dummy_reservation = Reservation(ReservationId('dummy_reservation_id'),
-                                               time_range_to_reserve,
+        self.__dummy_reservation = Reservation(self._default_reservation_id(),
+                                               self._make_tomorrow_time_to_range(),
                                                NumberOfParticipants(4),
                                                MeetingRoomId('A'),
                                                EmployeeId('001'))
+
+    def _default_reservation_id(self) -> ReservationId:
+        # これを採用したメリット: Reservationインスタンスのassertionが楽にできる
+        # これを採用したリスク: インスタンスを複数つくれば、ReservationIdかぶりをつくれる
+
+        return ReservationId('dummy_reservation_id')
 
     def _make_tomorrow_time_to_range(self) -> TimeRangeToReserve:
         tomorrow = self.now + datetime.timedelta(days=1)

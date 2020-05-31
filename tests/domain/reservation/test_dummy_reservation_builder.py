@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import dataclasses
 import datetime
 
@@ -27,14 +25,13 @@ class TestDummyReservationBuilder:
                            MeetingRoomId('A'),
                            EmployeeId('001'))
 
-    @freezegun.freeze_time('2020-4-1 10:00')
-    def test_特に何も指定しないとただの翌日のReservationがつくれる(self, default_dummy_reservation: Reservation):
+    def test_単一の正常なReservationを生成できる(self, default_dummy_reservation: Reservation):
         builder = DummyReservationBuilder(datetime.datetime.now())
 
-        assert isinstance(builder.build(), Reservation)
+        assert builder.build() == default_dummy_reservation
 
-    def test_生成された各ReservationのIDはつくるたびに必ず変わる(self):
-        # 逆に言うとおなじIDをもつreservationは生成されない
+    def test_同一インスタンスから生成されたReservationのIDは重複しない(self):
+        # 言い換えると、生成のたびにReservationIdは変化する
         builder = DummyReservationBuilder(datetime.datetime.now())
 
         id1 = builder.build().id
@@ -42,6 +39,34 @@ class TestDummyReservationBuilder:
         id3 = builder.build().id
 
         assert len({id1, id2, id3}) == 3
+
+    def test_別のインスタンスであれば同一IDを持つReservationがつくれてしまう(self):
+        reservation_id_1 = DummyReservationBuilder(datetime.datetime.now()).build().id
+        reservation_id_2 = DummyReservationBuilder(datetime.datetime.now()).build().id
+
+        assert reservation_id_1 == reservation_id_2
+
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_複雑なReservationもメソッドチェーンでつくりやすいよ(self, default_dummy_reservation: Reservation):
+        another_time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 15, 13, 00), 使用日時(2020, 4, 15, 14, 00))
+        another_meeting_room_id = MeetingRoomId('Z')
+        another_employee_id_999 = EmployeeId('999')
+
+        expected = Reservation(ReservationId('dummy_reservation_id'),
+                               another_time_range_to_reserve,
+                               NumberOfParticipants(4),
+                               another_meeting_room_id,
+                               another_employee_id_999,
+                               ReservationStatus.Canceled)
+
+        actual = DummyReservationBuilder(datetime.datetime.now()) \
+            .with_time_range_to_reserve(another_time_range_to_reserve) \
+            .with_meeting_room_id(another_meeting_room_id) \
+            .with_reserver_id(another_employee_id_999) \
+            .with_cancel() \
+            .build()
+
+        assert actual == expected
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_キャンセル済みのReservationがつくれる(self, default_dummy_reservation: Reservation):
