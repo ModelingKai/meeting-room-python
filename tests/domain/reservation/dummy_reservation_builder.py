@@ -78,7 +78,7 @@ class DummyReservationBuilder:
     def with_random_id(self) -> DummyReservationBuilder:
         # テストデータ作成のための強引なミューテーションだから妥協して使用している
         # ReservationId の生成ルールがガードできていないので注意！
-        object.__setattr__(self.dummy_reservation, 'id', ReservationId(str(uuid.uuid4())))
+        self.dummy_reservation = dataclasses.replace(self.dummy_reservation, id=ReservationId(str(uuid.uuid4())))
 
         return self
 

@@ -33,11 +33,15 @@ class TestDummyReservationBuilder:
 
         assert isinstance(builder.build(), Reservation)
 
-    def test_IDはつくるたびに必ず変わる(self):
+    def test_生成された各ReservationのIDはつくるたびに必ず変わる(self):
         # 逆に言うとおなじIDをもつreservationは生成されない
         builder = DummyReservationBuilder(datetime.datetime.now())
 
-        assert builder.build().id != builder.build().id
+        id1 = builder.build().id
+        id2 = builder.build().id
+        id3 = builder.build().id
+
+        assert len({id1, id2, id3}) == 3
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_キャンセル済みのReservationがつくれる(self, default_dummy_reservation: Reservation):
