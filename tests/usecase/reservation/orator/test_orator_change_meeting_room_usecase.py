@@ -23,23 +23,23 @@ class TestOratorChangeMeetingRoomUsecase:
 
     def test_指定した予約の会議室を変更できること(self):
         builder = DummyReservationBuilder()
-        reservation_0402_A = builder.with_meeting_room_id(MeetingRoomId('A')).build()
-        reservation_0402_B = builder.with_meeting_room_id(MeetingRoomId('B')).build()
-        reservation_0402_C = builder.with_meeting_room_id(MeetingRoomId('C')).build()
+        reservation_A = builder.with_meeting_room_id(MeetingRoomId('A')).build()
+        reservation_B = builder.with_meeting_room_id(MeetingRoomId('B')).build()
+        reservation_C = builder.with_meeting_room_id(MeetingRoomId('C')).build()
 
-        self.repository.reserve_new_meeting_room(reservation_0402_A)
-        self.repository.reserve_new_meeting_room(reservation_0402_B)
-        self.repository.reserve_new_meeting_room(reservation_0402_C)
+        self.repository.reserve_new_meeting_room(reservation_A)
+        self.repository.reserve_new_meeting_room(reservation_B)
+        self.repository.reserve_new_meeting_room(reservation_C)
 
         meeting_room_id_Z = MeetingRoomId('Z')
-        self.usecase.change_meeting_room(reservation_0402_B.id, meeting_room_id_Z)
+        self.usecase.change_meeting_room(reservation_B.id, meeting_room_id_Z)
 
-        expected = [reservation_0402_A,
-                    dataclasses.replace(reservation_0402_B, meeting_room_id=meeting_room_id_Z),
-                    reservation_0402_C]
+        expected = [reservation_A,
+                    dataclasses.replace(reservation_B, meeting_room_id=meeting_room_id_Z),
+                    reservation_C]
 
-        actual = [self.repository.find_by_id(reservation_0402_A.id),
-                  self.repository.find_by_id(reservation_0402_B.id),
-                  self.repository.find_by_id(reservation_0402_C.id)]
+        actual = [self.repository.find_by_id(reservation_A.id),
+                  self.repository.find_by_id(reservation_B.id),
+                  self.repository.find_by_id(reservation_C.id)]
 
         assert actual == expected
