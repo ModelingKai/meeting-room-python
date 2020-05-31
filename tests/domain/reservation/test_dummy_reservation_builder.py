@@ -45,7 +45,7 @@ class TestDummyReservationBuilder:
         assert reservation_id_1 == reservation_id_2
 
     @freezegun.freeze_time('2020-4-1 10:00')
-    def test_複雑なReservationもメソッドチェーンでつくりやすいよ(self, default_dummy_reservation: Reservation):
+    def test_複雑なReservationもメソッドチェーンでつくりやすいよ(self):
         another_time_range_to_reserve = TimeRangeToReserve(使用日時(2020, 4, 15, 13, 00), 使用日時(2020, 4, 15, 14, 00))
         another_meeting_room_id = MeetingRoomId('Z')
         another_employee_id_999 = EmployeeId('999')
