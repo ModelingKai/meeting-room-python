@@ -1,5 +1,3 @@
-import datetime
-
 import freezegun
 import pytest
 
@@ -13,14 +11,14 @@ class TestInMemoryFindAvailableReservationsUsecase:
     @pytest.fixture
     @freezegun.freeze_time('2020-3-1 10:00')
     def past_reservation(self) -> Reservation:
-        return DummyReservationBuilder(datetime.datetime.now()).with_random_id().build()
+        return DummyReservationBuilder().with_random_id().build()
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_find_available_reservations(self, past_reservation: Reservation):
         repository = InMemoryReservationRepository()
         usecase = FindAvailableReservationsUsecase(repository)
 
-        builder = DummyReservationBuilder(datetime.datetime.now())
+        builder = DummyReservationBuilder()
         available_reservation = builder.build()
         cancelled_reservation = builder.with_cancel().build()
 

@@ -1,5 +1,4 @@
 import dataclasses
-import datetime
 import uuid
 
 import freezegun
@@ -26,7 +25,7 @@ class TestInMemoryChangeTimeRangeUsecase:
     @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
     def reservation(self) -> Reservation:
-        return DummyReservationBuilder(datetime.datetime.now()).build()
+        return DummyReservationBuilder().build()
 
     @freezegun.freeze_time('2020-4-1 10:00')
     def test_既存の予約を別の時間帯に変更ができること(self, reservation: Reservation):
@@ -63,7 +62,7 @@ class TestInMemoryChangeTimeRangeUsecase:
         @freezegun.freeze_time('2020-4-01 10:00')
         def reservation_20200402_1300_1400() -> Reservation:
             """テストのために、 '2020-4-10 10:00' 時点では本来不正である過去の予約時間帯を持つデータを作る関数"""
-            return DummyReservationBuilder(datetime.datetime.now()).build()
+            return DummyReservationBuilder().build()
 
         exist_reservation = reservation_20200402_1300_1400()
         self.repository.data[exist_reservation.id] = exist_reservation

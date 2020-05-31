@@ -1,5 +1,4 @@
 import dataclasses
-import datetime
 
 import pytest
 
@@ -18,7 +17,7 @@ class TestInMemoryCancelMeetingRoomUsecase:
 
     @pytest.fixture
     def reservation(self) -> Reservation:
-        return DummyReservationBuilder(datetime.datetime.now()).build()
+        return DummyReservationBuilder().build()
 
     def test_予約をキャンセルができること(self, reservation: Reservation):
         expected = dataclasses.replace(reservation, reservation_status=ReservationStatus.Canceled)

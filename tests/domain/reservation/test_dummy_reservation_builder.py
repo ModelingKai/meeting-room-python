@@ -1,5 +1,3 @@
-import datetime
-
 import freezegun
 import pytest
 
@@ -24,14 +22,15 @@ class TestDummyReservationBuilder:
                            MeetingRoomId('A'),
                            EmployeeId('001'))
 
-    def test_単一の正常なReservationを生成できる(self, default_dummy_reservation: Reservation):
-        builder = DummyReservationBuilder(datetime.datetime.now())
+    @freezegun.freeze_time('2020-4-1 10:00')
+    def test_単一の正常なReservationを生成できる_予約時間帯は翌日13時から14時がデフォルトとなる(self, default_dummy_reservation: Reservation):
+        builder = DummyReservationBuilder()
 
         assert builder.build() == default_dummy_reservation
 
     def test_同一インスタンスから生成されたReservationのIDは重複しない(self):
         # 言い換えると、生成のたびにReservationIdは変化する
-        builder = DummyReservationBuilder(datetime.datetime.now())
+        builder = DummyReservationBuilder()
 
         id1 = builder.build().id
         id2 = builder.build().id
@@ -40,8 +39,8 @@ class TestDummyReservationBuilder:
         assert len({id1, id2, id3}) == 3
 
     def test_別のインスタンスであれば同一IDを持つReservationがつくれてしまう(self):
-        reservation_id_1 = DummyReservationBuilder(datetime.datetime.now()).build().id
-        reservation_id_2 = DummyReservationBuilder(datetime.datetime.now()).build().id
+        reservation_id_1 = DummyReservationBuilder().build().id
+        reservation_id_2 = DummyReservationBuilder().build().id
 
         assert reservation_id_1 == reservation_id_2
 
@@ -58,7 +57,7 @@ class TestDummyReservationBuilder:
                                another_employee_id_999,
                                ReservationStatus.Canceled)
 
-        actual = DummyReservationBuilder(datetime.datetime.now()) \
+        actual = DummyReservationBuilder() \
             .with_time_range_to_reserve(another_time_range_to_reserve) \
             .with_meeting_room_id(another_meeting_room_id) \
             .with_reserver_id(another_employee_id_999) \

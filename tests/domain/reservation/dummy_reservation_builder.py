@@ -25,18 +25,30 @@ class DummyReservationBuilder:
         2. Reservation間の整合性(予約時間帯が重なっていないなど)は担保できないから
             - やろうと思えば、リポジトリやドメインサービスを適用するってことはできるが、それはやりすぎでは？
 
+    ポイント
+        1. デフォルトの予約時間帯は、「実行日の翌日の13時〜14時」である
+            - `time_range_to_reserve` の指定記述が非常にだるいのでこれで十分という判断
+            - 「翌日」にしているのは、不正な予約時間帯になるのを防ぐため
+            - 特定の予約時間帯で作りたい場合は、 `self.with_time_range_to_reserve()` を使いましょう
+
+    できないこと
+        1. 過去の日時を持つデータはつくれない
+            - 結局、使用日時クラスの now で判断しているため生成不可能。freezegunなどで日時を固定すること
+        2. reservation_id と number_of_participants の指定はできない(2020年6月1日時点)
+            - 現状、これらを特定の値にしたいモチベーションがないため
+
     その他
         1. 同一のインスタンスから生成されるReservationのId重複だけは防いでいる
-        2. 過去の日時を持つデータはつくれない
-            - 結局、使用日時クラスの now で判断しているため生成不可能。freezegunなどで日時を固定すること
-        3. reservation_id と number_of_participants の指定はできない(2020年6月1日時点)
-            - 現状、これらを特定の値にしたいモチベーションがないため
     """
-    now: datetime.datetime
+    execute_date: datetime.date = dataclasses.field(default=None)
     used_reservation_ids: Set[ReservationId] = dataclasses.field(default_factory=set)
     __dummy_reservation: Reservation = dataclasses.field(init=False)
 
     def __post_init__(self):
+        # Pythonのデフォルト引数の罠を踏まないための実装
+        if self.execute_date is None:
+            self.execute_date = datetime.datetime.today()
+
         self.__dummy_reservation = Reservation(self._default_reservation_id(),
                                                self._default_time_to_range(),
                                                NumberOfParticipants(4),
@@ -50,9 +62,9 @@ class DummyReservationBuilder:
         return ReservationId('dummy_reservation_id')
 
     def _default_time_to_range(self) -> TimeRangeToReserve:
-        tomorrow = self.now + datetime.timedelta(days=1)
-
-        yyyy, mm, dd, *_ = tomorrow.timetuple()
+        """実行日の翌日13時〜14時 がデフォルトの予約時間帯"""
+        the_next_day = self.execute_date + datetime.timedelta(days=1)
+        yyyy, mm, dd, *_ = the_next_day.timetuple()
 
         return TimeRangeToReserve(使用日時(yyyy, mm, dd, 13, 00),
                                   使用日時(yyyy, mm, dd, 14, 00))

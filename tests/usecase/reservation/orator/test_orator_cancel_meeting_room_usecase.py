@@ -1,5 +1,4 @@
 import dataclasses
-import datetime
 
 from orator import DatabaseManager, Model
 
@@ -23,7 +22,7 @@ class TestOratorCancelMeetingRoomUsecase:
         self.usecase = CancelMeetingRoomUsecase(self.repository)
 
     def test_指定した予約のみがキャンセルとなること(self):
-        builder = DummyReservationBuilder(datetime.datetime.now())
+        builder = DummyReservationBuilder()
         reservation_0402_A = builder.with_meeting_room_id(MeetingRoomId('A')).build()
         reservation_0402_B = builder.with_meeting_room_id(MeetingRoomId('B')).build()
         reservation_0402_C = builder.with_meeting_room_id(MeetingRoomId('C')).build()

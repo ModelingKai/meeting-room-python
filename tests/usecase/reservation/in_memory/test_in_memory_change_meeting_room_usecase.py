@@ -1,5 +1,4 @@
 import dataclasses
-import datetime
 import uuid
 
 import pytest
@@ -23,7 +22,7 @@ class TestInMemoryChangeMeetingRoomUsecase:
 
     @pytest.fixture
     def reservation(self) -> Reservation:
-        return DummyReservationBuilder(datetime.datetime.now()).build()
+        return DummyReservationBuilder().build()
 
     def test_既存の予約を別の会議室に変更ができること(self, reservation):
         expected = dataclasses.replace(reservation, meeting_room_id=MeetingRoomId('B'))

@@ -1,5 +1,3 @@
-import datetime
-
 import pytest
 
 from src.domain.reservation.available_reservations import AvailableReservations
@@ -11,7 +9,7 @@ from tests.domain.reservation.dummy_reservation_builder import DummyReservationB
 class TestReservations:
     @pytest.fixture
     def canceled_reservation(self) -> Reservation:
-        return DummyReservationBuilder(datetime.datetime.now()).with_cancel().build()
+        return DummyReservationBuilder().with_cancel().build()
 
     def test_初期化時に有効ではない予約を含むリストを渡すとエラーとなる(self, canceled_reservation):
         with pytest.raises(NotAvailableReservationError):

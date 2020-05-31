@@ -1,5 +1,4 @@
 import dataclasses
-import datetime
 from dataclasses import dataclass
 
 import pytest
@@ -32,7 +31,7 @@ class TestInMemoryFindReservationsUsecase:
 
     @pytest.fixture
     def reservation(self) -> Reservation:
-        return DummyReservationBuilder(datetime.datetime.now()).build()
+        return DummyReservationBuilder().build()
 
     def test_指定IDのReservationが1件だけ取得できる(self, reservation: Reservation):
         self.repository.data[reservation.id] = reservation

@@ -1,5 +1,4 @@
 import dataclasses
-import datetime
 import uuid
 
 import pytest
@@ -23,7 +22,7 @@ class TestInMemoryReserveMeetingRoomUsecase:
 
     @pytest.fixture
     def reservation(self) -> Reservation:
-        return DummyReservationBuilder(datetime.datetime.now()).build()
+        return DummyReservationBuilder().build()
 
     def test_会議室を予約する_正常系(self, reservation):
         self.usecase.reserve_meeting_room(reservation)

@@ -1,5 +1,3 @@
-import datetime
-
 from orator import DatabaseManager, Model
 
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
@@ -21,7 +19,7 @@ class TestOratorReserveMeetingRoomUsecase:
         self.usecase = ReserveMeetingRoomUsecase(self.repository, domain_service)
 
     def test_予約ができること_正常系(self):
-        reservation = DummyReservationBuilder(datetime.datetime.now()).build()
+        reservation = DummyReservationBuilder().build()
 
         self.usecase.reserve_meeting_room(reservation)
 
