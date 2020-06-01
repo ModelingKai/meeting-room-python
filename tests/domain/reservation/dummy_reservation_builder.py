@@ -49,17 +49,21 @@ class DummyReservationBuilder:
         if self.execute_date is None:
             self.execute_date = datetime.datetime.today()
 
-        self.__dummy_reservation = Reservation(self._default_reservation_id(),
+        self.__dummy_reservation = Reservation(self._get_next_reservation_id(),
                                                self._default_time_to_range(),
                                                NumberOfParticipants(4),
                                                MeetingRoomId('A'),
                                                EmployeeId('001'))
 
-    def _default_reservation_id(self) -> ReservationId:
+    def _get_next_reservation_id(self) -> ReservationId:
+        """次のReservationIdを生成する。Idの値は1から順にインクリメントする。"""
         # これを採用したメリット: Reservationインスタンスのassertionが楽にできる
         # これを採用したリスク: インスタンスを複数つくれば、ReservationIdかぶりをつくれる
 
-        return ReservationId('dummy_reservation_id')
+        used_id_count = len(self.used_reservation_ids)
+        next_id = str(used_id_count + 1)
+
+        return ReservationId(next_id)
 
     def _default_time_to_range(self) -> TimeRangeToReserve:
         """実行日の翌日13時〜14時 がデフォルトの予約時間帯"""
@@ -102,11 +106,17 @@ class DummyReservationBuilder:
 
     def build(self) -> Reservation:
         if self._has_already_build_reservation_id():
-            self.with_random_id()
+            self._set_next_id()
 
-        self.used_reservation_ids.add(self.__dummy_reservation.id)
+        self._register_used_id()
 
         return self.__dummy_reservation
 
     def _has_already_build_reservation_id(self) -> bool:
         return self.__dummy_reservation.id in self.used_reservation_ids
+
+    def _set_next_id(self) -> None:
+        self.__dummy_reservation = dataclasses.replace(self.__dummy_reservation, id=self._get_next_reservation_id())
+
+    def _register_used_id(self) -> None:
+        self.used_reservation_ids.add(self.__dummy_reservation.id)

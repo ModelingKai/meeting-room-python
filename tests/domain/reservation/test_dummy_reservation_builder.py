@@ -1,5 +1,4 @@
 import freezegun
-import pytest
 
 from src.domain.employee.employee_id import EmployeeId
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
@@ -13,22 +12,17 @@ from tests.domain.reservation.dummy_reservation_builder import DummyReservationB
 
 
 class TestDummyReservationBuilder:
-    @pytest.fixture
     @freezegun.freeze_time('2020-4-1 10:00')
-    def default_dummy_reservation(self) -> Reservation:
-        return Reservation(ReservationId('dummy_reservation_id'),
-                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                           NumberOfParticipants(4),
-                           MeetingRoomId('A'),
-                           EmployeeId('001'))
+    def test_単一の正常なReservationを生成できる_予約時間帯は翌日13時から14時がデフォルトとなる(self):
+        expected = Reservation(ReservationId('1'),
+                               TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
+                               NumberOfParticipants(4),
+                               MeetingRoomId('A'),
+                               EmployeeId('001'))
 
-    @freezegun.freeze_time('2020-4-1 10:00')
-    def test_単一の正常なReservationを生成できる_予約時間帯は翌日13時から14時がデフォルトとなる(self, default_dummy_reservation: Reservation):
-        builder = DummyReservationBuilder()
+        assert DummyReservationBuilder().build() == expected
 
-        assert builder.build() == default_dummy_reservation
-
-    def test_同一インスタンスから生成されたReservationのIDは重複しない(self):
+    def test_同一インスタンスから生成されたReservationのIDは1から順にインクリメントされる(self):
         # 言い換えると、生成のたびにReservationIdは変化する
         builder = DummyReservationBuilder()
 
@@ -36,7 +30,17 @@ class TestDummyReservationBuilder:
         id2 = builder.build().id
         id3 = builder.build().id
 
-        assert len({id1, id2, id3}) == 3
+        assert [id1, id2, id3] == [ReservationId('1'), ReservationId('2'), ReservationId('3')]
+
+    def test_ランダムなIdを割り振ることができる(self):
+        # 1つのテストで複数のBuilderインスタンスを利用するときのId衝突を防ぐときに役立つ機能
+        builder = DummyReservationBuilder()
+
+        random_id1 = builder.with_random_id().build().id
+        random_id2 = builder.with_random_id().build().id
+        random_id3 = builder.with_random_id().build().id
+
+        assert [random_id1, random_id2, random_id3] != [ReservationId('1'), ReservationId('2'), ReservationId('3')]
 
     def test_別のインスタンスであれば同一IDを持つReservationがつくれてしまう(self):
         reservation_id_1 = DummyReservationBuilder().build().id
@@ -50,7 +54,7 @@ class TestDummyReservationBuilder:
         another_meeting_room_id = MeetingRoomId('Z')
         another_employee_id_999 = EmployeeId('999')
 
-        expected = Reservation(ReservationId('dummy_reservation_id'),
+        expected = Reservation(ReservationId('1'),
                                another_time_range_to_reserve,
                                NumberOfParticipants(4),
                                another_meeting_room_id,
