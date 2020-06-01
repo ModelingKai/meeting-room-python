@@ -36,11 +36,9 @@ class TestDummyReservationBuilder:
         # 1つのテストで複数のBuilderインスタンスを利用するときのId衝突を防ぐときに役立つ機能
         builder = DummyReservationBuilder()
 
-        random_id1 = builder.with_random_id().build().id
-        random_id2 = builder.with_random_id().build().id
-        random_id3 = builder.with_random_id().build().id
+        random_id = builder.with_random_id().build().id
 
-        assert [random_id1, random_id2, random_id3] != [ReservationId('1'), ReservationId('2'), ReservationId('3')]
+        assert random_id != ReservationId('1')
 
     def test_別のインスタンスであれば同一IDを持つReservationがつくれてしまう(self):
         reservation_id_1 = DummyReservationBuilder().build().id
