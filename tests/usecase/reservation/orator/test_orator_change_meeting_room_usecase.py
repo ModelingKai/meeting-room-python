@@ -1,19 +1,12 @@
 import dataclasses
 
-import freezegun
-import pytest
 from orator import DatabaseManager, Model
 
-from src.domain.employee.employee_id import EmployeeId
 from src.domain.meeting_room.meeting_room_id import MeetingRoomId
-from src.domain.reservation.number_of_participants import NumberOfParticipants
-from src.domain.reservation.reservation import Reservation
 from src.domain.reservation.reservation_domain_service import ReservationDomainService
-from src.domain.reservation.reservation_id import ReservationId
-from src.domain.reservation.time_range_to_reserve import TimeRangeToReserve
-from src.domain.reservation.使用日時 import 使用日時
 from src.infrastructure.reservation.orator.orator_reservation_repository import OratorReservationRepository
 from src.usecase.reservation.change_meeting_room_usecase import ChangeMeetingRoomUseCase
+from tests.domain.reservation.dummy_reservation_builder import DummyReservationBuilder
 from tests.usecase.reservation.orator.migrate_in_memory import TEST_DB_CONFIG, migrate_in_memory
 
 
@@ -28,48 +21,25 @@ class TestOratorChangeMeetingRoomUsecase:
         domain_service = ReservationDomainService(self.repository)
         self.usecase = ChangeMeetingRoomUseCase(self.repository, domain_service)
 
-    @pytest.fixture
-    @freezegun.freeze_time('2020-4-1 10:00')
-    def reservation_0402_A(self) -> Reservation:
-        return Reservation(ReservationId('0402A'),
-                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                           NumberOfParticipants(4),
-                           MeetingRoomId('A'),
-                           EmployeeId('001'))
+    def test_指定した予約の会議室を変更できること(self):
+        builder = DummyReservationBuilder()
+        reservation_A = builder.with_meeting_room_id(MeetingRoomId('A')).build()
+        reservation_B = builder.with_meeting_room_id(MeetingRoomId('B')).build()
+        reservation_C = builder.with_meeting_room_id(MeetingRoomId('C')).build()
 
-    @pytest.fixture
-    @freezegun.freeze_time('2020-4-1 10:00')
-    def reservation_0402_B(self) -> Reservation:
-        return Reservation(ReservationId('0402B'),
-                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                           NumberOfParticipants(4),
-                           MeetingRoomId('B'),
-                           EmployeeId('001'))
-
-    @pytest.fixture
-    @freezegun.freeze_time('2020-4-1 10:00')
-    def reservation_0402_C(self) -> Reservation:
-        return Reservation(ReservationId('0402C'),
-                           TimeRangeToReserve(使用日時(2020, 4, 2, 13, 00), 使用日時(2020, 4, 2, 14, 00)),
-                           NumberOfParticipants(4),
-                           MeetingRoomId('C'),
-                           EmployeeId('001'))
-
-    @freezegun.freeze_time('2020-4-1 10:00')
-    def test_指定した予約の会議室を変更できること(self, reservation_0402_A, reservation_0402_B, reservation_0402_C):
-        self.repository.reserve_new_meeting_room(reservation_0402_A)
-        self.repository.reserve_new_meeting_room(reservation_0402_B)
-        self.repository.reserve_new_meeting_room(reservation_0402_C)
+        self.repository.reserve_new_meeting_room(reservation_A)
+        self.repository.reserve_new_meeting_room(reservation_B)
+        self.repository.reserve_new_meeting_room(reservation_C)
 
         meeting_room_id_Z = MeetingRoomId('Z')
-        self.usecase.change_meeting_room(reservation_0402_B.id, meeting_room_id_Z)
+        self.usecase.change_meeting_room(reservation_B.id, meeting_room_id_Z)
 
-        expected = [reservation_0402_A,
-                    dataclasses.replace(reservation_0402_B, meeting_room_id=meeting_room_id_Z),
-                    reservation_0402_C]
+        expected = [reservation_A,
+                    dataclasses.replace(reservation_B, meeting_room_id=meeting_room_id_Z),
+                    reservation_C]
 
-        actual = [self.repository.find_by_id(reservation_0402_A.id),
-                  self.repository.find_by_id(reservation_0402_B.id),
-                  self.repository.find_by_id(reservation_0402_C.id)]
+        actual = [self.repository.find_by_id(reservation_A.id),
+                  self.repository.find_by_id(reservation_B.id),
+                  self.repository.find_by_id(reservation_C.id)]
 
         assert actual == expected
